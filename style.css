@@ -1,0 +1,27 @@
+.mycenter
+{
+    text-align: center;
+}
+
+.mypara
+{
+    text-align: left; 
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+span.highlighted-phrase
+{
+    font-weight: bold;
+}
+
+/*
+Bootstrap Augmentations
+*/
+
+.list-group
+{
+    display: inline-block;
+}
+
