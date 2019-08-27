@@ -8,9 +8,10 @@
         "ul.list-group":["w-75", "p-3"], 
         "div.card": ["w-100", "mx-auto","my-2", "align-items-center", "pt-4"],
         "div.mydisplay": ["text-center", "bg-primary", "text-white"], 
-        "div.passage-entry":["container-fluid", "w-75"],
+        "div.passage-entry":["container-fluid", "w-90"],
         "h3": ["my-3"], 
-        "div.col": ["mx-0", "w-100"]
+        "div.col": ["mx-0", "w-100"],
+        "nav":["navbar-expand-lg", "navbar-light", "bg-light", "sticky-top"]
     };
     //BootStrap Settings end.
     const ALLSETTINGS = 
@@ -43,7 +44,7 @@
     /**
      * A function that reads from the ALLSETTINGS and apply all the setiings in it.
      */
-    async function applyAllSettings()
+    function applyAllSettings()
     {
         console.log("Applying All Settings... ");
         for (let i = 0; i < ALLSETTINGS.length; i++)
@@ -84,11 +85,26 @@
     } 
 
     /**
-     * Add all listeners to the needed elements. 
+     * Using the const in the field to add all the listen to their desired elements .
      */
     async function prepareAllListeners()
     {
         console.log("Preparing All Listeners.");
+    }
+
+    /**
+     * Function scans the page for the passages and setup the dropdown manu for easy nevigation.
+     * - It only creates the 
+     * @param {Fxn} funccall
+     * The function it should call after the asyn execution. 
+     */
+    async function prepareDropDownManu(funccall = null)
+    {
+
+        if (funccall !== null)
+        {
+            funccall();
+        }
     }
 
     /**
