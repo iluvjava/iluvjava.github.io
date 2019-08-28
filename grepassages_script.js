@@ -11,7 +11,8 @@
         "div.passage-entry":["container-fluid", "w-90"],
         "h3": ["my-3"], 
         "div.col": ["mx-0", "w-100"],
-        "nav":["navbar-expand-lg", "navbar-light", "bg-light", "sticky-top"]
+        "nav":["navbar-expand-lg", "navbar-light", "bg-light", "sticky-top"], 
+        ".passage-entry *": ["auto-hidden"]      
     };
     //BootStrap Settings end.
     const ALLSETTINGS = 

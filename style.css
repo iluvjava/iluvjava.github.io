@@ -16,6 +16,10 @@ span.highlighted-phrase
     font-weight: bold;
 }
 
+.auto-hidden
+{
+    display: none;
+}
 /*
 Bootstrap Augmentations
 */
