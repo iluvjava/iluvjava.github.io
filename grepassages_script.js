@@ -8,11 +8,11 @@
         "ul.list-group":["w-75", "p-3"], 
         "div.card": ["w-100", "mx-auto","my-2", "align-items-center", "pt-4"],
         "div.mydisplay": ["text-center", "bg-primary", "text-white"], 
-        "div.passage-entry":["container-fluid", "w-90"],
+        "div.passage-entry":["container-fluid", "w-75"],
         "h3": ["my-3"], 
-        "div.col": ["mx-0", "w-100"],
+        "div.col": ["mx-0", "w-90"],
         "nav":["navbar-expand-lg", "navbar-light", "bg-light", "sticky-top"], 
-        ".passage-entry *": ["auto-hidden"]      
+        ".passage-entry:not(.not-auto-hidden) *": ["auto-hidden"]
     };
     //BootStrap Settings end.
     const ALLSETTINGS = 
@@ -28,6 +28,8 @@
             console.log("Listener triggered on element: " + this);
         }
     }
+
+    let DropdownManu = qs(".my-dropdown-menu");
 
     "use strict";
 
@@ -101,7 +103,6 @@
      */
     async function prepareDropDownManu(funccall = null)
     {
-
         if (funccall !== null)
         {
             funccall();
