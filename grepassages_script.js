@@ -33,7 +33,7 @@
                 let id = e.target.innerText.split(" ")[1];
                 let elements_to_hide = qs(".passage-entry *:not(.auto-hidden)");
                 for 
-                (  
+                (
                     let i = 0, e = elements_to_hide[i];
                     i < elements_to_hide.length;
                     e = elements_to_hide[++i]
