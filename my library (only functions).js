@@ -1,75 +1,11 @@
-$(
-function ()
-{   
-    const MYELEMENTS = 
-    [
-        {
-            element: "div" // element tag, <, > must be used. 
-            , 
-            parent: "body" // The parent that this element will be appended to. 
-            ,
-            innertext: "yoyoyo there is some innertext for the div element."
-            ,
-            attributes: 
-            { 
-                // ID is not supported. 
-                alt: "TheAlText"
-                , 
-                src: "/example.com"
-                , 
-                "somethingelse": "stuff"
-                ,
-                "someattribues": "the key for that attributes."
-                , 
-                "somebooleanattribute": "" // use empty val for boolean attributes.  
-            }
-            ,
-            children:
-            [
-                {
-                    // recursion....
-                    // but the element can choose not to have the parent attribute.
-                    element: "a"
-                    , 
-                    attributes: 
-                    {
-                        href: "example.com"
-                        , 
-                        "yoyo-my-attribute": "attr-val" 
-                    }
-                }
-                
-            ]
-        }
-    ]
-
-    // This is really useful for bootstrap and shits. 
-    const SETTINGS = 
+(
+    ()=>
     {
-        "body": ["class1", "class2"],
-        "body *": "class3 class4"
-    };
-
-    //This is just generally very useful for managing shits. 
-    const LISTENER = 
-    {
-        "li": 
-        [
-            "mouseover mouseout"
-            ,
-            (e)=>
-            {
-console.log(e.type + "Event At: "+ e.target.innerText);
-            }
-        ]
-    }
-
-console.log("Library JS is interpreted.");
-
+    
     /**
      *  Read the object and change the object to elements with classes. 
      */
-    function applyClassSettings(settings = SETTINGS)
+    function applyClassSettings(settings)
     {
         $.each(settings, function (idx, val) {
             $(idx).addClass(val);
@@ -79,7 +15,7 @@ console.log("Library JS is interpreted.");
     /**
      * Prepare listeners from a json object. 
      */
-    function prepareTheListeners(arg = LISTENER)
+    function prepareTheListeners(arg)
     {
         $.each
         (
@@ -87,8 +23,6 @@ console.log("Library JS is interpreted.");
             function (k, v)
             {
                 $(k).on(v[0], v[1]);
-console.log(v[0]);
-console.log(v[1]);
             }
         )
     }
@@ -100,7 +34,7 @@ console.log(v[1]);
      * @param {JQ DOM} parents  
      * It's for the recursion so that children know what their parents are. 
      */
-    function convert(arg = MYELEMENTS, parents = null)
+    function convert(arg, parents = null)
     {
         for(let i = 0; i < arg.length; i++)
         {
@@ -115,7 +49,6 @@ console.log(v[1]);
                 throw new Error("Invalid Json");
             }
             NewDomMember = $(createElement(obj["element"]));
-console.log("Creating new element: " + NewDomMember);
             if ("attributes" in obj)
             {
                 createAttrs(NewDomMember, obj["attributes"]); 
@@ -124,15 +57,16 @@ console.log("Creating new element: " + NewDomMember);
             {
                 NewDomMember.text(obj["innertext"]);
             }
+            if ("classlist" in obj)
+            {
+                NewDomMember.addClass(obj["classlist"]);
+            }
             if ("children" in obj)
             {
                 // debugger;
-console.log("Children attrs is in JSON obj. ");
                 convert(obj["children"], NewDomMember);
             }
-console.log("The new Dom element is: " + $(NewDomMember));
             let Parents = parents === null? $(obj["parent"]) : parents;
-console.log("This is the parents: " + Parents);
             Parents.append(NewDomMember); 
         }
     }
@@ -168,8 +102,9 @@ console.log("This is the parents: " + Parents);
         return document.createElement(tagname);
     }
 
-    applyClassSettings();
-    prepareTheListeners();
-    convert();
+    window["applyClassSettings"] = applyClassSettings;
+    window["prepareTheListeners"] = prepareTheListeners;
+    window["convert"] = convert;
 
-});
+    }
+)();

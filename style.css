@@ -20,6 +20,12 @@ span.highlighted-phrase
 {
     display: none;
 }
+
+.hidden-anwers
+{
+    display: none;
+}
+
 /*
 Bootstrap Augmentations
 */
@@ -27,4 +33,5 @@ Bootstrap Augmentations
 {
     display: inline-block;
 }
+
 
