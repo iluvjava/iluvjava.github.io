@@ -92,13 +92,13 @@
         {   
             if(this.DisplayAnswers)
             {
-                this.TargetElement.children()[0].innerText 
-                = text===null?"All Sources are From Kaplan":text;
+                $(this.TargetElement.children()[0]).text( 
+                text===null?"All Sources are From Kaplan":text);
             }
             else
             {
-                this.TargetElement.children()[0].innerText 
-                = "All Sources are From Kaplan";
+                $(this.TargetElement.children()[0]).text( 
+                "All Sources are From Kaplan");
             }
         }
         this.Handler = (e) =>
