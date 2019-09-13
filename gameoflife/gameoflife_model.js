@@ -63,13 +63,13 @@ class My2DArray {
   }
 
   getWidth() {
-      return this.J;
-    }
-    /**
-     * Return an instance of My2DArray where each entry is either a 1 or a 0.
-     * @returns {My2DArray}
-     * 
-     */
+    return this.J;
+  }
+  /**
+   * Return an instance of My2DArray where each entry is either a 1 or a 0.
+   * @returns {My2DArray}
+   * 
+   */
   static getRandomBool2DArray(x, y) {
     let res = new My2DArray(x, y);
     for (let i = 0; i < x; i++)
@@ -111,14 +111,16 @@ class GameOfLifeLogic {
   }
 
   /**
-   * Return the number of neigbours that are alived in a certain position.
-   * * Counts the numbers of alives at that surrounded the grid at
+   * Return the number of neighbor that is alive in a certain position.
+   * * Counts the numbers of alive at that surrounded the grid at
    * * that position.
    */
   alive_count(x, y) {
     let res = 0;
     for (let i = -1; i < 2; i++)
       for (let j = -1; j < 2; j++) {
+        if (i === 0 && j === 0)
+          continue;
         res += this.CurrentFrame.get(x + i, y + j);
       }
     return res;
@@ -153,7 +155,7 @@ class GameOfLifeLogic {
    */
   update(frames = 1) {
     this._updateOneFrame();
-    return [this.CurrentFrame];  
+    return [this.CurrentFrame];
   }
 
   /**
@@ -168,7 +170,7 @@ class GameOfLifeLogic {
         newframe.set(i, j, this.should_live(i, j));
       }
     this.CurrentFrame = newframe;
-    
+
   }
 
 }
