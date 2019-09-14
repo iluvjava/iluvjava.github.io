@@ -259,5 +259,69 @@ class GameOfLifeLogic2 {
     return alivecount === 3;
   }
 
+}
+/**
+ * An attempt on making the second iteration even faster. 
+ * - When updating, we only updates alives at time t. 
+ * - 1 means current alive, 0 means current die.
+ * - when updating neighbours. 
+ *    - only updates if the cell is alive/is next to an alive neibour. 
+ *    - ?.1 => 0 neibours at t (happens when one cell is alone at time t)
+ *    - ?.n => n-1 neibours at t. 
+ *    - ? is either 1 or 0.
+ * - Normalize and update the array. 
+ */
+class GameOfLifeLogic3 {
+  
+  /**
+   * 
+   * @param {My2DArray} arr
+   * An instance of My2DArray.  
+   */
+  constructor(arr) {
+    this.Arr = arr;
+    this.W = arr.getWidth();
+    this.H = arr.getHeight();
+  }
+
+  /**
+   * Render integers into floats to 
+   * represent neighbors count. 
+   */
+  RenderNeibhbours()
+  {
+    
+  }
+
+  /**
+   * 
+   * @param {int} x 
+   * @param {int} y 
+   */
+  UpdateNeighborsAt(x, y)
+  {
+    let res = 0;
+    for (let i = -1; i < 2; i++)
+      for (let j = -1; j < 2; j++) {
+        if (i === 0 && j === 0)
+          continue;
+        res += ~~(this.Arr.get(x + i, y + j));
+      }
+    return this.Arr.set(x, y, this.Arr.get(x, y) + res/10);
+  }
+
+  /**
+   * Analyze the intermediate results, 
+   * @param {int} x
+   * @param {int} y
+   * @return {bool}
+   * true if live on to next generation. 
+   * false it doesn't live onto next generation.  
+   */
+  ShouldLive(x, y)
+  {
+
+  }
+
 
 }
