@@ -171,7 +171,7 @@ $(document).ready(() => {
       $("#MyCanvas").css("height", CanvasHeight + "px");
 
       let Arr = My2DArray.getRandomBool2DArray(GridW, GridH);
-      this.Model = new GameOfLifeLogic(Arr);
+      this.Model = new GameOfLifeLogic2(Arr);
       console.log("Model constructed: ");
       console.log(this.Model);
       this.View = new GameView(GridSize);

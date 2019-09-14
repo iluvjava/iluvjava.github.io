@@ -59,11 +59,11 @@ class My2DArray {
   }
 
   getHeight() {
-    return this.I;
+    return this.J;
   }
 
   getWidth() {
-    return this.J;
+    return this.I;
   }
   /**
    * Return an instance of My2DArray where each entry is either a 1 or a 0.
@@ -172,5 +172,92 @@ class GameOfLifeLogic {
     this.CurrentFrame = newframe;
 
   }
+}
+/**
+ * This class provides an in place algorithm for the evolution 
+ * of the array. 
+ */
+class GameOfLifeLogic2 {
+  /**
+   * 
+   * @param {My2DArray} arr
+   * An instance of My2DArray.  
+   */
+  constructor(arr) {
+    this.Arr = arr;
+    this.W = arr.getWidth();
+    this.H = arr.getHeight();
+  }
+
+
+  /**
+   * Return the number of neighbor that is alive in a certain position.
+   * * Counts the numbers of alive at that surrounded the grid at
+   * * that position.
+   */
+  alive_count(x, y) {
+    let res = 0;
+    for (let i = -1; i < 2; i++)
+      for (let j = -1; j < 2; j++) {
+        if (i === 0 && j === 0)
+          continue;
+        res += ~~(this.Arr.get(x + i, y + j));
+      }
+    return res;
+  }
+
+  /**
+   * Methods updates the current 2D array and return it inside an array. 
+   * @return {Array} 
+   * a reference to the next generation.
+   */
+  update() {
+    this.MarkAndGenerateNextGen();
+    return [this.Arr];
+  }
+
+  /**
+   * Marking on the board with float for the next generation. 
+   * if it's dead to alive, then it's set to 0.5, 
+   * if it's alive to dead, it's set to 1.5,
+   * alive stays alive, it's still 1
+   * dead stays dead, it's still 0
+   * - This is generated Inplace! 
+   */
+  MarkAndGenerateNextGen() {
+    for (let i = 0; i < this.W; i++)
+      for (let j = 0; j < this.H; j++) {
+        let v = this.Arr.get(i, j);
+        let ShouldLive = this.should_live(i, j);
+        if (v === 1 && ShouldLive) continue;
+        if (v === 0 && !ShouldLive) continue;
+        this.Arr.set(i, j, v + 0.5);
+      }
+    for (let i = 0; i < this.W; i++)
+      for (let j = 0; j < this.H; j++) {
+        if (this.Arr.get(i, j) === 0.5) this.Arr.set(i, j, 1);
+        if (this.Arr.get(i, j) === 1.5) this.Arr.set(i, j, 0);
+      }
+  }
+
+  /**
+   * 
+   * @param {int} posi1 
+   * @param {in} posi2
+   * @return {boolean}
+   * true if the cell is going to leave for the next generation. 
+   */
+  should_live(posi1, posi2) {
+    let alivecount = this.alive_count(posi1, posi2);
+    if (this.Arr.get(posi1, posi2)) {
+      if (alivecount <= 3) {
+        if (alivecount < 2) return false;
+        return true;
+      }
+      return false;
+    }
+    return alivecount === 3;
+  }
+
 
 }
