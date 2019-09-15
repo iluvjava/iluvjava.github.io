@@ -79,6 +79,36 @@ class My2DArray {
     return res;
   }
 
+  /**
+   * Return a certain size of 2d array that has all 0s in it. 
+   */
+  static getZero2DArray(W, H)
+  {
+    let res = new My2DArray(W, H);
+    for (let i = 0; i < W; i++)
+      for (let j = 0; j < H; j++) {
+        res.set(i,j, 0);
+      }
+    return res; 
+  }
+
+  /**
+   * Get a string representation of the object. 
+   * @returns {string} 
+   * 
+   */
+  ToString() {
+    let res = "";
+    for (let i = 0; i < this.I; i++) {
+      for (let j = 0; j< this.J; j++)
+      {
+        res += this.get(i, j).toFixed(1) + " ";
+      }
+      res += "\n";
+    }
+    return res; 
+  }
+
 }
 
 /**
@@ -260,19 +290,23 @@ class GameOfLifeLogic2 {
   }
 
 }
+
 /**
  * An attempt on making the second iteration even faster. 
  * - When updating, we only updates alives at time t. 
  * - 1 means current alive, 0 means current die.
- * - when updating neighbours. 
+ *!-  when updating neighbours. 
  *    - only updates if the cell is alive/is next to an alive neibour. 
  *    - ?.1 => 0 neibours at t (happens when one cell is alone at time t)
  *    - ?.n => n-1 neibours at t. 
  *    - ? is either 1 or 0.
  * - Normalize and update the array. 
+ * - Speed Improvements: 
+ *  - Inplace and O(N) where N is the number of active cells. 
+ * ? Possible further inprovements?
  */
 class GameOfLifeLogic3 {
-  
+
   /**
    * 
    * @param {My2DArray} arr
@@ -282,15 +316,61 @@ class GameOfLifeLogic3 {
     this.Arr = arr;
     this.W = arr.getWidth();
     this.H = arr.getHeight();
+    
+  }
+
+  /**
+   * @returns 
+   * Return next generation in [arr]
+   */
+  update()  
+  {
+    this.RenderNeibhbours();
+    this.Normalization();
+    return [this.Arr]; 
   }
 
   /**
    * Render integers into floats to 
    * represent neighbors count. 
+   * ! Update the only the living cells and its vicinity. (Active cells )
    */
-  RenderNeibhbours()
-  {
-    
+  RenderNeibhbours() {
+    for (let i = 0; i < this.W; i++)
+      for (let j = 0; j < this.H; j++) {
+        let CellVal = this.Arr.get(i, j);
+        if (CellVal !== 1) continue;
+
+        // Update This Alive cell at time t. 
+        this.UpdateNeighborsAt(i, j);
+
+        // Update the neighbors if it hasn't been updated. 
+        for (let m = -1; m < 2; m++)
+          for (let n = -1; n < 2; n++) {
+            if (m === 0 && n === 0) continue;
+            CellVal = this.Arr.get(m + i, n + j);
+            if (CellVal === 0 || CellVal === 1) {
+              this.UpdateNeighborsAt(m + i, n + j);
+            }
+          }
+      }
+  }
+
+  /**
+   * Decides weather a cell will live in t + 1 and 
+   * normailize all the values. 
+   */
+  Normalization() {
+    for (let i = 0; i < this.W; i++)
+      for (let j = 0; j < this.H; j++) {
+        let Cellval = this.Arr.get(i, j);
+        if (Cellval === 0 || Cellval === 1)
+        continue;
+        if (this.ShouldLive(i, j))
+          this.Arr.set(i, j, 1);
+        else
+          this.Arr.set(i, j, 0);
+      }
   }
 
   /**
@@ -298,8 +378,7 @@ class GameOfLifeLogic3 {
    * @param {int} x 
    * @param {int} y 
    */
-  UpdateNeighborsAt(x, y)
-  {
+  UpdateNeighborsAt(x, y) {
     let res = 0;
     for (let i = -1; i < 2; i++)
       for (let j = -1; j < 2; j++) {
@@ -307,21 +386,55 @@ class GameOfLifeLogic3 {
           continue;
         res += ~~(this.Arr.get(x + i, y + j));
       }
-    return this.Arr.set(x, y, this.Arr.get(x, y) + res/10);
+    return this.Arr.set(x, y, this.Arr.get(x, y) + (res + 1) / 10);
   }
 
   /**
-   * Analyze the intermediate results, 
+   * For the preprocessed array, it returns the number of neibours it has. 
+   * ! A cell is processed only if it "floats", else throw error. 
+   */
+  CountAlive(x, y) {
+    let CellVal = this.Arr.get(x, y);
+    if (CellVal === 1 || CellVal === 0) {
+      throw new Error();
+    }
+    return ((CellVal - (~~CellVal)) * 10) - 1;
+  }
+
+  /**
+   * Analyze the intermediate results, using the rules of the game. 
+   * ! Function cannot be called on with where x,y is non floating. 
    * @param {int} x
    * @param {int} y
    * @return {bool}
    * true if live on to next generation. 
    * false it doesn't live onto next generation.  
    */
-  ShouldLive(x, y)
-  {
-
+  ShouldLive(x, y) {
+    let alivecount = this.CountAlive(x, y);
+    if (this.Arr.get(x, y)) {
+      if (alivecount <= 3) {
+        if (alivecount < 2) return false;
+        return true;
+      }
+      return false;
+    }
+    return alivecount === 3;
   }
 
-
 }
+
+  // Codes for testing and shit. 
+  
+  let testarray = My2DArray.getZero2DArray(6, 6);
+  console.log("Testing with a 6x6 grid with static a life. ");
+  testarray.set(2, 2, 1);
+  testarray.set(3, 2, 1);
+  testarray.set(2, 3, 1);
+  testarray.set(3, 3, 1);
+  console.log(testarray.ToString());
+  console.log("Trying to render the neighbors: ");
+
+  
+
+  
