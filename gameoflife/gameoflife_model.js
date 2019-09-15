@@ -102,7 +102,7 @@ class My2DArray {
     for (let i = 0; i < this.I; i++) {
       for (let j = 0; j< this.J; j++)
       {
-        res += this.get(i, j).toFixed(1) + " ";
+        res += this.get(i, j).toFixed(1) + "  ";
       }
       res += "\n";
     }
@@ -295,7 +295,7 @@ class GameOfLifeLogic2 {
  * An attempt on making the second iteration even faster. 
  * - When updating, we only updates alives at time t. 
  * - 1 means current alive, 0 means current die.
- *!-  when updating neighbours. 
+ *!-  when updating neighbors. 
  *    - only updates if the cell is alive/is next to an alive neibour. 
  *    - ?.1 => 0 neibours at t (happens when one cell is alone at time t)
  *    - ?.n => n-1 neibours at t. 
@@ -325,7 +325,7 @@ class GameOfLifeLogic3 {
    */
   update()  
   {
-    this.RenderNeibhbours();
+    this.RenderNeighbors();
     this.Normalization();
     return [this.Arr]; 
   }
@@ -335,21 +335,22 @@ class GameOfLifeLogic3 {
    * represent neighbors count. 
    * ! Update the only the living cells and its vicinity. (Active cells )
    */
-  RenderNeibhbours() {
+  RenderNeighbors() {
     for (let i = 0; i < this.W; i++)
       for (let j = 0; j < this.H; j++) {
+       // if(i === 3 && j === 3)debugger; // ! bug
+
         let CellVal = this.Arr.get(i, j);
         if (CellVal !== 1) continue;
-
         // Update This Alive cell at time t. 
         this.UpdateNeighborsAt(i, j);
-
+        
         // Update the neighbors if it hasn't been updated. 
         for (let m = -1; m < 2; m++)
           for (let n = -1; n < 2; n++) {
             if (m === 0 && n === 0) continue;
             CellVal = this.Arr.get(m + i, n + j);
-            if (CellVal === 0 || CellVal === 1) {
+            if (CellVal === 0) {
               this.UpdateNeighborsAt(m + i, n + j);
             }
           }
@@ -412,7 +413,7 @@ class GameOfLifeLogic3 {
    */
   ShouldLive(x, y) {
     let alivecount = this.CountAlive(x, y);
-    if (this.Arr.get(x, y)) {
+    if (this.Arr.get(x, y) > 1) {
       if (alivecount <= 3) {
         if (alivecount < 2) return false;
         return true;
@@ -421,6 +422,7 @@ class GameOfLifeLogic3 {
     }
     return alivecount === 3;
   }
+
 
 }
 
@@ -433,8 +435,11 @@ class GameOfLifeLogic3 {
   testarray.set(2, 3, 1);
   testarray.set(3, 3, 1);
   console.log(testarray.ToString());
-  console.log("Trying to render the neighbors: ");
-
-  
-
+  let m = new GameOfLifeLogic3(testarray);
+  console.log("Trying to render cell blocks: ");
+  m.RenderNeighbors();
+  console.log(testarray.ToString());
+  console.log("Normalizing the rendered cell block: ");
+  m.Normalization();
+  console.log(testarray.ToString());
   
