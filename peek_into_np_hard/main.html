@@ -4,23 +4,44 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Peek Into Np-Hard</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"> </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async
           src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
     </script>
   </head>
   <body>
-    <h1>
+    <section>
+      <h1>
       Introduction
-    </h1>
-    <p>
-      The Knapsack Problem is the best problem to learn about NP-Hardness 
-      because it's simple, in terms of how the problem is defined. 
-      <hr>
-      It's simple also because it's approximation algorithm is not NP-Hard. 
-    </p>
-    <p>
-
-    </p>
+      </h1>
+      <p>
+        The Knapsack Problem is the best problem to learn about NP-Hardness 
+        because it's simple, in terms of how the problem is defined. 
+        <br>
+        It's simple also because it's approximation algorithm is not NP-Hard.
+      </p>
+      <p>
+        Formulation of the Knapsack problem: 
+        \(\max\{\sum_{i=1}^n p_ix_i : \sum_{i=1}^n w_i \leq b\wedge x\in\{0, 1\}^n \}\)
+        and here is a list of constraints I defined: 
+      </p>
+      <ol>
+        <li>
+          For all item's profits: \(p_i \in \mathbb{R}_+\)
+        </li>
+        <li>
+          For all item's weight: \(0 \leq w_i \leq b\)
+        </li>
+      </ol>
+    </section>
+    <section>
+      <h1>
+        Dynamic Programming
+      </h1>
+    </section>
+    <section>
+      <h1>Approximation Algorithms</h1>
+    </section>
+    
   </body>
 </html>
