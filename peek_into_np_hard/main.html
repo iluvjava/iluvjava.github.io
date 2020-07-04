@@ -24,14 +24,14 @@
       <p>
         Formulation of the Knapsack problem: 
         \(\max\{\sum_{i=1}^n p_ix_i : \sum_{i=1}^n w_i x_i \leq b\wedge x\in\{0, 1\}^n \}\)
-        and here is a list of constraints I defined: 
+        and to eliminates edge cases, let's also define that: 
       </p>
       <ol>
         <li>
           For all item's profits: \(p_i \in \mathbb{R}_+\)
         </li>
         <li>
-          For all item's weight: \(0 \leq w_i \leq b\)
+          For all item's weight: \(0 \leq w_i \leq b; w_i\in \mathbb{R}_+\)
         </li>
       </ol>
     </section>
@@ -43,8 +43,8 @@
       <p>
         Dynamic Programming is possible if one of the value, \(\vec{w}\) or 
         \(\vec{p}\) is a vector of integers. This makes things easy because 
-        the number of subsets of solution sharing the same profits/weights are 
-        more than 1. 
+        it allows the Dynamic Programming algorithm to optimize for subsets 
+        of item sharing the same weights/profits. 
         <br>
         For the contrary, imagine the weights and profits of the item is random 
         points on the real number line, then it's impossible to have the 
@@ -135,7 +135,7 @@
             </ul>
           </li>
         </ul>
-        The dual formulation will have a table with this many rows: \(\sum_{i} p_i\);  But The upper bound for profits 
+        The dual formulation will have a table with this many rows: \(\sum_{i} p_i\);  but the upper bound for profits 
         can be reduced using approximation algorithm: Greedy Algorithm. 
       </p>
     </section>
@@ -248,7 +248,7 @@
           m :=
           \frac{2}
           {
-            \underset{0 \leq i, j \leq n}{\text{min}}
+            \underset{0 \leq i, j \leq n - 1}{\text{min}}
             \{|p_i - p_j|\}
           }
         \]
