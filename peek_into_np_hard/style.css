@@ -4,3 +4,7 @@ body {
   margin-right: auto;
   font-size: large;
 }
+
+pre {
+  overflow-x: scroll;
+}

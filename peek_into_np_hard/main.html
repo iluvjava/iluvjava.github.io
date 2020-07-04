@@ -35,6 +35,7 @@
         </li>
       </ol>
     </section>
+    <hr>
     <section>
       <h1>
         Dynamic Programming
@@ -102,7 +103,7 @@
             On the table, look for entry maximizes value of T[j, w]. 
           </li>
         </ul>    
-        The complexity of the primral exact algorithm is the size o the table: 
+        The complexity of the Primal exact algorithm is the size o the table: 
         \(\mathcal{O}(n*b)\)
       </p>
       <h2>Dual</h2>
@@ -138,6 +139,7 @@
         can be reduced using approximation algorithm: Greedy Algorithm. 
       </p>
     </section>
+    <hr>
     <section>
       <h1>Approximation Algorithms</h1>
       <p>
@@ -170,7 +172,7 @@
         <h3>Claim I: </h3>
         <p>
           There there doesn't exist any subset that have an objective value that is larger than the 
-          objective value of Greedy Algorithm(This is obvious if we use prove it with linear programming). 
+          objective value of Greedy Algorithm(This is obvious if we prove it with linear programming). 
           <br>
         </p>
         <h3>Claim II: </h3>
@@ -178,7 +180,7 @@
           <br>
           <h4>Proof:</h4> 
           <br>
-          \(\tilde{S}\): The integeral solution fitured out by the greedy algorithm; \(S^+\): The optimal integral, 
+          \(\tilde{S}\): The integeral solution produced by the greedy algorithm; \(S^+\): The optimal integral, 
           solution. They are both a set of indices. 
           <br>
           Let k denotes the slack variable: \[k := b - \sum_{i\in S^+} w_i\]
@@ -206,9 +208,14 @@
         <h3>Claim I: </h3>
         This algorithm asserts an lower bound on the optimal solution, let \(p(S):= \sum_{i\in S}p_i\)
         (profits are not rounded), and let the solution found by the rounded profits be \(\tilde{S}\), and let the 
-        absolute optimal solution be: \(S^*\), then: \(p(S) \geq (1 -\epsilon)p(S^*)\). 
+        absolute optimal solution be: \(S^*\), then: \(p(\tilde{S}) \geq (1 -\epsilon)p(S^*)\). 
+        <h4>Proof: </h4>
+        \[\sum_{i\in\tilde{S}}p_i' 
+        \leq
+         p(\tilde{S})\]
       </p>
       <h2>Primal with Rounding</h2>
     </section>
+    <hr>
   </body>
 </html>
