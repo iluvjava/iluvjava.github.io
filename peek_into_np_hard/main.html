@@ -174,11 +174,27 @@
           <br>
         </p>
         <h3>Claim II: </h3>
-          The items with integer value assigned to it in the solution sum up together has objective value 
-          at least 1/2 of the absolute optimal. 
+          The slack on the optimal solution is less than the minimum item with minimum weight in the Greedy solution. 
           <br>
+          <h4>Proof:</h4> 
+          <br>
+          \(\tilde{S}\): The integeral solution fitured out by the greedy algorithm; \(S^+\): The optimal integral, 
+          solution. They are both a set of indices. 
+          <br>
+          Let k denotes the slack variable: \[k := b - \sum_{i\in S^+} w_i\]
+          <br>
+          Given the optimality assumption of \(S^+\), we know that we cannot move any element in \(\tilde{S}\) to increase
+          the objective value of \(S^+\), therefore:
+          \[\min_{i\in\tilde{S}}\{w_i\} > k\]
+          Now assume somehow, the item with minimum weight in \(\min_{i\in\tilde{S}}\{w_i\} > b/2\), then the solution 
+          of greedy must contain that one solution (there is not enough budget for 2 items), then the aboslute optimal
+          will have to be at most \(2\sum_{i\in\tilde{S^+}}p_i\), otherwise, \(S^+\) will contain an item has more 
+          value with less weight, which is a contradiction to how greedy algorithm works.  
+          <br><br>
+          For the ther case, assume that the value \(\min_{i\in\tilde{S}}\{w_i\} \leq b/2\), then \(k < b/2\), making 
+          not enough room for the absolute optimal to make more than double the profits compare to the greedy algorithm. 
       </p>
-      <h2>Primal with Rounding</h2>
+      <h2>Dual with Rounding</h2>
       <p>
         The algorithm round the profits to integers and then use the Dual DP(Dynamic Programming) to solve the problem,
         here is the algorithm: 
@@ -187,8 +203,12 @@
         where \(0 < \epsilon < 1\), then redefine \(p_i' := \lfloor{m*p_i}\rfloor\), as the rounded profits. 
         <br>
         Then use the Dual DP to solve the problem. 
+        <h3>Claim I: </h3>
+        This algorithm asserts an lower bound on the optimal solution, let \(p(S):= \sum_{i\in S}p_i\)
+        (profits are not rounded), and let the solution found by the rounded profits be \(\tilde{S}\), and let the 
+        absolute optimal solution be: \(S^*\), then: \(p(S) \geq (1 -\epsilon)p(S^*)\). 
       </p>
-      <h2>Dual with Rounding</h2>
+      <h2>Primal with Rounding</h2>
     </section>
   </body>
 </html>
