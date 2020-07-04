@@ -140,8 +140,54 @@
     </section>
     <section>
       <h1>Approximation Algorithms</h1>
+      <p>
+        We need approximation algorithms for the reasons that: 
+        <ul>
+          <li>
+            The weights and profits of items can both be real numbers, one of the way to handle that is to use 
+            an approximation algorithms. 
+          </li>
+          <li>
+            It also provides an upperbound for the branch & bound algorith, which is invaluable.    
+          </li>
+        </ul>
+      </p>
       <h2>Greedy Algorithm</h2>
+      <p>
+        The greedy algorithm ranks the items by its value (measure as \(p_i/w_i\)), and then it takes a fractional 
+        amount the the last item item that cannot fit into the budget. 
+        <br>
+        <pre>
+          Rank all items by its value. 
+          while: There is remaining budget: 
+            take the item if the budget allows
+            else: 
+              take a fractional amount of that item to exhaust all budget, then break;
+        </pre>
+        If the greedy algorithm's solution is all integers, then it's the absolute optimal (almost impossible)
+        <br>
+        This algorithm is extremely fast, and it provides an upperbound for a given Knapsack problem.
+        <h3>Claim I: </h3>
+        <p>
+          There there doesn't exist any subset that have an objective value that is larger than the 
+          objective value of Greedy Algorithm(This is obvious if we use prove it with linear programming). 
+          <br>
+        </p>
+        <h3>Claim II: </h3>
+          The items with integer value assigned to it in the solution sum up together has objective value 
+          at least 1/2 of the absolute optimal. 
+          <br>
+      </p>
       <h2>Primal with Rounding</h2>
+      <p>
+        The algorithm round the profits to integers and then use the Dual DP(Dynamic Programming) to solve the problem,
+        here is the algorithm: 
+        <br>
+        Define the multiplier as: \[m:= \frac{n}{\max_i\{p_i\}\epsilon}\] 
+        where \(0 < \epsilon < 1\), then redefine \(p_i' := \lfloor{m*p_i}\rfloor\), as the rounded profits. 
+        <br>
+        Then use the Dual DP to solve the problem. 
+      </p>
       <h2>Dual with Rounding</h2>
     </section>
   </body>
