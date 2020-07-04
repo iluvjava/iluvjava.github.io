@@ -177,11 +177,12 @@
         </p>
         <h3>Claim II: </h3>
           The slack on the optimal solution is less than the minimum item with minimum weight in the Greedy solution. 
+          The optimal solution has an objective value that is at least 1/2 of the greedy algorithm. 
           <br>
           <h4>Proof:</h4> 
           <br>
           \(\tilde{S}\): The integeral solution produced by the greedy algorithm; \(S^+\): The optimal integral, 
-          solution. They are both a set of indices. 
+          solution. They are both a set of indices.
           <br>
           Let k denotes the slack variable: \[k := b - \sum_{i\in S^+} w_i\]
           <br>
@@ -251,7 +252,7 @@
           }
         \]
         This scaling strategy will assumes that all the item's profits preserves it's orderings after the scaling, 
-        this performs will produce a smaller scaling factor and it "seems to be" preserve the optimal solution
+        this performs will produce a smaller scaling factor and it "seems to" preserve the optimal solution
         (please contact me if you know how to prove or disprove this). 
       </p>
       <h2>Primal with Rounding</h2>
