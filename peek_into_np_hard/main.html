@@ -73,15 +73,15 @@
           <li>
             The recurrence relation: 
             <ul>
-              <li>T[j + 1, w] := max(T[j, w - weight[j]] + profits[j + 1], T[j, w])</li>
-              <li>If w - weight[j] < 0 then just ignore that case. </li>
+              <li>T[j + 1, w] := max(T[j, w - \(w_j\)] + \(p_{j+1}\), T[j, w])</li>
+              <li>If w - \(w_j\) < 0 then just ignore that case. </li>
             </ul>
           </li>
           <li>
             Base Cases: 
             <ul>
-              <li>T[0, 0] := 0</li>
               <li>T[-1, \(\forall \)] := -inf</li>
+              <li>T[-1, 0] := 0</li>
             </ul>
           </li>
           <li>
@@ -91,7 +91,7 @@
             Optimization: 
             <ul>
               <li>
-                only the previous column of T is used for each iteration, so that can be simplied by storing only previous column. 
+                Only the previous column of T is used for each iteration, so that can be simplied by storing only previous column. 
               </li>
               <li>
                 We need to keep track of the solution using a dictionary. 
@@ -108,14 +108,29 @@
       <h2>Dual</h2>
       <p>
         The dual tries to minimize the weight of the solution for a fixed 
-        profits. 
-        <li>
-
-        </li>
+        profits. And it allows weights to be positive real, and the profits has to be integers. 
+        <br>
+        Inputs: \(\forall p_i: p_i \in \mathbb{Z}_+\), \(\forall w_i: w_i \in \mathbb{R}_+\)
+        <ul>
+          <li>
+            Definition of table: T[j, p]: The minimum of weights such that it gives exactly a profits of p. 
+          </li>
+          <li>
+            Recurrence: T[j, p] := min(T[j - 1, p - \(p_j\)] + \(w_j\), T[j - 1, p])
+          </li>
+          <li>
+            Base cases: T[-1, \(\forall\)] := \(+\inf\); T[-1, 0]:= 0
+          </li>
+        </ul>
+        The dual formulation is harder to find a size for the recurrence table. But The upper bound for profits can be 
+        find using approximation algorithm: Greedy Algorithm. 
       </p>
     </section>
     <section>
       <h1>Approximation Algorithms</h1>
+      <p>
+        
+      </p>
     </section>
   </body>
 </html>
