@@ -203,13 +203,13 @@
         here is the algorithm: 
         <br>
         Define the multiplier as: \[m:= \frac{n}{\max_i\{p_i\}\epsilon}\] 
-        where \(0 &lt; \epsilon &lt; 1\), then redefine \(p_i' := \lfloor{m*p_i}\rfloor\), as the rounded profits; then 
-        redefined \(p_i = m*p_i\)
+        where \(0 &lt; \epsilon &lt; 1\), then define \(p_i' := \lfloor{m*p_i}\rfloor\), as the rounded profits; then 
+        redefined \(p_i := m*p_i\)
         <br>
         Then use the Dual DP to solve the problem. 
         <h3>Claim I: </h3>
-        This algorithm asserts an lower bound on the optimal solution, let \(p(S):= \sum_{i\in S}p_i\)
-        (profits are not rounded), and let the solution found by the rounded profits be \(\tilde{S}\), and let the 
+        This algorithm asserts a lower bound on the optimal solution, let \(p(S):= \sum_{i\in S}p_i\)
+        (profits are not rounded, but rescaled), and let the solution found by the rounded profits be \(\tilde{S}\), and let the 
         absolute optimal solution be: \(S^*\), then: \(p'(\tilde{S}) = p'(S^*) \geq (1 -\epsilon)p(S^*)\). 
         <h4>Proof: </h4>
         First, it's obviously true that: \(p'(\tilde{S}) = p'(S^*)\), because DP asserts the optimality for the inputs,
@@ -223,6 +223,7 @@
         \[p'(S^*) \geq p(S^*) - n\]
         Consider the quantity: \(n\)
         \[\frac{n}{\epsilon} = \max_{i}\{p_i\} \leq p(S^*)\]
+        The \(p_i\) insdie of the maximum operator is not scaled! 
         \(S^*\) non-empty by preconditions. 
         then we have: 
         \[p'(S^*) \geq p(S^*) - n \geq p(S^*) - \epsilon p(S^*) = (1 - \epsilon)p(S^*)\]
@@ -252,7 +253,7 @@
           }
         \]
         This scaling strategy will asserts that all the item's profits preserves it's orderings after the scaling, 
-        this performs will produce a smaller scaling factor and it "seems to" preserve the optimal solution
+        this will produce a smaller scaling factor and it "seems to" preserve the optimal solution
         (please contact me if you know how to prove or disprove this). 
       </p>
       <h2>Primal with Rounding</h2>
