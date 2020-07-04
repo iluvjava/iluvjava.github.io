@@ -108,7 +108,7 @@
       <h2>Dual</h2>
       <p>
         The dual tries to minimize the weight of the solution for a fixed 
-        profits. And it allows weights to be positive real, and the profits has to be integers. 
+        profits. And it allows weights to be positive real, and the profits has to be integers.
         <br>
         Inputs: \(\forall p_i: p_i \in \mathbb{Z}_+\), \(\forall w_i: w_i \in \mathbb{R}_+\)
         <ul>
@@ -116,21 +116,33 @@
             Definition of table: T[j, p]: The minimum of weights such that it gives exactly a profits of p. 
           </li>
           <li>
-            Recurrence: T[j, p] := min(T[j - 1, p - \(p_j\)] + \(w_j\), T[j - 1, p])
+            Recurrence: 
+            <ul>
+              <li> T[j, p] := min(T[j - 1, p - \(p_j\)] + \(w_j\), T[j - 1, p])</li>
+              <li>If p - \(p_j\) < 0, then just ignore that case. </li>
+            </ul>
+           
           </li>
           <li>
-            Base cases: T[-1, \(\forall\)] := \(+\inf\); T[-1, 0]:= 0
+            Order of update: column by columns. 
+          </li>
+          <li>
+            Base cases: 
+            <ul>
+              <li>T[-1, \(\forall\)] := \(+\inf\);</li>
+              <li> T[-1, 0]:= 0 </li>
+            </ul>
           </li>
         </ul>
-        The dual formulation is harder to find a size for the recurrence table. But The upper bound for profits can be 
-        find using approximation algorithm: Greedy Algorithm. 
+        The dual formulation will have a table with this many rows: \(\sum_{i} p_i\);  But The upper bound for profits 
+        can be reduced using approximation algorithm: Greedy Algorithm. 
       </p>
     </section>
     <section>
       <h1>Approximation Algorithms</h1>
-      <p>
-        
-      </p>
+      <h2>Greedy Algorithm</h2>
+      <h2>Primal with Rounding</h2>
+      <h2>Dual with Rounding</h2>
     </section>
   </body>
 </html>
