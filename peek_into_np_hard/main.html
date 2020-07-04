@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width">
     <title>Peek Into Np-Hard</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -22,7 +23,7 @@
       </p>
       <p>
         Formulation of the Knapsack problem: 
-        \(\max\{\sum_{i=1}^n p_ix_i : \sum_{i=1}^n w_i \leq b\wedge x\in\{0, 1\}^n \}\)
+        \(\max\{\sum_{i=1}^n p_ix_i : \sum_{i=1}^n w_i x_i \leq b\wedge x\in\{0, 1\}^n \}\)
         and here is a list of constraints I defined: 
       </p>
       <ol>
@@ -55,8 +56,55 @@
         </ol>
         This is one of the applications of duality in Linear Programming. 
       </p>
+      
       <h2>Primal</h2>
-      <p></p>
+      <p>
+        Inputs: \(\forall w_i : w_i \in \mathbb{Z}_+\), \(\forall p_i: p_i \in \mathbb{R}_+\)
+        <br>
+        Observe that, one of the vector can have numbers that are real. 
+        <ul>
+          <li>
+            T[j, w] := the profits of items using sub array from 0 to j such 
+            that it sums up to weight of exactly w. 
+            <br>
+            It's up to the reader to make of sense that: \(0 \leq j \leq n-1\),
+            \(0\leq w \leq b\)
+          </li>
+          <li>
+            The recurrence relation: 
+            <ul>
+              <li>T[j + 1, w] := max(T[j, w - weight[j]] + profits[j + 1], T[j, w])</li>
+              <li>If w - weight[j] < 0 then just ignore that case. </li>
+            </ul>
+          </li>
+          <li>
+            Base Cases: 
+            <ul>
+              <li>T[0, 0] := 0</li>
+              <li>T[-1, \(\forall \)] := -inf</li>
+            </ul>
+          </li>
+          <li>
+            Order for updating: column, by columns. 
+          </li>
+          <li>
+            Optimization: 
+            <ul>
+              <li>
+                only the previous column of T is used for each iteration, so that can be simplied by storing only previous column. 
+              </li>
+              <li>
+                We need to keep track of the solution using a dictionary. 
+              </li>
+            </ul>
+          </li>
+          <li>
+            On the table, look for entry maximizes value of T[j, w]. 
+          </li>
+        </ul>    
+        The complexity of the primral exact algorithm is the size o the table: 
+        \(\mathcal{O}(n*b)\)
+      </p>
     </section>
     <section>
       <h1>Approximation Algorithms</h1>
