@@ -310,10 +310,8 @@ Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
     ItemsIncluded=ItemsIncludedCopied2, 
     Budget=Budget
   )
-
-  Compare both the solutions from the subproblem, 
-  and return the objective value. 
-  Update the global optimal if one of the sub problem has a better optimal.
+  // Update the global objective value for the problem. 
+  ObjectiveGlobal := max(ObjectiveGlobal, Objective, IncludeIt, NotIncludeIt)
         </pre>
       </p>
 
