@@ -81,7 +81,6 @@
      */
     function createAttrs(domelement, jobject)
     {
-
         for (k in jobject)
         {
             let v = jobject[k];
@@ -105,6 +104,7 @@
     window["applyClassSettings"] = applyClassSettings;
     window["prepareTheListeners"] = prepareTheListeners;
     window["convert"] = convert;
+
 
     }
 )();

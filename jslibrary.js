@@ -87,8 +87,8 @@ console.log("Library JS is interpreted.");
             function (k, v)
             {
                 $(k).on(v[0], v[1]);
-console.log(v[0]);
-console.log(v[1]);
+                console.log(v[0]);
+                console.log(v[1]);
             }
         )
     }
