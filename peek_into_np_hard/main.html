@@ -170,7 +170,8 @@
             else: 
               take a fractional amount of that item to exhaust all budget, then break;
         </pre>
-        If the greedy algorithm's solution is all integers, then it's the absolute optimal (almost impossible)
+        If the greedy algorithm's solution is all integers, then it's the absolute optimal 
+        (almost impossible, if this happens, and you made the Knapsack problem yourself, you must be drunk)
         <br>
         This algorithm is extremely fast, and it provides an upperbound for a given Knapsack problem.
         <h3>Claim I: </h3>
@@ -227,7 +228,7 @@
         \[p'(S^*) \geq p(S^*) - n\]
         Consider the quantity: \(n\)
         \[\frac{n}{\epsilon} = \max_{i}\{p_i\} \leq p(S^*)\]
-        The \(p_i\) insdie of the maximum operator is not scaled! 
+        The \(p_i\) inside of the maximum operator is not scaled! 
         \(S^*\) non-empty by preconditions. 
         then we have: 
         \[p'(S^*) \geq p(S^*) - n \geq p(S^*) - \epsilon p(S^*) = (1 - \epsilon)p(S^*)\]
@@ -267,9 +268,55 @@
       <h2>Branch & Bound Algorithm</h2>
       <p>
         The branch and bound algorithm uses a heuristic algorithm that produces an upper bound 
-        for maximization problem. Here we are going to use different heuristic to aid 
-        with the algorithm. 
+        for maximization problem. Here we are going to use different heuristics to aid 
+        with the algorithm.
+        <br>
+        A branch and bound algorithm is an improvement on bruteforce search algorithm 
+        for NP-Hard problem, instead of searching all the solution spaces, it uses heuristic 
+        algorithms that is fast(Approximation algorithms) to determine which subset 
+        of solutions spaces it's going to investigate. 
+        <br>
+        The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
+        very accurate.
+        <br>
+        <pre>
+Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
+  if Budget < min(items'weight):
+    return PartialObject // Slack is too small, current PartialObjective cannot be increased. 
+  Objective := Items.Heuristic() + PartialObjective
+  if Objective <= ObjGlobal: 
+    return Objective // All sub problems of current Items cannot improve the global objective. 
+  GreedySolution = Items.Greedy()
+  x := Fractional item of the GreedySolution
+  
+  // x is in global optimal solution: 
+  ItemsCopied1 := Items.copy().remove(x)
+  ItemsIncludedCopied1 := ItemsIncluded.copy().add(x)
+  IncludeIt := Soln(
+    ObjGlobal=Objective, // New Improved Objective
+    PartialObjective=sum_profits(ItemsCopied1), // Including the items into the new objective value. 
+    Items=ItemsCopied1,  // This items must be used, hence it's removed from items set. 
+    ItemsIncluded=ItemsIncludedCopied2, // x is included, hence it'a added to this set.
+    Budget=Bedget-weight(x)
+  )
+
+  // x is not in the global optimal solution:
+  ItemsCopied2 := Items.copy().remove(x)
+  ItemsIncludedCopied2 :=  ItemsIncluded.copy()
+  NotIncludeIt := Soln(
+    ObjGlobal=Objective, 
+    PartialObjective=sum_profits(ItemsCopied2),
+    Items=ItemsCopied2,
+    ItemsIncluded=ItemsIncludedCopied2, 
+    Budget=Budget
+  )
+
+  Compare both the solutions from the subproblem, 
+  and return the objective value. 
+  Update the global optimal if one of the sub problem has a better optimal.
+        </pre>
       </p>
+
     </section>
   </body>
 </html>

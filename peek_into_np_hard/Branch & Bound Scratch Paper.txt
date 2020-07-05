@@ -1,0 +1,52 @@
+Branch & Bound Scratch Paper
+
+inputs:
+* ObjGlobal: The maximum objective value ever achieved by the algorithm. 
+* PartialObjective: The objective value passed by the caller of teh function. 
+* Items: The set of items that we can choose from. 
+  * Items: List of tuples, profits and weights. 
+  * Immutable. 
+* ItemsIncluded: This is the solution passed down by the caller of theh function. 
+  * It's a set of items that are contained in the solution. 
+  * Immutable.
+* Budget:
+  * It changes. 
+! Items IntemsIncluded and Items are 2 disjoint sets, if items are included 
+by the caller, the calles are not going to do anything about it. 
+
+
+
+Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
+  if Budget < min(items'weight):
+    return PartialObject // Slack is too small, current PartialObjective cannot be increased. 
+  Objective := Items.Heuristic() + PartialObjective
+  if Objective <= ObjGlobal: 
+    return Objective // All sub problems of current Items cannot improve the global objective. 
+  GreedySolution = Items.Greedy()
+  x := Fractional item of the GreedySolution
+  
+  // x is in global optimal solution: 
+  ItemsCopied1 := Items.copy().remove(x)
+  ItemsIncludedCopied1 := ItemsIncluded.copy().add(x)
+  IncludeIt := Soln(
+    ObjGlobal=Objective, // New Improved Objective
+    PartialObjective=sum_profits(ItemsCopied1), // Including the items into the new objective value. 
+    Items=ItemsCopied1,  // This items must be used, hence it's removed from items set. 
+    ItemsIncluded=ItemsIncludedCopied2, // x is included, hence it'a added to this set.
+    Budget=Bedget-weight(x)
+  )
+
+  // x is not in the global optimal solution:
+  ItemsCopied2 := Items.copy().remove(x)
+  ItemsIncludedCopied2 :=  ItemsIncluded.copy()
+  NotIncludeIt := Soln(
+    ObjGlobal=Objective, 
+    PartialObjective=sum_profits(ItemsCopied2),
+    Items=ItemsCopied2,
+    ItemsIncluded=ItemsIncludedCopied2, 
+    Budget=Budget
+  )
+
+  Compare both the solutions from the subproblem, 
+  and return the objective value. 
+  Update the global optimal if one of the sub problem has a better optimal.
