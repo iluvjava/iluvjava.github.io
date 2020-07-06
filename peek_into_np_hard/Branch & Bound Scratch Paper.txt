@@ -51,4 +51,5 @@ Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
   and return the objective value. 
   Update the global optimal if one of the sub problem has a better optimal.
 
-  https://prod.liveshare.vsengsaas.visualstudio.com/join?CF901B11ED1927BFCA678C867E42EB31B9E7
+Ok, This is probably not safe, we might need a better solution but so far it's Ok. 
+https://prod.liveshare.vsengsaas.visualstudio.com/join?CF901B11ED1927BFCA678C867E42EB31B9E7

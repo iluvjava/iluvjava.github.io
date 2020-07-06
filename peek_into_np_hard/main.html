@@ -2,291 +2,334 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="style.css">
+    
     <meta name="viewport" content="width=device-width">
     <title>Peek Into Np-Hard</title>
+    
+    <!--For Bootstrap style-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Bootstrap end-->
+    
+    <!--MyStyle-->
+    <link rel="stylesheet" href="style.css">
+    <!--End-->
+
+    <!--For MathJax-->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async
           src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
     </script>
+    <!--For MathJax Ends-->
   </head>
   <body>
-    <section>
-      <h1>
-      Introduction
-      </h1>
-      <p>
-        The Knapsack Problem is the best problem to learn about NP-Hardness 
-        because it's simple, in terms of how the problem is defined. 
-        <br>
-        It's simple also because it's approximation algorithm is not NP-Hard.
-      </p>
-      <p>
-        Formulation of the Knapsack problem: 
-        \(\max\{\sum_{i=1}^n p_ix_i : \sum_{i=1}^n w_i x_i \leq b\wedge x\in\{0, 1\}^n \}\)
-        and to eliminates edge cases, let's also define that: 
-      </p>
-      <ol>
-        <li>
-          For all item's profits: \(p_i \in \mathbb{R}_+\)
-        </li>
-        <li>
-          For all item's weight: \(0 \leq w_i \leq b; w_i\in \mathbb{R}_+\)
-        </li>
-        <li>
-          I am going to use index starting with 0 and ends with n-1 for all 
-          parts after this: 
-        </li>
-      </ol>
-    </section>
-    <hr>
-    <section>
-      <h1>
-        Dynamic Programming
-      </h1>
-      <p>
-        Dynamic Programming is possible if one of the value, \(\vec{w}\) or 
-        \(\vec{p}\) is a vector of integers. This makes things easy because 
-        it allows the Dynamic Programming algorithm to optimize for subsets 
-        of item sharing the same weights/profits. 
-        <br>
-        For the contrary, imagine the weights and profits of the item is random 
-        points on the real number line, then it's impossible to have the 
-        different subsets having the same profits/weights. 
-        <br>
-        There are 2 solution to solving the Knapsack problem: 
-        <ol>
-          <li>Primal: Maximizing the profits for a certain amount of weights.</li>
-          <li>Dual: Minimizing the weights for a certain amount profits. </li>
-        </ol>
-        This is one of the applications of duality in Linear Programming. 
-      </p>
-      
-      <h2>Primal</h2>
-      <p>
-        Inputs: \(\forall w_i : w_i \in \mathbb{Z}_+\), \(\forall p_i: p_i \in \mathbb{R}_+\)
-        <br>
-        Observe that, one of the vector can have numbers that are real. 
-        <ul>
-          <li>
-            T[j, w] := the profits of items using sub array from 0 to j such 
-            that it sums up to weight of exactly w. 
-            <br>
-            It's up to the reader to make of sense that: \(0 \leq j \leq n-1\),
-            \(0\leq w \leq b\)
-          </li>
-          <li>
-            The recurrence relation: 
-            <ul>
-              <li>T[j + 1, w] := max(T[j, w - \(w_j\)] + \(p_{j+1}\), T[j, w])</li>
-              <li>If w - \(w_j\) < 0 then just ignore that case. </li>
-            </ul>
-          </li>
-          <li>
-            Base Cases: 
-            <ul>
-              <li>T[-1, \(\forall \)] := -inf</li>
-              <li>T[-1, 0] := 0</li>
-            </ul>
-          </li>
-          <li>
-            Order for updating: column, by columns. 
-          </li>
-          <li>
-            Optimization: 
-            <ul>
-              <li>
-                Only the previous column of T is used for each iteration, so that can be simplied by storing only previous column. 
-              </li>
-              <li>
-                We need to keep track of the solution using a dictionary. 
-              </li>
-            </ul>
-          </li>
-          <li>
-            On the table, look for entry maximizes value of T[j, w]. 
-          </li>
-        </ul>    
-        The complexity of the Primal exact algorithm is the size o the table: 
-        \(\mathcal{O}(n*b)\)
-      </p>
-      <h2>Dual</h2>
-      <p>
-        The dual tries to minimize the weight of the solution for a fixed 
-        profits. And it allows weights to be positive real, and the profits has to be integers.
-        <br>
-        Inputs: \(\forall p_i: p_i \in \mathbb{Z}_+\), \(\forall w_i: w_i \in \mathbb{R}_+\)
-        <ul>
-          <li>
-            Definition of table: T[j, p]: The minimum of weights such that it gives exactly a profits of p. 
-          </li>
-          <li>
-            Recurrence: 
-            <ul>
-              <li> T[j, p] := min(T[j - 1, p - \(p_j\)] + \(w_j\), T[j - 1, p])</li>
-              <li>If p - \(p_j\) < 0, then just ignore that case. </li>
-            </ul>
-           
-          </li>
-          <li>
-            Order of update: column by columns. 
-          </li>
-          <li>
-            Base cases: 
-            <ul>
-              <li>T[-1, \(\forall\)] := \(+\inf\);</li>
-              <li> T[-1, 0]:= 0 </li>
-            </ul>
-          </li>
-        </ul>
-        The dual formulation will have a table with this many rows: \(\sum_{i} p_i\);  but the upper bound for profits 
-        can be reduced using approximation algorithm: Greedy Algorithm. 
-      </p>
-    </section>
-    <hr>
-    <section>
-      <h1>Approximation Algorithms</h1>
-      <p>
-        We need approximation algorithms for the reasons that: 
-        <ul>
-          <li>
-            The weights and profits of items can both be real numbers, one of the way to handle that is to use 
-            an approximation algorithms. 
-          </li>
-          <li>
-            It also provides an upperbound for the branch & bound algorith, which is invaluable.    
-          </li>
-        </ul>
-      </p>
-      <h2>Greedy Algorithm</h2>
-      <p>
-        The greedy algorithm ranks the items by its value (measure as \(p_i/w_i\)), and then it takes a fractional 
-        amount the the last item item that cannot fit into the budget. 
-        <br>
-        <pre>
-          Rank all items by its value. 
-          while: There is remaining budget: 
-            take the item if the budget allows
-            else: 
-              take a fractional amount of that item to exhaust all budget, then break;
-        </pre>
-        If the greedy algorithm's solution is all integers, then it's the absolute optimal 
-        (almost impossible, if this happens, and you made the Knapsack problem yourself, you must be drunk)
-        <br>
-        This algorithm is extremely fast, and it provides an upperbound for a given Knapsack problem.
-        <h3>Claim I: </h3>
+    <nav class="navbar sticky-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../index.html">My WebPages</a>
+        </div>
+      </div>
+    </nav>
+    <div id="side-bar">
+      <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#dp">Dynamic Programming</a></li>
+        <li><a href="#approx">Approximation Algorithms</a></li>
+        <li><a href="#bb">Branch and Bound algorithms</a></li>
+      </ul>
+    </div>
+    <div id="main-content">
+      <section id="intro">
+        <h1>
+        Introduction
+        </h1>
         <p>
-          There there doesn't exist any subset that have an objective value that is larger than the 
-          objective value of Greedy Algorithm(This is obvious if we prove it with linear programming). 
+          The Knapsack Problem is the best problem to learn about NP-Hardness 
+          because it's simple, in terms of how the problem is defined. 
           <br>
+          It's simple also because it's approximation algorithm is not NP-Hard.
         </p>
-        <h3>Claim II: </h3>
-          The slack on the optimal solution is less than the minimum item with minimum weight in the Greedy solution. 
-          The optimal solution has an objective value that is at least 1/2 of the greedy algorithm. 
-          <br>
-          <h4>Proof:</h4> 
-          <br>
-          \(\tilde{S}\): The integeral solution produced by the greedy algorithm; \(S^+\): The optimal integral, 
-          solution. They are both a set of indices.
-          <br>
-          Let k denotes the slack variable: \[k := b - \sum_{i\in S^+} w_i\]
-          <br>
-          Given the optimality assumption of \(S^+\), we know that we cannot move any element in \(\tilde{S}\) to increase
-          the objective value of \(S^+\), therefore:
-          \[\min_{i\in\tilde{S}}\{w_i\} > k\]
-          Now assume somehow, the item with minimum weight in \(\min_{i\in\tilde{S}}\{w_i\} > b/2\), then the solution 
-          of greedy must contain that one solution (there is not enough budget for 2 items), then the aboslute optimal
-          will have to be at most \(2\sum_{i\in\tilde{S^+}}p_i\), otherwise, \(S^+\) will contain an item has more 
-          value with less weight, which is a contradiction to how greedy algorithm works.  
-          <br><br>
-          For the ther case, assume that the value \(\min_{i\in\tilde{S}}\{w_i\} \leq b/2\), then \(k &lt; b/2\), making 
-          not enough room for the absolute optimal to make more than double the profits compare to the greedy algorithm. 
-      </p>
-      <h2>Dual with Rounding</h2>
-      <p>
-        The algorithm round the profits to integers and then use the Dual DP(Dynamic Programming) to solve the problem,
-        here is the algorithm: 
-        <br>
-        Define the multiplier as: \[m:= \frac{n}{\max_i\{p_i\}\epsilon}\] 
-        where \(0 &lt; \epsilon &lt; 1\), then define \(p_i' := \lfloor{m*p_i}\rfloor\), as the rounded profits; then 
-        redefined \(p_i := m*p_i\)
-        <br>
-        Then use the Dual DP to solve the problem. 
-        <h3>Claim I: </h3>
-        This algorithm asserts a lower bound on the optimal solution, let \(p(S):= \sum_{i\in S}p_i\)
-        (profits are not rounded, but rescaled), and let the solution found by the rounded profits be \(\tilde{S}\), and let the 
-        absolute optimal solution be: \(S^*\), then: \(p'(\tilde{S}) = p'(S^*) \geq (1 -\epsilon)p(S^*)\). 
-        <h4>Proof: </h4>
-        First, it's obviously true that: \(p'(\tilde{S}) = p'(S^*)\), because DP asserts the optimality for the inputs,
-        hence there is no way the absolute optimal can have high profits in the rounded problem. 
-        <br>
-        Starts with this basic facts: 
-
-        \[\lfloor p_i \rfloor + 1 \geq p_i\]
-        \[\lfloor p_i \rfloor \geq p_i - 1\]
-        Then we have: 
-        \[p'(S^*) \geq p(S^*) - n\]
-        Consider the quantity: \(n\)
-        \[\frac{n}{\epsilon} = \max_{i}\{p_i\} \leq p(S^*)\]
-        The \(p_i\) inside of the maximum operator is not scaled! 
-        \(S^*\) non-empty by preconditions. 
-        then we have: 
-        \[p'(S^*) \geq p(S^*) - n \geq p(S^*) - \epsilon p(S^*) = (1 - \epsilon)p(S^*)\]
-        <br>
-        Therefore we know the this algorithm must give us an optimal solution at least \(\epsilon\) portion of the optimality. 
-        <br>
-        Furthermore, it also gives us an upperbound on the solution which is: 
-        \[
-          \frac{p'(\tilde{S})}{1 - \epsilon} \geq p(S^*)
-        \]
-        and then: 
-        \[
-          \frac{p'(\tilde{S})}{m(1 - \epsilon)} \geq \frac{p(S^*)}{m} = Opt_{abs}
-        \]
-        Which is an upper bound, as \(\epsilon \rightarrow 0\), we know that \(m\) increases together with 
-        \(p'(\tilde{S})\), and it will eventually be equal because the round error gets less as the multiplier increase. 
-        <h3>Claim II:</h3>
-        There is another rounding strategy that might appear to be more appealing but I don't know yet how to prove it. 
-        The new multiplier is set to separate profits in such a way that after scaling, item's profits lies within 
-        their integer slots. Then m can be defined as: 
-        \[
-          m :=
-          \frac{2}
-          {
-            \underset{0 \leq i, j \leq n - 1}{\text{min}}
-            \{|p_i - p_j|\}
-          }
-        \]
-        This scaling strategy will asserts that all the item's profits preserves it's orderings after the scaling, 
-        this will produce a smaller scaling factor and it "seems to" preserve the optimal solution
-        (please contact me if you know how to prove or disprove this). 
-      </p>
-      <h2>Primal with Rounding</h2>
-    </section>
-    <hr>
-    <section>
-      <h2>Branch & Bound Algorithm</h2>
-      <p>
-        The branch and bound algorithm uses a heuristic algorithm that produces an upper bound 
-        for maximization problem. Here we are going to use different heuristics to aid 
-        with the algorithm.
-        <br>
-        A branch and bound algorithm is an improvement on bruteforce search algorithm 
-        for NP-Hard problem, instead of searching all the solution spaces, it uses heuristic 
-        algorithms that is fast(Approximation algorithms) to determine which subset 
-        of solutions spaces it's going to investigate. 
-        <br>
-        The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
-        very accurate.
-        <br>
-        Here is the meaning for all the input variables: 
-        <ul>
+        <p>
+          Formulation of the Knapsack problem: 
+          \(\max\{\sum_{i=1}^n p_ix_i : \sum_{i=1}^n w_i x_i \leq b\wedge x\in\{0, 1\}^n \}\)
+          and to eliminates edge cases, let's also define that: 
+        </p>
+        <ol>
           <li>
-            
+            For all item's profits: \(p_i \in \mathbb{R}_+\)
           </li>
-          <li></li>
-        </ul>
-        <pre>
+          <li>
+            For all item's weight: \(0 \leq w_i \leq b; w_i\in \mathbb{R}_+\)
+          </li>
+          <li>
+            I am going to use index starting with 0 and ends with n-1 for all 
+            parts after this: 
+          </li>
+        </ol>
+      </section>
+      <hr>
+      <section id="dp">
+        <h1>
+          Dynamic Programming
+        </h1>
+        <p>
+          Dynamic Programming is possible if one of the value, \(\vec{w}\) or 
+          \(\vec{p}\) is a vector of integers. This makes things easy because 
+          it allows the Dynamic Programming algorithm to optimize for subsets 
+          of item sharing the same weights/profits. 
+          <br>
+          For the contrary, imagine the weights and profits of the item is random 
+          points on the real number line, then it's impossible to have the 
+          different subsets having the same profits/weights. 
+          <br>
+          There are 2 solution to solving the Knapsack problem: 
+          <ol>
+            <li>Primal: Maximizing the profits for a certain amount of weights.</li>
+            <li>Dual: Minimizing the weights for a certain amount profits. </li>
+          </ol>
+          This is one of the applications of duality in Linear Programming. 
+        </p>
+        
+        <h2>Primal</h2>
+        <p>
+          Inputs: \(\forall w_i : w_i \in \mathbb{Z}_+\), \(\forall p_i: p_i \in \mathbb{R}_+\)
+          <br>
+          Observe that, one of the vector can have numbers that are real. 
+          <ul>
+            <li>
+              T[j, w] := the profits of items using sub array from 0 to j such 
+              that it sums up to weight of exactly w. 
+              <br>
+              It's up to the reader to make of sense that: \(0 \leq j \leq n-1\),
+              \(0\leq w \leq b\)
+            </li>
+            <li>
+              The recurrence relation: 
+              <ul>
+                <li>T[j + 1, w] := max(T[j, w - \(w_j\)] + \(p_{j+1}\), T[j, w])</li>
+                <li>If w - \(w_j\) < 0 then just ignore that case. </li>
+              </ul>
+            </li>
+            <li>
+              Base Cases: 
+              <ul>
+                <li>T[-1, \(\forall \)] := -inf</li>
+                <li>T[-1, 0] := 0</li>
+              </ul>
+            </li>
+            <li>
+              Order for updating: column, by columns. 
+            </li>
+            <li>
+              Optimization: 
+              <ul>
+                <li>
+                  Only the previous column of T is used for each iteration, so that can be simplied by storing only previous column. 
+                </li>
+                <li>
+                  We need to keep track of the solution using a dictionary. 
+                </li>
+              </ul>
+            </li>
+            <li>
+              On the table, look for entry maximizes value of T[j, w]. 
+            </li>
+          </ul>    
+          The complexity of the Primal exact algorithm is the size o the table: 
+          \(\mathcal{O}(n*b)\)
+        </p>
+        <h2>Dual</h2>
+        <p>
+          The dual tries to minimize the weight of the solution for a fixed 
+          profits. And it allows weights to be positive real, and the profits has to be integers.
+          <br>
+          Inputs: \(\forall p_i: p_i \in \mathbb{Z}_+\), \(\forall w_i: w_i \in \mathbb{R}_+\)
+          <ul>
+            <li>
+              Definition of table: T[j, p]: The minimum of weights such that it gives exactly a profits of p. 
+            </li>
+            <li>
+              Recurrence: 
+              <ul>
+                <li> T[j, p] := min(T[j - 1, p - \(p_j\)] + \(w_j\), T[j - 1, p])</li>
+                <li>If p - \(p_j\) < 0, then just ignore that case. </li>
+              </ul>
+            </li>
+            <li>
+              Order of update: column by columns. 
+            </li>
+            <li>
+              Base cases: 
+              <ul>
+                <li>T[-1, \(\forall\)] := \(+\inf\);</li>
+                <li> T[-1, 0]:= 0 </li>
+              </ul>
+            </li>
+          </ul>
+          The dual formulation will have a table with this many rows: \(\sum_{i} p_i\);  but the upper bound for profits 
+          can be reduced using approximation algorithm: Greedy Algorithm. 
+        </p>
+      </section>
+      <hr>
+      <section id="approx">
+        <h1>Approximation Algorithms</h1>
+        <p>
+          We need approximation algorithms for the reasons that: 
+          <ul>
+            <li>
+              The weights and profits of items can both be real numbers, one of the way to handle that is to use 
+              an approximation algorithms. 
+            </li>
+            <li>
+              It also provides an upperbound for the branch & bound algorith, which is invaluable.    
+            </li>
+          </ul>
+        </p>
+        <h2>Greedy Algorithm</h2>
+        <p>
+          The greedy algorithm ranks the items by its value (measure as \(p_i/w_i\)), and then it takes a fractional 
+          amount the the last item item that cannot fit into the budget. 
+          <br>
+          <pre>
+            Rank all items by its value. 
+            while: There is remaining budget: 
+              take the item if the budget allows
+              else: 
+                take a fractional amount of that item to exhaust all budget, then break;
+          </pre>
+          If the greedy algorithm's solution is all integers, then it's the absolute optimal 
+          (almost impossible, if this happens, and you made the Knapsack problem yourself, you must be drunk)
+          <br>
+          This algorithm is extremely fast, and it provides an upperbound for a given Knapsack problem.
+          <h3>Claim I: </h3>
+          <p>
+            There there doesn't exist any subset that have an objective value that is larger than the 
+            objective value of Greedy Algorithm(This is obvious if we prove it with linear programming). 
+            <br>
+          </p>
+          <h3>Claim II: </h3>
+          <p>
+            The slack on the optimal solution is less than the minimum item with minimum weight in the Greedy solution. 
+            The optimal solution has an objective value that is at least 1/2 of the greedy algorithm. 
+            <br>
+            <h4>Proof:</h4>
+            <p>
+              \(\tilde{S}\): The integeral solution produced by the greedy algorithm; \(S^+\): The optimal integral, 
+              solution. They are both a set of indices.
+              <br>
+              Let k denotes the slack variable: \[k := b - \sum_{i\in S^+} w_i\]
+              <br>
+              Given the optimality assumption of \(S^+\), we know that we cannot move any element in \(\tilde{S}\) to increase
+              the objective value of \(S^+\), therefore:
+              \[\min_{i\in\tilde{S}}\{w_i\} > k\]
+              Now assume somehow, the item with minimum weight in \(\min_{i\in\tilde{S}}\{w_i\} > b/2\), then the solution 
+              of greedy must contain that one solution (there is not enough budget for 2 items), then the aboslute optimal
+              will have to be at most \(2\sum_{i\in\tilde{S^+}}p_i\), otherwise, \(S^+\) will contain an item has more 
+              value with less weight, which is a contradiction to how greedy algorithm works.  
+              <br><br>
+              For the ther case, assume that the value \(\min_{i\in\tilde{S}}\{w_i\} \leq b/2\), then \(k &lt; b/2\), making 
+              not enough room for the absolute optimal to make more than double the profits compare to the greedy algorithm.
+            </p> 
+          </p>
+        </p>
+        <h2>Dual with Rounding</h2>
+        <p>
+          The algorithm round the profits to integers and then use the Dual DP(Dynamic Programming) to solve the problem,
+          here is the algorithm: 
+          <br>
+          Define the multiplier as: \[m:= \frac{n}{\max_i\{p_i\}\epsilon}\] 
+          where \(0 &lt; \epsilon &lt; 1\), then define \(p_i' := \lfloor{m*p_i}\rfloor\), as the rounded profits; then 
+          redefined \(p_i := m*p_i\)
+          <br>
+          Then use the Dual DP to solve the problem. 
+          <h3>Claim I: </h3>
+          <p>
+            This algorithm asserts a lower bound on the optimal solution, let \(p(S):= \sum_{i\in S}p_i\)
+            (profits are not rounded, but rescaled), and let the solution found by the rounded profits be \(\tilde{S}\), and let the 
+            absolute optimal solution be: \(S^*\), then: \(p'(\tilde{S}) = p'(S^*) \geq (1 -\epsilon)p(S^*)\). 
+            <h4>Proof: </h4>
+            <p>
+              First, it's obviously true that: \(p'(\tilde{S}) = p'(S^*)\), because DP asserts the optimality for the inputs,
+              hence there is no way the absolute optimal can have high profits in the rounded problem. 
+              <br>
+              Starts with this basic facts: 
+
+              \[\lfloor p_i \rfloor + 1 \geq p_i\]
+              \[\lfloor p_i \rfloor \geq p_i - 1\]
+              Then we have: 
+              \[p'(S^*) \geq p(S^*) - n\]
+              Consider the quantity: \(n\)
+              \[\frac{n}{\epsilon} = \max_{i}\{p_i\} \leq p(S^*)\]
+              The \(p_i\) inside of the maximum operator is not scaled! 
+              \(S^*\) non-empty by preconditions. 
+              then we have: 
+              \[p'(S^*) \geq p(S^*) - n \geq p(S^*) - \epsilon p(S^*) = (1 - \epsilon)p(S^*)\]
+              <br>
+              Therefore we know the this algorithm must give us an optimal solution at least \(\epsilon\) portion of the optimality. 
+              <br>
+              Furthermore, it also gives us an upperbound on the solution which is: 
+              \[
+                \frac{p'(\tilde{S})}{1 - \epsilon} \geq p(S^*)
+              \]
+              and then: 
+              \[
+                \frac{p'(\tilde{S})}{m(1 - \epsilon)} \geq \frac{p(S^*)}{m} = Opt_{abs}
+              \]
+              Which is an upper bound, as \(\epsilon \rightarrow 0\), we know that \(m\) increases together with 
+              \(p'(\tilde{S})\), and it will eventually be equal because the round error gets less as the multiplier increase. 
+            </p>
+            <h3>Claim II:</h3>
+            <p>
+              There is another rounding strategy that might appear to be more appealing but I don't know yet how to prove it. 
+              The new multiplier is set to separate profits in such a way that after scaling, item's profits lies within 
+              their integer slots. Then m can be defined as: 
+              \[
+                m :=
+                \frac{2}
+                {
+                  \underset{0 \leq i, j \leq n - 1}{\text{min}}
+                  \{|p_i - p_j|\}
+                }
+              \]
+              This scaling strategy will asserts that all the item's profits preserves it's orderings after the scaling, 
+              this will produce a smaller scaling factor and it "seems to" preserve the optimal solution
+              (please contact me if you know how to prove or disprove this). 
+            </p>
+              
+          </p>
+        </p>
+        <h2>Primal with Rounding</h2>
+      </section>
+      <hr>
+      <section id="bb">
+        <h2>Branch & Bound Algorithm</h2>
+        <p>
+          The branch and bound algorithm uses a heuristic algorithm that produces an upper bound 
+          for maximization problem. Here we are going to use different heuristics to aid 
+          with the algorithm.
+          <br>
+          A branch and bound algorithm is an improvement on bruteforce search algorithm 
+          for NP-Hard problem, instead of searching all the solution spaces, it uses heuristic 
+          algorithms that is fast(Approximation algorithms) to determine which subset 
+          of solutions spaces it's going to investigate. 
+          <br>
+          The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
+          very accurate.
+          <br>
+          Here is the meaning for all the input variables: 
+          <ul>
+            <li>
+              ObjGlobal: This is the best optimal value found by the recursive function
+              globally. 
+            </li>
+            <li>
+              PartialObjective: This is the objective value passed by the callers, specifiying 
+              the totaly profits for all items in "ItemsIncluded". 
+            </li>
+          </ul>
+          <pre>
 Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
   if Budget < min(items'weight):
     return PartialObject // Slack is too small, current PartialObjective cannot be increased. 
@@ -319,8 +362,9 @@ Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
   )
   // Update the global objective value for the problem. 
   ObjectiveGlobal := max(ObjectiveGlobal, Objective, IncludeIt, NotIncludeIt)
-        </pre>
-      </p>
-    </section>
+          </pre>
+        </p>
+      </section>
+    </div>
   </body>
 </html>
