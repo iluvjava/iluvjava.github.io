@@ -1,17 +1,17 @@
-# JustAWebsite
+# JustAWebsite # 
 it's just a few html css files. 
 
-# grepassages.html
+# grepassages.html # 
 - Might need to add a dropdown manual at the top of nev bar to make it easier to read passages. (WIP)
     - Drop down manu will be created by the script. id="my-dropdown-manu"
         - Scan all elements with class: "passage Entry"
-        - Add then passge title to the dropdown list as <li>
+        - Add then passge title to the dropdown list as `<li>`
     - Hide unviewing passages on page
         - Make one of the passage entry to be on page by default. 
         - Default unhidden must be manually coded in.
 
-# About The Technical Details
-## Promises and Async Function
+# About The Technical Details #
+## Promises and Async Function ##
 - [Link](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
 - An async function can make calls to functions that return promises and then await all of the to finish. 
 - await keyword can only be used for function that returns a promise. 
