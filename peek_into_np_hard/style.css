@@ -29,10 +29,6 @@ pre {
   overflow-x: scroll;
 }
 
-p, pre {
-  margin-left: 3em;
-}
-
 h1, h2, h3 {
   padding-top: 0.5em;
   padding-bottom: 0.5em;

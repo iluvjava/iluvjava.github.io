@@ -240,7 +240,6 @@
             not enough room for the absolute optimal to make more than double the profits compare to the greedy algorithm.
           </p> 
         </p>
-        
         <h2>Dual with Rounding</h2>
         <p>
           The algorithm round the profits to integers and then use the Dual DP(Dynamic Programming) to solve the problem,
@@ -311,30 +310,38 @@
       <hr>
       <section id="bb">
         <h2>Branch & Bound Algorithm</h2>
-        <p>
-          The branch and bound algorithm uses a heuristic algorithm that produces an upper bound 
+          <p>The branch and bound algorithm uses a heuristic algorithm that produces an upper bound 
           for maximization problem. Here we are going to use different heuristics to aid 
-          with the algorithm.
+          with the algorithm.</p>
           <br>
-          A branch and bound algorithm is an improvement on bruteforce search algorithm 
+          <p> A branch and bound algorithm is an improvement on bruteforce search algorithm 
           for NP-Hard problem, instead of searching all the solution spaces, it uses heuristic 
           algorithms that is fast(Approximation algorithms) to determine which subset 
-          of solutions spaces it's going to investigate. 
+          of solutions spaces it's going to investigate. </p>
           <br>
-          The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
-          very accurate.
+          <p>The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
+          very accurate.</p>
           <br>
-          Here is the meaning for all the input variables: 
-          <ul>
-            <li>
-              ObjGlobal: This is the best optimal value found by the recursive function
-              globally. 
-            </li>
-            <li>
-              PartialObjective: This is the objective value passed by the callers, specifiying 
-              the totaly profits for all items in "ItemsIncluded". 
-            </li>
-          </ul>
+          <p>
+            Here is the meaning for all the input variables:
+            <ul>
+              <li>
+                ObjGlobal: This is the best optimal value found by the recursive function
+                globally. 
+              </li>
+              <li>
+                PartialObjective: This is the objective value passed by the callers, specifiying 
+                the totaly profits for all items in "ItemsIncluded". 
+              </li>
+              <li>
+                Items: This is the set of items for this, and all it's sub-problems. 
+              </li>
+              <li>
+                Budget: The upper limit of item's weights.
+              </li>
+            </ul>
+          </p>
+        <p>
           <pre>
 Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
   if Budget < min(items'weight):
