@@ -306,6 +306,21 @@
           </p>
         </p>
         <h2>Primal with Rounding</h2>
+        <p>
+          Primal Rounding rounds the weights of the items to integer down, and then use DP to solve. This is generally
+          a good idea however changing the constraints of the function can devistating and it might even break
+          one of the preconditions listed. 
+        </p>
+        <p>
+          The round strategy seek for a way of putting all the weights of the items into their unique integer 
+          slot so that the oderings of the item's wieghts are preserved the scaling and rounding.
+        </p>
+        <h3>Claim I:</h3>
+        <p>
+          Round the weights of the items can give a approximation solution as that is arbitarily bad. 
+        </p>
+        <h4>Proof: </h4>
+        
       </section>
       <hr>
       <section id="bb">
@@ -317,7 +332,7 @@
           <p> A branch and bound algorithm is an improvement on bruteforce search algorithm 
           for NP-Hard problem, instead of searching all the solution spaces, it uses heuristic 
           algorithms that is fast(Approximation algorithms) to determine which subset 
-          of solutions spaces it's going to investigate. </p>
+          of solutions spaces it's going to investigate.</p>
           <br>
           <p>The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
           very accurate.</p>
