@@ -393,6 +393,35 @@ Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
           </pre>
         </p>
       </section>
+      <section id="lp">
+        <h2>Knapsack but Linear Programming</h2>
+        <p>
+          This is a linear programming problem in its nature, and all above discussion is only for mathematical interests
+          however in practices, the reduction of this problem to linear programming is the easiest once a solver avaible. 
+        </p>
+        <h3>Extended Knapsack</h3>
+        <p>
+          This problem so far deal with choosing an item that is 0/1, means for each item, we only have the choice 
+          to: include, or not include. 
+          However, as we already show that, inside the approximation algorithm, items can be rounded to the same weights, 
+          and it it's equivalent of having the same items, but with non-binary variable. 
+
+          Hence the new Knapsack probem is concerned with using an item multiple times, or more specifically: 
+          $$x_i \in \lbrack 0, c_i\rbrack \cap \mathbb{Z}_+$$
+          Which is the only changes made to the 0/1 Knapsack Problem. 
+        </p>
+        <h3>Branch and Bound</h3>
+        <p>
+          It's up to the reader to realize the trivial fact that the branch and bound algorithm for linear programming is equivalent 
+          to the branch and bound algorithm using greedy approximation as the heuristic. 
+        </p>
+        <h3>Gomory Cut</h3>
+        <p>
+          Here I will indulge myself talking about a more general way of solving linear programming problem using 
+          the method known as Gomory cut, which in this case, it's very similar to using Rounding Algorithm as Heuristic
+          and Greedy's Solution as the solution for optimizing. The connection is entirely intuitive. 
+        </p>
+      </section>
     </div>
   </body>
 </html>
