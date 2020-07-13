@@ -35,7 +35,7 @@
 
     function main()
     {
-        if (true)
+        if (window.mobileCheck())
         {
             MainContent = id("main-content"); 
             MainContent.style.paddingLeft = "0px"; 
