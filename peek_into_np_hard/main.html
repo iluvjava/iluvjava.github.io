@@ -333,7 +333,7 @@
         </p>
         <h3>Claim I:</h3>
         <p>
-          Round the weights of the items down can give a approximation solution as that is pretty off. 
+          Round the weights of the items down can give an upperbound as that is pretty off. 
         </p>
         <h4>An Instance: </h4>
         <p>
@@ -360,8 +360,19 @@
           \(\{1.499 + 0.5, 1.499 - 0.5\}\), then in this case the scaling factor will be: m = 1, hence we can round thing 
           down directly to get: \(\{1, 0\}\). Then in this case, the weight of each item is off by 49.9%. 
           <br>
-          Therefore, in the worst case, the upperbound will be 1/2 of the optimal value of the solution. 
+          Now imagine we have a list of items taking the values of: 
+          \[\lbrack 1.999, 0.999, 1.999, 0.999... \rbrack\]
+          Repeating 2n times, then the errors will be able to build up. Suppose the budget \(b\) we have is 2n, also assume that 
+          items with weight \(0.999\) has no profits, then after rounding it, the budget will remain unchanged as \(n\) gets 
+          arbitrarily large while the weight is reduced by 50%, allowing us to include 2 times many items as the actual optimal solution.  
+          <br>
+          Therefore, in the worst case, the upperbound will be 1/2 of the optimal value of the solution. Comparatively 
+          this is way slower than the greedy algorithm and yet they have equally bad worst case. However how likely 
+          for each of them to hit the worst case worth another lengthy discussion; but I believe it's unlikely. 
         </p>
+        <h3>Claim II:</h3>
+        <p>There can be a better upper bound that depends on the list inputs. </p>
+
       </section>
       <hr>
       <section id="bb">
