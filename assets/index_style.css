@@ -1,5 +1,7 @@
-.cards-grid,  .cards-grid .card {
+.cards-grid, .cards-grid .card, #intro{
     margin-top: 3em;
     margin-left: auto;
     margin-right: auto;
+    line-height: 2em;
 }
+
