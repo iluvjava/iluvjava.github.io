@@ -6,7 +6,7 @@
   overflow-x: scroll;
 }
 
-/*Straight from W3C school */
+/* Straight from W3C school */
 #side-bar {
   height: 100%; /* Full-height: remove this if you want "auto" height */
   width: 200px; /* This is fixed  */
@@ -20,7 +20,7 @@
   background-color: rgba(134,216,247, 0.5);
 }
 
-#side-bar li {
+#side-bar li, nav li {
   list-style-type: none;
   padding-left: 0%;
   padding-top: 1em;
@@ -29,6 +29,10 @@
 
 #side-bar ul {
   padding-inline-start: 2em;
+}
+
+nav ul {
+  padding-inline-start: 0em;
 }
 
 pre {
@@ -40,6 +44,19 @@ h1, h2, h3 {
   padding-bottom: 0.5em;
 }
 
-.navbar {
+.navbar, nav li {
   background-color: rgba(249,184,210, 0.5); 
+}
+
+.nav-hamburger-menu-icon img{
+  height: 40px;
+}
+
+nav li {
+  text-align: center;
+  padding-bottom: 1em;
+}
+
+.hide {
+  display: none;
 }
