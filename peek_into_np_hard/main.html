@@ -299,6 +299,12 @@
                   \{|p_i - p_j|\}
                 }
               \]
+            </p>
+            <p>
+              We need to assume that the profits of each items are unique to avoid denominator being zero. 
+              In the case where all tiems has the same profits, no scaling and rounding is needed.
+            </p>
+            <p>
               This scaling strategy will asserts that all the item's profits preserves it's orderings after the scaling, 
               this will produce a smaller scaling factor and it "seems to" preserve the optimal solution
               (please contact me if you know how to prove or disprove this). 
@@ -313,14 +319,45 @@
         </p>
         <p>
           The round strategy seek for a way of putting all the weights of the items into their unique integer 
-          slot so that the oderings of the item's wieghts are preserved the scaling and rounding.
+          slot so that the oderings of the item's wieghts are preserved the scaling and rounding. In this case, assuming
+          weights of all items are unique: 
+          \[
+            m :=
+            \frac{2}
+            {
+              \underset{0 \leq i, j \leq n - 1}{\text{min}}
+              \{|w_i - w_j|\}
+            }
+          \]
         </p>
         <h3>Claim I:</h3>
         <p>
           Round the weights of the items can give a approximation solution as that is arbitarily bad. 
         </p>
         <h4>Proof: </h4>
-        
+        <p>
+          Consider these 2 items with the following weights: 
+          \[(1.099 + 0.1, 1.099 - 0.1)\]
+          Then it's not hard to determine that the scaling factor m will be: \(m=10\)
+          Then after scaling, we have the following weights for the items: 
+          \[(10.99 + 1, 10.99 - 1)\]
+          Rounding things down, we have: 
+          \[(11, 9)\] 
+          where each item's weight is off by 0.99. Now let's recover the weight by dividing the rounded value by the 
+          multipler to get: 
+          \[1.1, 0.9\]
+          and then each weight of the item will be off by 0.099. 
+        </p>
+        <p>
+          Then in this case, the weight can be off by 10% when solving it based on the rounded weight. 
+        </p>
+        <p>
+          A more extrem example will involve the weights of \((0.199+0.1, 0.199-0.1)\). And after sclaing, rounding 
+          and scaling back, it will be \((2, 0)\), and one of the item's weight is off by 1.701! This is a bad 
+          sign if the weights of items are taking extreme discrete values. 
+          <br>
+          I don't recommend using it because it's just way off. 
+        </p>
       </section>
       <hr>
       <section id="bb">

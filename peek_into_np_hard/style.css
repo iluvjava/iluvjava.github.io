@@ -2,6 +2,8 @@
   width: 95%;
   padding-left: 250px;
   font-size: large;
+  min-width: 500px;
+  overflow-x: scroll;
 }
 
 #side-bar {
