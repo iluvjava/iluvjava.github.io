@@ -333,9 +333,9 @@
         </p>
         <h3>Claim I:</h3>
         <p>
-          Round the weights of the items can give a approximation solution as that is arbitarily bad. 
+          Round the weights of the items down can give a approximation solution as that is pretty off. 
         </p>
-        <h4>Proof: </h4>
+        <h4>An Instance: </h4>
         <p>
           Consider these 2 items with the following weights: 
           \[(1.099 + 0.1, 1.099 - 0.1)\]
@@ -347,17 +347,20 @@
           where each item's weight is off by 0.99. Now let's recover the weight by dividing the rounded value by the 
           multipler to get: 
           \[(1.1, 0.9)\]
-          and then each weight of the item will be off by 0.099. 
+          and then each weight of the item will be off by +0.099. 
         </p>
         <p>
           Then in this case, the weight can be off by 10% when solving it based on the rounded weight. 
+          <br>
+          The key here is to choose items only taking 2 value, and choosing the value in such a way that it maximizes the 
+          rounding error. 
         </p>
         <p>
-          A more extrem example will involve the weights of \((0.199+0.1, 0.199-0.1)\). And after sclaing, rounding 
-          and scaling back, it will be \((2, 0)\), and one of the item's weight is off by 1.701! This is a bad 
-          sign if the weights of items are taking extreme discrete values. 
+          Now consider a more extreme case where the weights of the item only takes on 2 values and they are: 
+          \(\{1.499 + 0.5, 1.499 - 0.5\}\), then in this case the scaling factor will be: m = 1, hence we can round thing 
+          down directly to get: \(\{1, 0\}\). Then in this case, the weight of each item is off by 49.9%. 
           <br>
-          I don't recommend using it because it's just way off. 
+          Therefore, in the worst case, the upperbound will be 1/2 of the optimal value of the solution. 
         </p>
       </section>
       <hr>
