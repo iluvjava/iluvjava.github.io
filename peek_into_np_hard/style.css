@@ -3,7 +3,6 @@
   padding-left: 250px;
   font-size: large;
   min-width: 500px;
-  overflow-x: scroll;
 }
 
 /* Straight from W3C school */
@@ -18,6 +17,10 @@
   padding-top: 4em;
   padding-right: 2em;
   background-color: rgba(134,216,247, 0.5);
+}
+
+div.footer-padding {
+  margin-top: 10em;
 }
 
 #side-bar li, nav li {
