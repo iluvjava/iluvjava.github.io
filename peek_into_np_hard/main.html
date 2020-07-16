@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
     <meta name="viewport" content="width=device-width">
     <title>Peek Into Np-Hard</title>
     
@@ -47,7 +46,7 @@
             <li><a href="#lp">Knapsack but Linear Programming</a></li>
             <li>
               <a target="_blank" href="https://github.com/iluvjava/Silly_Python_Stuff/tree/master/knapsack">
-              Githug Repo for This Project
+              Github Repo for This Project
               </a>
             </li>
           </ul>
@@ -62,7 +61,7 @@
         <li><a href="#bb">Branch and Bound algorithms</a></li>
         <li><a href="#lp">Knapsack but Linear Programming</a></li>
         <li><a target="_blank" href="https://github.com/iluvjava/Silly_Python_Stuff/tree/master/knapsack">
-          Githug Repo for This Project
+          Github Repo for This Project
         </a></li>
       </ul>
     </div>
@@ -395,80 +394,136 @@
           this is way slower than the greedy algorithm and yet they have equally bad worst case. However how likely 
           for each of them to hit the worst case worth another lengthy discussion; but I believe it's unlikely. 
         </p>
-        <h3>Claim II:</h3>
+        <h4>Claim II:</h4>
         <p>(There is a way to place a better bound on the output, but it will depend on the inputs of the algorithm. )</p>
-
+        <h2>Why All These?</h2>
+        <p>
+          We are particularly interested in the approximation algorithm for the upperbound because a good heuristic will 
+          serves the Branch and Bound algorithm accordingly. 
+        <br>
+          It's not smart to use the same heuristic when the algorithm because different heuristics works the best depending 
+          on the particular inputs, hence, if we can mix all the approximation algorithm together to produce a best 
+          upperbound for the algorithm, then it will speed up the run-time of the Branch and Bound algorithm. 
+        </p>
+       
+        
       </section>
       <hr>
       <section id="bb">
         <h2>Branch & Bound Algorithm</h2>
-          <p>The branch and bound algorithm uses a heuristic algorithm that produces an upper bound 
-          for maximization problem. Here we are going to use different heuristics to aid 
-          with the algorithm.</p>
-          <br>
-          <p> A branch and bound algorithm is an improvement on bruteforce search algorithm 
-          for NP-Hard problem, instead of searching all the solution spaces, it uses heuristic 
-          algorithms that is fast(Approximation algorithms) to determine which subset 
-          of solutions spaces it's going to investigate.</p>
-          <br>
-          <p>The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
-          very accurate.</p>
-          <br>
           <p>
-            Here is the meaning for all the input variables:
+            The branch and bound algorithm uses a heuristic algorithm that produces an upper bound 
+            for maximization problem. Here we are going to use different heuristics to aid 
+            with the algorithm.
+          </p>
+          <h3>
+            Determing Factors for B&B: 
+          </h3>
+          <p>
+            A branch and bound algorithm is an improvement on bruteforce search algorithm 
+            for NP-Hard problem, instead of searching all the solution spaces, it uses heuristic 
+            algorithms that is fast(Approximation algorithms) to determine which subset 
+            of solutions spaces it's going to investigate.
+            <br>
+            2 of the most important ingredient of the branch and bound algorithm are: 
+            <ul>
+              <li>The way order of branching.</li>
+              <li>The topology of growing the tree.</li>
+              <li>The precision of the Heuristic</li>
+            </ul>
+            <br>
+            The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
+            very accurate.
+        </p>
+        <h3>Demo Psuedocodes: </h3>
+        <p>
+          Define a class name: Problem 
+          <p>
+            Which has the following variables in its field: 
+          </p>
             <ul>
               <li>
-                ObjGlobal: This is the best optimal value found by the recursive function
-                globally. 
+                I1: List of Items's Index, representing the list of items that are added to the knapsack by the supper-problem 
+                (Or, the Caller of a recursive function)
               </li>
               <li>
-                PartialObjective: This is the objective value passed by the callers, specifiying 
-                the totaly profits for all items in "ItemsIncluded". 
+                I2: List of Item's Index, representing the list of items that are free to invesitage by this sub-problem. 
               </li>
               <li>
-                Items: This is the set of items for this, and all it's sub-problems. 
+                P: List of profits
               </li>
               <li>
-                Budget: The upper limit of item's weights.
+                W: List of weights
+              </li>
+              <li>
+                Budget
               </li>
             </ul>
+          <p>
+            And it has one method that is defined as the following: 
           </p>
-        <p>
-          <pre>
-Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
-  if Budget < min(items'weight):
-    return PartialObject // Slack is too small, current PartialObjective cannot be increased. 
-  Objective := Items.Heuristic() + PartialObjective
-  if Objective <= ObjGlobal: 
-    return Objective // All sub problems of current Items cannot improve the global objective. 
-  GreedySolution = Items.Greedy()
-  x := Fractional item of the GreedySolution
-  
-  // x is in global optimal solution: 
-  ItemsCopied1 := Items.copy().remove(x)
-  ItemsIncludedCopied1 := ItemsIncluded.copy().add(x)
-  IncludeIt := Soln(
-    ObjGlobal=Objective, // New Improved Objective
-    PartialObjective=sum_profits(ItemsCopied1), // Including the items into the new objective value. 
-    Items=ItemsCopied1,  // This items must be used, hence it's removed from items set. 
-    ItemsIncluded=ItemsIncludedCopied2, // x is included, hence it'a added to this set.
-    Budget=Bedget-weight(x)
-  )
-
-  // x is not in the global optimal solution:
-  ItemsCopied2 := Items.copy().remove(x)
-  ItemsIncludedCopied2 :=  ItemsIncluded.copy()
-  NotIncludeIt := Soln(
-    ObjGlobal=Objective, 
-    PartialObjective=sum_profits(ItemsCopied2),
-    Items=ItemsCopied2,
-    ItemsIncluded=ItemsIncludedCopied2, 
-    Budget=Budget
-  )
-  // Update the global objective value for the problem. 
-  ObjectiveGlobal := max(ObjectiveGlobal, Objective, IncludeIt, NotIncludeIt)
-          </pre>
+          <ul>
+            <li>
+              greedy(): Choose, among all items marked by I2, and returns the following
+              <ul>
+                <li>
+                  IntIdx: The list of indices of items that are choosen as a whole by the greedy algorithm.
+                </li>
+                <li>
+                  Frac: The index of the item choosen to have non-integer solution to it. 
+                </li>
+                <li>
+                  Opt: The upper bound on the given problem (doesn't have to be given by Greedy)
+                </li>
+              </ul>
+            </li>
+          </ul>
         </p>
+        <h4>Psuedo Codes: </h4>
+        <p>
+          Inputs: 
+          <ul>
+            <li>
+              P: An instance of a problem. 
+            </li>
+            <li>
+              S_star: I1 of the given problem P, list of indices that are aready in the knapsack by the problem. 
+            </li>
+            <li>
+              Opt_star: total profits of all the items that are included into the Knapsack. 
+            </li>
+          </ul>
+        </p>
+        function: 
+        <div class="indent-all">
+          def soln(P: Type[Problem], S_star, Opt_star): 
+            <div class="indent-all">
+              stack = {P} <br>
+              while stack is not empty: 
+                <div class="indent-all">
+                  P0 = stack.pop() <br>
+                  IntIdx, Frac, Opt = P0.greedy() <br>
+                  if Opt > Opt_star: 
+                  <div class="indent-all">
+                    if frac is None: 
+                    <div class="indent-all">
+                      Opt_star := Opt // solution is all integers
+                    </div>
+                    else: 
+                    <div class="indent-all">
+                      stack.push(Problem(I + [frac], I2.remove(frac), P0.P, P0.W, P0.B - P0.W[frac])) <br>
+                      stack.push(Problem(I, I2.remove(frac), P0.P, P0.W, P0.B - P0.W[frac]))
+                    </div>
+                  </div>
+                </div>
+                <div class="indent-all">
+                  if IntIdx has better profits than S_star: <br>
+                  S_star = P0.I1 + IntIdx
+                </div>
+            </div>
+            return S_star, Opt_star
+        </div>
+        
       </section>
       <hr>
       <section id="lp">
@@ -501,7 +556,6 @@ Soln(ObjGlobal, PartialObjective, Items, ItemsIncluded, Budget):
         </p>
       </section>
       <div class="footer-padding">
-
       </div>
     </div>
   </body>

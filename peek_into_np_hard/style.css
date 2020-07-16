@@ -63,3 +63,7 @@ nav li {
 .hide {
   display: none;
 }
+
+.indent-all {
+  margin-left: 2em ;
+}
