@@ -400,13 +400,12 @@
         <p>
           We are particularly interested in the approximation algorithm because a tight upperbound will 
           serve the Branch and Bound algorithm well. 
-        <br>
-          It's not smart to use the same, depending on the particular inputs, some heuristic works better than others.
-          Hence, if we can mix all the approximation algorithm together to produce a best 
+        </p>
+        <p>
+          It's not smart to use the same approximation algorithm for branch a bound either, depending on the particular inputs,
+          some heuristic works better than others. Hence, if we can mix all the approximation algorithm together to produce a best 
           upperbound for the algorithm, then it will speed up the run-time of the Branch and Bound algorithm. 
         </p>
-       
-        
       </section>
       <hr>
       <section id="bb">
@@ -523,7 +522,6 @@
             </div>
             return S_star, Opt_star
         </div>
-        
       </section>
       <hr>
       <section id="lp">
@@ -550,9 +548,8 @@
         </p>
         <h3>Gomory Cut</h3>
         <p>
-          Here I will indulge myself talking about a more general way of solving linear programming problem using 
-          the method known as Gomory cut, which in this case, it's very similar to using Rounding Algorithm as Heuristic
-          and Greedy's Solution as the solution for optimizing. The connection is entirely intuitive. 
+          It's left as an excercise for the readers to comtemplate the intuitive connection between using scaling and rounding
+          as heuristic and Branch and Bound algorithm versus using Gomory cut on the linear programming problem. 
         </p>
       </section>
       <div class="footer-padding">
