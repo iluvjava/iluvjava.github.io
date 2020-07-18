@@ -522,6 +522,23 @@
             </div>
             return S_star, Opt_star
         </div>
+        <h3>Additional Notes</h3>
+        <p>
+          When the heuristics are set to be the greedy algorithm, this branch and bound algorithm become equivalent to 
+          the solving the same system of inqaulities using the Branch and Bound algorithm for Linear inqaulities. 
+        </p>
+        <p>
+          A mixed heuristics can be used, however we need to identify the characteristics from a sub-proboem such that, 
+          using approximation algorithms will give a better run-time than the The greedy algorithm. 
+        </p>
+        <p>
+          Finally, a "warm-start" feasible solution can be provided in advance to speed up the branch and bound process,
+          this is helpful because a high value for the global objective value will cut some of the branching process. 
+        </p>
+        <p>
+          However in my code, I used the integral part of the greedy solution to give a warm start to the 
+          Branch and Bound algorithm, which is the most efficient to use. 
+        </p>
       </section>
       <hr>
       <section id="lp">
