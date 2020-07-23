@@ -32,6 +32,45 @@
         q("div.collapse.navbar-collapse").classList.toggle("show"); 
     }
 
+    function assignStyleToPlotly()
+    {
+        plotyModule = id("ploty-module")
+        plotyModule.style = "width:600px;height:800px;"; 
+        plotyModule.style.marginLeft = "auto"; 
+        plotyModule.style.marginRight = "auto";
+    }
+
+    function fetchDataAndPlot(source)
+    {
+
+        function populateData(theData)
+        {
+            let y0 = theData["bb_time"];
+            let y1 = theData["dp_time"];
+            let trace1 = {
+                y: y0,
+                type: 'box', 
+                name: "BB_Time in Seconds"
+            };  
+            let trace2 = {
+                y: y1,
+                type: "box",
+                name: 'DP_Time in Seconds'
+            };
+            let Layout = {
+                title: "BB and DP time Comparison"
+            }
+            let data = [trace1, trace2];
+            Plotly.newPlot(document.getElementById('ploty-module'), data, Layout);
+
+        };
+        return fetch(source)
+            .then(response => response.json())
+            .then(populateData)
+    }
+
+   
+
     function main()
     {
         if (window.mobileCheck())
@@ -48,6 +87,9 @@
             addListenerTo(Menu, menuBottonHandler, "click"); 
             
         }
+        console.log("Loading Ploty module.");
+        assignStyleToPlotly();
+        fetchDataAndPlot("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/knapsack/bb%2C%20dp%20bench.json");
     }
 
     window.onload = main;
