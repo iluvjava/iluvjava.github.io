@@ -13,15 +13,8 @@
     <!--Bootstrap end-->
     
     <!--MyStyle-->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mystyle.css">
     <!--End-->
-
-    <!--For MathJax-->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
-    </script>
-    <!--For MathJax Ends-->
 
     <!--Nothing here yet. -->
     <!--For Plottind data and Adpating Webpage to mobile devices-->
@@ -29,7 +22,7 @@
     <!-- End -->
 
     <!--Plotly-->
-    <script src="../assets/client_scripts/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script> <!--FIX VERSION, new UPDATE has problem-->
     <!--END-->
 
     <!--JS hilight for the clock blocks in the web: -->
@@ -692,7 +685,12 @@ if __name__ == "__main__":
       </div>
     </div>
     <footer>
-
+      <!--For MathJax-->
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script id="MathJax-script"
+            src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
+      </script>
+      <!--For MathJax Ends-->
     </footer>
   </body>
 </html>
