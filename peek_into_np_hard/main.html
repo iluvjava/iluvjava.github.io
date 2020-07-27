@@ -55,6 +55,7 @@
               </a>
             </li>
             <li><a href="#bench">Performance and Benchmark</a></li>
+            <li><a href="#epilogue">Epilogue</a></li>
           </ul>
         </div>
       </div>
@@ -70,6 +71,7 @@
           Github Repo for This Project
         </a></li>
         <li><a href="#bench">Performance and Benchmark</a></li>
+        <li><a href="#epilogue">Epilogue</a></li>
       </ul>
     </div>
     <div id="main-content">
@@ -546,6 +548,76 @@
           However in my code, I used the integral part of the greedy solution to give a warm start to the 
           Branch and Bound algorithm, which is the most efficient to use. 
         </p>
+        <h3>
+          Pathological Inputs
+        </h3>
+        <p>
+          We claim that the BB algorithm is exponential, however it's relatively rare occurences for realy life problem. 
+          This particular Pathological instance works the same for BB algorithm for linear programming and it's taken 
+          from the course notes of math 409, credits goes to Thomas Rothvoss, a professor at UW.
+        </p>
+        <p>
+          The pothological instance is formulated as the following: 
+          \[
+            \max \lbrace 
+              x_0|
+                \frac{x_0}{2} + \sum_{i = 1}^n = \frac{n}{2}; x \in \{0, 1\}^{n+1} 
+            \rbrace
+          \]
+          With the constraint that \(n \geq 4\) and n is even (odd number of items because index starts with zero). 
+        </p>
+        <h3>proof: </h3>
+        <p>
+          Here, we assume that, a warm start solution for the problem is not given on the start of the algorithm. 
+        </p>
+        <p>
+          Each node on the BB tree represents a sub-problem where some of the value for \(x_i\) is fixed, and hence. Model 
+          it with 2 index sets: \(I_0\) and \(I_1\). 
+        </p>
+        <p>
+          For at each node, we have a candidate solution: \(\tilde{x}_i\) and it's defined as the following: 
+          \[
+            \tilde{x}_i := 
+            \begin{cases}
+              1 & i = 0\\
+              1 & i \in I_1\\
+              0 & i \in I_0\\
+              \lambda & else
+            \end{cases}
+          \]
+        </p>
+        <p>As long as \(|I_0| + |I_1| \leq \frac{n}{3}\), and \(\tilde{x}_0 = 1\), then there is a feasible LP that cannot be pruned yet. </p>
+        <p>
+          Exam the following expression: 
+          \[
+            \frac{\tilde{x}_0}{2} + \sum_{i=1}^n \tilde{x}_i
+            = 
+            \frac{1}{2} + |I_1| + (n - |I_0| - |I_1|)\lambda = \frac{n}{2}
+          \]
+          Where the quantity: \(n - |I_0| - |I_1|\) the variable that are still free and can be fractional. 
+        </p>
+        <p>
+          Which gives: 
+          \[
+            \sum_{i=1}^n \tilde{x}_i
+            = 
+            |I_1| + (n - |I_0| - |I_1|)\lambda = \frac{n}{2} - \frac{1}{2}
+          \]
+        </p>
+        <p>
+          Remember that: \(0 \leq |I_1| \leq \frac{n}{3}\) and \(|I_0| + |I_1| \leq \frac{n}{3}\) which implies that: 
+          \[
+            n - |I_0| - |I_1| \geq \frac{2n}{3}
+          \]
+        </p>
+        <p>
+          There always exists a choice of \(\lambda\) in between zero an one such that the sub-problem is solvable. In addtion, 
+          the solution to the sub-problem will be a fractional value too because of the assumption that n is even and the 
+          \(1/2\) on the right hand side, therefore, the solution is also non-integer. 
+        </p>
+        <p>
+          As a result, the tree will keep branching for \(n/3\) in depth, meaning that the algorithm will be exponential in runtime. 
+        </p>
       </section>
       <hr>
       <section id="lp">
@@ -680,6 +752,53 @@ if __name__ == "__main__":
         main()
 
         </code></pre>
+        <p>
+          To compare the performance of both the BB and the DP algorithm, items with integers weights and profits are used, 
+          but they are in very huge value so that it's comparable to items with profits and weights as float values. 
+        </p>
+        <p>
+          There are 2 major ways a random problem are generated, by the "rand_problem_ints" and the "rand_problem_exponential" 
+          method in the script. 
+          <ul>
+            <li>
+              rand_problem_exponential
+              <ul>
+                <li>This method generates item's with weights and profits from a uniform distribution. </li>
+              </ul>
+            </li>
+            <li>rand_problem_exponential</li>
+            <ul>
+              <li>This method generates item's weights and profits from a exponential distribution. </li>
+            </ul>
+          </ul>
+        </p>
+      </section>
+      <section id="epilogue">
+        <h2>
+          Epilogue
+        </h2>
+        <p>
+           We have explored 2 of the ways of how dynamic programming can solve the problem, how rounding the floats values
+          allowed us to approximate the solution for the problem and use it to as heuristic for the Branch and Bound algorithm 
+          in the end. 
+        </p>
+        <p>
+          Throughout the exploration, we observe the intricacy of the zero one knapsack problem and revealed the fact that, 
+          Dynamic Programming is just the beginning of things and how this problem in particular, can be a very good 
+          reduced example for LP, where, the simplex solving routine has been substituted with the Heuristic we developed in the session. 
+        </p>
+        <p>
+          I wish to write more on this, but have to pause the project here because of time limitations. There are a still a 
+          lot of problems/subjects left unexplored such as:
+          <ul>
+            <li>Mixed Heuristic for BB</li>
+            <li>Extended knapsack</li>
+            <li>More Benchmarking</li>
+            <li>Upper Bound for Primal Rounding</li>
+            <li>Unproved Precise Scaling Strategy in Rounding Primal</li>
+          </ul>
+          And much much more connections to discover from this problem to other area of mathematics and computer algorithms. 
+        </p>
       </section>
       <div class="footer-padding">
       </div>
