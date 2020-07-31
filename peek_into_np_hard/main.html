@@ -638,9 +638,13 @@
           Which is the only changes made to the 0/1 Knapsack Problem. 
         </p>
         <p>
-          So, I think I found a specialized way of adapting the LP Simplex Algorithm with the BB that might speed up
-          the running time for the branch and bound, against the Naive implementation of the algorithm, but at the time
-          of writing the website, this algorithm is still in development.
+          The major implementation of this problem is an invitable one: <a href="https://en.wikipedia.org/wiki/Truncation_error#:~:text=In%20numerical%20analysis%20and%20scientific,error%20is%20a%20truncation%20error.">
+          Floating Point Truncation Errors</a>. 
+          For this reason, we cannot get absolute optimality for every well defined inputs. I think this is out of scope for 
+          this dicussion about Knapsack and NP-Hardness, but I will review and and anal=yze it in the future. 
+          The problem is discovered by inputing some items with unrealistic distribution, and it mannage to produce inaccuracy on the optimality 
+          for both the COIN_CBC solver and my solver. This problem is profound and might be hard to solve. But I believe it's easy 
+          to do rational computations in python, so please don't worry about it too much, but it's a real concern. 
         </p>
         <h3>Branch and Bound</h3>
         <p>
