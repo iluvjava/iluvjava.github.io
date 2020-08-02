@@ -2,9 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
-    
     <meta name="viewport" content="width=device-width">
-    <title>Peek Into Np-Hard</title>
+    <title>Untitled</title>
     
     <!--For Bootstrap style-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -14,38 +13,75 @@
     <!--Bootstrap end-->
     
     <!--MyStyle-->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mystyle.css">
     <!--End-->
 
-    <!--For MathJax-->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
-    </script>
-    <!--For MathJax Ends-->
+    <!--For plotting data and Adpating Webpage to mobile devices-->
+    <script src="client_scripts_general.js"></script>
+    <!-- End -->
+
+    <!--Plotly-->
+    <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script> <!--FIX VERSION, new UPDATE has problem-->
+    <!--END-->
+
+    <!--JS hilight for the code blocks in the web: -->
+    <link rel="stylesheet"
+      href="../assets/client_scripts/syntax_highlight_pack/styles/a11y-light.css">
+    <script src="../assets/client_scripts/syntax_highlight_pack/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <!--END-->
+
   </head>
   <body>
     <nav class="navbar sticky-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="">My WebPages</a> <!--Change thing here-->
+          <a class="navbar-brand" href="../index.html">My WebPages</a>
+        </div>
+        <botton>
+            <span class="nav-hamburger-menu-icon hide"><img src="../assets/menu_hamburger.png" alt="menu"></span> 
+        </botton>
+        <div class="collapse navbar-collapse">
+          <ul>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#dp">Dynamic Programming</a></li>
+            <li><a href="#approx">Approximation Algorithms</a></li>
+            <li><a href="#bb">Branch and Bound algorithms</a></li>
+            <li><a href="#lp">Knapsack but Linear Programming</a></li>
+            <li>
+              <a target="_blank" href="https://github.com/iluvjava/Silly_Python_Stuff/tree/master/knapsack">
+                Github Repo for This Project
+              </a>
+            </li>
+            <li><a href="#bench">Performance and Benchmark</a></li>
+            <li><a href="#epilogue">Epilogue</a></li>
+          </ul>
         </div>
       </div>
     </nav>
     <div id="side-bar">
-      <ul>
-        <li><a href="#intro">Introduction</a></li>
-      </ul>
+     
     </div>
     <div id="main-content">
       <section id="intro">
-        <h1>
-        Introduction
-        </h1>
-        <p>
-          Text
-        </p>
+        
       </section>
       <hr>
+      <section id="part1">
+        
+      </section>
+      
+      </section>
+      <div class="footer-padding">
+      </div>
+    </div>
+    <footer>
+      <!--For MathJax-->
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script id="MathJax-script"
+            src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
+      </script>
+      <!--For MathJax Ends-->
+    </footer>
   </body>
 </html>
