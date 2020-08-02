@@ -40,12 +40,16 @@ nav ul {
 
 pre {
   overflow-x: scroll;
-  background-color: gray;
 }
 
 h1, h2, h3 {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+
+nav li {
+  text-align: center;
+  padding-bottom: 1em;
 }
 
 .navbar, nav li {
@@ -56,15 +60,14 @@ h1, h2, h3 {
   height: 40px;
 }
 
-nav li {
-  text-align: center;
-  padding-bottom: 1em;
-}
-
 .hide {
   display: none;
 }
 
 .indent-all {
   margin-left: 2em ;
+}
+
+.inline-code-highlight {
+  background: pink;
 }

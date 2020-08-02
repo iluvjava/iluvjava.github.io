@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Numerical Instability of Extended Knapsack</title>
+
+    <!--For Bootstrap style-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Bootstrap end-->
+
+    <!--MyStyle-->
+    <link rel="stylesheet" href="mystyle.css">
+    <!--End-->
+
+    <!--For plotting data and Adpating Webpage to mobile devices-->
+    <script src="client_scripts_general.js"></script>
+    <!-- End -->
+
+    <!--Plotly-->
+    <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
+    <!--FIX VERSION, new UPDATE has problem-->
+    <!--END-->
+
+    <!--JS hilight for the code blocks in the web: -->
+    <link rel="stylesheet" href="../assets/client_scripts/syntax_highlight_pack/styles/a11y-light.css">
+    <script src="../assets/client_scripts/syntax_highlight_pack/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <!--END-->
+
+</head>
+
+<body>
+    <nav class="navbar sticky-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="../index.html">My WebPages</a>
+            </div>
+            <botton>
+                <span class="nav-hamburger-menu-icon hide"><img src="../assets/menu_hamburger.png" alt="menu"></span>
+            </botton>
+            <div class="collapse navbar-collapse">
+                <ul>
+                    <!--Section links. -->
+                    <li>
+                        <a href="#intro">Intro</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="side-bar">
+        <ul>
+            <!--Section Links. -->
+            <li>
+                <a href="#intro">Intro</a>
+            </li>
+        </ul>
+    </div>
+    <div id="main-content">
+        <section id="intro">
+            <h2>
+                Introduction
+            </h2>
+            <p>
+                The extended Knapsack problem is the Binary Knapsack problem with an additional constraints on the
+                counts
+                of the items allowed.
+            </p>
+            <p>
+                The problem can be phrased by the following linear programming problem:
+            </p>
+            <p>
+                \[
+                \max
+                \lbrace
+                \sum_{i=1}^n p_i x_i |
+                \left( \sum_{i=1}^n w_i x_i \right) \leq b
+                \wedge x \leq c
+                \wedge
+                x \geq \mathbb{R}_+
+                \rbrace
+                \]
+            </p>
+            <p>
+                Where the scalar \(b\) is the budget, the weight limit of the all the items in the knapsack and the
+                value
+                \(c\) is consisted of positive integers, denoting the number of a certain item that is available. The
+                weight of the items all real positive number and so are the profits of the items.
+            </p>
+            <p>
+                The decision value is a positive integer vector, where each element \(x_i\) denotes the number of items
+                that are included in the knapsack.
+            </p>
+        </section>
+        <hr>
+        <section id="inst">
+            <h2>
+                Numerical Instability
+            </h2>
+            <p>
+                It occurs when the algorithm is attempting to verify the feasibility of a given solution. 
+                For any given integer solution, if the purtubation on the solution vector that changes the solution 
+                from feasible to unfeasible, or vice versa. 
+            </p>
+            <p>
+                This has a huge impact for the branching process of the algorithm. Opensource solver such as the 
+                Coint_CBC failed to address this issue, meaning that, it's also unstable. And this issue has a huge 
+                impact because it completely alters the search path of the algorithm, deviates it away from the 
+                global optimal completely. 
+            </p>
+            <h3>
+                An Instance of Instability
+            </h3>
+            <p>
+                <ul>
+                    <li>Profits: [0.79, 0.35, 0.23, 0.89, 0.9]</li>
+                    <li>Weights: [0.38, 0.19, 0.01, 0.6]</li>
+                    <li>Item's count: [2, 4, 5, 4, 1]</li>
+                    <li>Budget: 1.38</li>
+                </ul>
+            </p>
+            <p>
+                Consider the following integer solution: \(x_1 = 2, x_2 = 3, x_3 = 5\). It has the following weights: 
+                \(0.38*2 + 0.19*3 + 0.01*5 = 1.38\) which saturated the total amount of available budget. 
+            </p>
+            <p>
+                However, the python outputs the following: 1.3800000000000001, which is an infeasible solution, off 
+                but the machine episilon. 
+            </p>
+            <p>
+                One might doubt that: This might be an rare occurance and even if the weights are very close to 
+                the boundary, it doesn't mean that it affects the Branch and Bound process. (The following parts
+                will surprise you if you are thinking about this), but I assure you that I didn't make up this 
+                instance by hand, It's found when via testing, and for inputs size of 5, it occurs about 1% of the time, 
+                for larger imput size, numerical instability manifested in other ways, in addition to misidentifying
+                an infeasible solution. 
+            </p>
+
+        </section>
+        <hr>
+        <section id="branching">
+            <h2>
+                The Impact on Branching
+            </h2>
+            <p>
+                In my codes, I added a verbose mode to print out the decision made by the algorithm, and here is the 
+                outputs, let's read it together, pay attention to the pink highlighted lines of outputs from the 
+                algorithm. 
+            </p>
+            <pre>
+                <code>
+BB executing with warm start solution and objective value: 
+{2: 5, 0: 2}
+2.7300000000000004
+--------------------
+EKnapSack Instance: 
+Size: 5
+Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+Variable Lower Bound: {}
+<span class="inline-code-highlight">Greedy Soluion: {2: 5, 0: 2, 1: 2.999999999999999}</span>
+Upperbound (Objective Value from Greedy algo): 3.7800000000000002
+Branching Identifier: 
+[?] Heuristic points to increasing objective, this node branches.
+  --------------------
+  EKnapSack Instance: 
+  Size: 5
+  Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+  Variable Lower Bound: {1: 3}
+  <span class="inline-code-highlight">Greedy Soluion: {1: 3, 2: 5, 0: 1.9999999999999993}</span>
+  Upperbound (Objective Value from Greedy algo): 3.78
+  Branching Identifier: 1
+  [?] Heuristic points to increasing objective, this node branches.
+    --------------------
+    EKnapSack Instance: 
+    Size: 5
+    Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+    Variable Lower Bound: {1: 3, 0: 2}
+    <span class="inline-code-highlight">Greedy Soluion: {1: 3, 0: 2, 2: 4.999999999999982} </span>
+    Upperbound (Objective Value from Greedy algo): 3.779999999999996
+    Branching Identifier: 11
+    [?] Heuristic points to increasing objective, this node branches.
+      --------------------
+      EKnapSack Instance: 
+      Size: 5
+      Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+      Variable Lower Bound: {1: 3, 0: 2, 2: 5}
+      Greedy Soluion: None
+      Upperbound (Objective Value from Greedy algo): -inf
+      Branching Identifier: 111
+      [*] Pruned by Infeasibility.
+      --------------------
+      EKnapSack Instance: 
+      Size: 5
+      Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+      Variable Lower Bound: {1: 3, 0: 2}
+      Greedy Soluion: {1: 3.0526315789473677, 0: 2, 2: 4}
+      Upperbound (Objective Value from Greedy algo): 3.568421052631579
+      Branching Identifier: 110
+      [?] Heuristic points to increasing objective, this node branches.
+        --------------------
+        EKnapSack Instance: 
+        Size: 5
+        Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+        Variable Lower Bound: {1: 4, 0: 2}
+        Greedy Soluion: None
+        Upperbound (Objective Value from Greedy algo): -inf
+        Branching Identifier: 1101
+        [*] Pruned by Infeasibility.
+        --------------------
+        EKnapSack Instance: 
+        Size: 5
+        Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+        Variable Lower Bound: {1: 3, 0: 2}
+        Greedy Soluion: {1: 3, 0: 2, 2: 4, 3: 0.01666666666666637}
+        Upperbound (Objective Value from Greedy algo): 3.564833333333333
+        Branching Identifier: 1100
+        [?] Heuristic points to increasing objective, this node branches.
+          --------------------
+          EKnapSack Instance: 
+          Size: 5
+          Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+          Variable Lower Bound: {1: 3, 0: 2, 3: 1}
+          Greedy Soluion: None
+          Upperbound (Objective Value from Greedy algo): -inf
+          Branching Identifier: 11001
+          [*] Pruned by Infeasibility.
+          --------------------
+          EKnapSack Instance: 
+          Size: 5
+          Variables Aren't fixed to zero: {0, 1, 2, 4}
+          Variable Lower Bound: {1: 3, 0: 2}
+          Greedy Soluion: {1: 3, 0: 2, 2: 4, 4: 0.01587301587301559}
+          Upperbound (Objective Value from Greedy algo): 3.564285714285714
+          Branching Identifier: 11000
+          [?] Heuristic points to increasing objective, this node branches.
+            --------------------
+            EKnapSack Instance: 
+            Size: 5
+            Variables Aren't fixed to zero: {0, 1, 2, 4}
+            Variable Lower Bound: {1: 3, 0: 2, 4: 1}
+            Greedy Soluion: None
+            Upperbound (Objective Value from Greedy algo): -inf
+            Branching Identifier: 110001
+            [*] Pruned by Infeasibility.
+            --------------------
+            EKnapSack Instance: 
+            Size: 5
+            Variables Aren't fixed to zero: {0, 1, 2}
+            Variable Lower Bound: {1: 3, 0: 2}
+            Greedy Soluion: {1: 3, 0: 2, 2: 4}
+            Upperbound (Objective Value from Greedy algo): 3.55
+            Branching Identifier: 110000
+            <span class="inline-code-highlight">[!] This Node has found an integral solution and updated the optimal</span> 
+    --------------------
+    EKnapSack Instance: 
+    Size: 5
+    Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+    Variable Lower Bound: {1: 3}
+    Greedy Soluion: {1: 4, 2: 5, 0: 1, 3: 0.3166666666666663}
+    Upperbound (Objective Value from Greedy algo): 3.621833333333333
+    Branching Identifier: 10
+    [?] Heuristic points to increasing objective, this node branches.
+      --------------------
+      EKnapSack Instance: 
+      Size: 5
+      Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+      Variable Lower Bound: {1: 3, 3: 1}
+      Greedy Soluion: {1: 3, 3: 1, 2: 5, 0: 0.4210526315789473}
+      Upperbound (Objective Value from Greedy algo): 3.4226315789473682
+      Branching Identifier: 101
+      [~] Sub-Optimal; Branching is pruned. 
+      --------------------
+      EKnapSack Instance: 
+      Size: 5
+      Variables Aren't fixed to zero: {0, 1, 2, 4}
+      Variable Lower Bound: {1: 3}
+      Greedy Soluion: {1: 4, 2: 5, 0: 1, 4: 0.30158730158730124}
+      Upperbound (Objective Value from Greedy algo): 3.611428571428571
+      Branching Identifier: 100
+      [?] Heuristic points to increasing objective, this node branches.
+        --------------------
+        EKnapSack Instance: 
+        Size: 5
+        Variables Aren't fixed to zero: {0, 1, 2, 4}
+        Variable Lower Bound: {1: 3, 4: 1}
+        Greedy Soluion: {1: 3, 4: 1, 2: 5, 0: 0.342105263157894}
+        Upperbound (Objective Value from Greedy algo): 3.370263157894736
+        Branching Identifier: 1001
+        [~] Sub-Optimal; Branching is pruned. 
+        --------------------
+        EKnapSack Instance: 
+        Size: 5
+        Variables Aren't fixed to zero: {0, 1, 2}
+        Variable Lower Bound: {1: 3}
+        Greedy Soluion: {1: 4, 2: 5, 0: 1}
+        Upperbound (Objective Value from Greedy algo): 3.34
+        Branching Identifier: 1000
+        [~] Sub-Optimal; Branching is pruned. 
+  --------------------
+  EKnapSack Instance: 
+  Size: 5
+  Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+  Variable Lower Bound: {}
+  Greedy Soluion: {2: 5, 0: 2, 1: 2, 3: 0.31666666666666643}
+  Upperbound (Objective Value from Greedy algo): 3.7118333333333338
+  Branching Identifier: 0
+  [?] Heuristic points to increasing objective, this node branches.
+    --------------------
+    EKnapSack Instance: 
+    Size: 5
+    Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+    Variable Lower Bound: {3: 1}
+    Greedy Soluion: {3: 1, 2: 5, 0: 1.921052631578947}
+    Upperbound (Objective Value from Greedy algo): 3.557631578947368
+    Branching Identifier: 01
+    [?] Heuristic points to increasing objective, this node branches.
+      --------------------
+      EKnapSack Instance: 
+      Size: 5
+      Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+      Variable Lower Bound: {3: 1, 0: 2}
+      Greedy Soluion: {3: 1, 0: 2, 2: 2.0000000000000018}
+      Upperbound (Objective Value from Greedy algo): 2.9300000000000006
+      Branching Identifier: 011
+      [~] Sub-Optimal; Branching is pruned. 
+      --------------------
+      EKnapSack Instance: 
+      Size: 5
+      Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
+      Variable Lower Bound: {3: 1}
+      Greedy Soluion: {3: 1, 2: 5, 0: 1, 1: 1.842105263157894}
+      Upperbound (Objective Value from Greedy algo): 3.474736842105263
+      Branching Identifier: 010
+      [~] Sub-Optimal; Branching is pruned. 
+    --------------------
+    EKnapSack Instance: 
+    Size: 5
+    Variables Aren't fixed to zero: {0, 1, 2, 4}
+    Variable Lower Bound: {}
+    Greedy Soluion: {2: 5, 0: 2, 1: 2, 4: 0.30158730158730135}
+    Upperbound (Objective Value from Greedy algo): 3.701428571428572
+    Branching Identifier: 00
+    [?] Heuristic points to increasing objective, this node branches.
+      --------------------
+      EKnapSack Instance: 
+      Size: 5
+      Variables Aren't fixed to zero: {0, 1, 2, 4}
+      Variable Lower Bound: {4: 1}
+      Greedy Soluion: {4: 1, 2: 5, 0: 1.8421052631578942}
+      Upperbound (Objective Value from Greedy algo): 3.5052631578947366
+      Branching Identifier: 001
+      [~] Sub-Optimal; Branching is pruned. 
+      --------------------
+      EKnapSack Instance: 
+      Size: 5
+      Variables Aren't fixed to zero: {0, 1, 2}
+      Variable Lower Bound: {}
+      Greedy Soluion: {2: 5, 0: 2, 1: 2}
+      Upperbound (Objective Value from Greedy algo): 3.4300000000000006
+      Branching Identifier: 000
+      [~] Sub-Optimal; Branching is pruned. 
+                </code>
+            </pre>
+
+            
+        </section>
+        <div class="footer-padding">
+
+        </div>
+    </div>
+    <footer>
+        <!--For MathJax-->
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
+        </script>
+        <!--For MathJax Ends-->
+    </footer>
+</body>
+
+</html>
