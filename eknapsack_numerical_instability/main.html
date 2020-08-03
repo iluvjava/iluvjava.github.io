@@ -458,11 +458,38 @@ print(float(Frac(0.57)/Frac(0.19)))
         <section>
             <h2>Kahan's Summation Algorithm</h2>
             <p>
-                "Can I just use the python default sum() method? "
+                "Can I just use the python default sum() method?"
             </p>
             <p>
                 "ABSOLUTELY NO! NO! Please!! NO!"
             </p>
+            <p>
+                "Ok ok... Jesus isn't that some over reactions there... How about the sum() in numpy"
+            </p>
+            <p>
+                "Yeah, that one is ok, but believe me, it's just a tiny bit better than sum() in python, and it's 
+                still way worse compare to Kahan's Summtion algorithm, because it uses pairwise Summation, a divide 
+                by conquer approach, which reduces the rate of the accumulations of CC Errors, but made no attempt 
+                to eliminate it. Another problem of that is, it doesn't support running sum in a loop. "
+            </p>
+            <p>
+                So I went ahead and implemented the algorithm for running sum, and array sum, it turns out to have 
+                a precision that is exactly the same as rational computations, very impressive, and it also provide 
+                robustness via some python special functions for data type. 
+            </p>
+            <p>
+                This wheel is extremely simple to make, it completely eliminated the CC Error, not only that, it's 
+                easy to apply for other languages such as C++ and C# too. It's also useful for summing intensive 
+                computations, related to Matrices multiplications, getting statistical parameters, or even just 
+                improving the Nested Multiplication algorithm or polynomial evaluations. 
+            </p>
+            <p>
+                I benchedmarked those 3 algorithms in <a href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/Numerical%20Instability/numerical_instability_experiments.py">
+                here</a>. And... to my surprise, the default sum() in python incorrectly summed up 95% of the floats 
+                arrays for size of 100, and np.sum() summed up 77% of them incorrectly, and Kahan's method's 
+                doesn't have any errors compare to summing up with rational numbers. 
+            </p>
+            <!--Maybe plotting the errors here too. -->
 
         </section>
         <div class="footer-padding">
