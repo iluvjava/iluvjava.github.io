@@ -414,13 +414,13 @@ Branching Identifier:
             <p>
                 However, if the CC Error is fixed then consider the case where the solution misidentified an integral 
                 solution \(x_1 = 3\) as \(x_1 = 2.999999999999999\), then immediately after, it will branch into 
-                2 sub problem, the first fixed the lower bound, making \(x \geq 2\) and \( x \leq 3\), and THAT! The 
-                second branch gives forces the algorithm to compute based on the correct integral value, hence, 
-                re-crafting the solution! 
+                2 sub problems, the first is fixed on lower bound, making \(x \leq 2\) and \( x \geq 3\), and THAT! That 
+                second branch is forced to compute solution again based on the correct integral value, hence, 
+                re-crafting the solution (without the CC Error)! 
             </p>
         </section>
         <div class="footer-padding">
-
+            
         </div>
     </div>
     <footer>
