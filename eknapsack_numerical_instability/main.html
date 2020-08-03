@@ -470,7 +470,11 @@ print(float(Frac(0.57)/Frac(0.19)))
                 "Yeah, that one is ok, but believe me, it's just a tiny bit better than sum() in python, and it's 
                 still way worse compare to Kahan's Summtion algorithm, because it uses pairwise Summation, a divide 
                 by conquer approach, which reduces the rate of the accumulations of CC Errors, but made no attempt 
-                to eliminate it. Another problem of that is, it doesn't support running sum in a loop. "
+                to eliminate it. Another problem of that is, it doesn't support running sum in a loop."
+            </p>
+            <p>
+                "Finally, the pyton provides math.fsum function, which is as accurate as it Kahan, and I recommend 
+                using it whenever possible."
             </p>
             <p>
                 So I went ahead and implemented the algorithm for running sum, and array sum, it turns out to have 
@@ -484,7 +488,7 @@ print(float(Frac(0.57)/Frac(0.19)))
                 improving the Nested Multiplication algorithm or polynomial evaluations. 
             </p>
             <p>
-                I benchedmarked those 3 algorithms in <a href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/Numerical%20Instability/numerical_instability_experiments.py">
+                I benchedmarked those 4 algorithms in <a href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/Numerical%20Instability/numerical_instability_experiments.py">
                 here</a>. And... to my surprise, the default sum() in python incorrectly summed up 95% of the floats 
                 arrays for size of 100, and np.sum() summed up 77% of them incorrectly, and Kahan's method's 
                 doesn't have any errors compare to summing up with rational numbers. 
