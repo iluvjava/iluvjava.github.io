@@ -90,7 +90,8 @@
                 Where the scalar \(b\) is the budget, the weight limit of the all the items in the knapsack and the
                 value
                 \(c\) is consisted of positive integers, denoting the number of a certain item that is available. The
-                weight of the items all real positive number and so are the profits of the items.
+                weights of the items are all real positive number and the profits of the items are real positive numbers 
+                too.
             </p>
             <p>
                 The decision value is a positive integer vector, where each element \(x_i\) denotes the number of items
@@ -391,10 +392,10 @@ Branching Identifier:
         </p>
         <h3>How Did I Reach the Above Conclusion</h3>
         <p>
-            I compare the numerical results with the rational computation results. After limiting the rational computation
-            to computation on the greedy algorithm, I failed to control the propagation of the binary representation 
-            errors. Hence, via experiments, I know the propagation of the errors on the branching process is caused 
-            by repeated summing of the floats. 
+            I compare the floats results with the rational computation results in debug mode. After limiting the 
+            rational computation to only the greedy algorithm part, I still failed to control the propagation of the 
+            binary representation errors. Hence, via experiments, I know the propagation of the errors on the branching 
+            process is caused by repeated summing of the floats. 
         </p>
         </section>
         <hr>
@@ -418,6 +419,51 @@ Branching Identifier:
                 second branch is forced to compute solution again based on the correct integral value, hence, 
                 re-crafting the solution (without the CC Error)! 
             </p>
+            <h3>Why Not use Rational/BigDecimals to Mitigate the Errors?</h3>
+            <p>
+                This is an important one because many programmers will be tempted to resolve the problem with provided 
+                solution in python instead of inventing their own wheels. However, here I grarantee that, this solution 
+                is absolutely not desirable. 
+            </p>
+            <p>
+                It's not desirable for the following reasons: 
+                <ul>
+                    <li>
+                        If the rational numbers are used, it has to be used for the WHOLE process of the algorithm,
+                        including the inputs and the outputs, reducing the speed significantly because rational 
+                        computation is expensive. 
+                    </li>
+                    <li>
+                        If big decimal is used, then a very high precision must be applied, or else, the CC Error 
+                        persists when summing up big decimals repeatedly for a list of decimals. 
+                    </li>
+                    <li>
+                        Using any of the above within in a limited scope on our algorithm is a waste of time because
+                        the Frary algorithm, the underlying machanics that convert the floats to rationals actually 
+                        preserve the binary representation errors. 
+                    </li>
+                </ul>
+            </p>
+            <p>
+                For demonstrating the third point, simply try: 
+                <pre>
+                    <code>
+import fractions.Fraction as Frac
+print(float(Frac(0.57)/Frac(0.19)))
+                    </code>
+                </pre>
+                And it will still give the wrong number... And unsurprisingly, the "Decimal" in fractions does the same. 
+            </p> 
+        </section>
+        <section>
+            <h2>Kahan's Summation Algorithm</h2>
+            <p>
+                "Can I just use the python default sum() method? "
+            </p>
+            <p>
+                "ABSOLUTELY NO! NO! Please!! NO!"
+            </p>
+
         </section>
         <div class="footer-padding">
             
