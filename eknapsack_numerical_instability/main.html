@@ -129,8 +129,9 @@
                 \(0.38*2 + 0.19*3 + 0.01*5 = 1.38\) which saturated the total amount of available budget. 
             </p>
             <p>
-                However, the python outputs the following: 1.3800000000000001, which is an infeasible solution, off 
-                but the machine episilon. 
+                However, the python outputs the following: 1.3800000000000001, which is an infeasible solution. 
+                The binary of this number that stores in the computer memory is correct, but when converting it 
+                to an integer in base 10, it ceased to be correct. See more here: 
             </p>
             <p>
                 One might doubt that: This might be an rare occurance and even if the weights are very close to 
@@ -180,7 +181,7 @@ Branching Identifier:
     Size: 5
     Variables Aren't fixed to zero: {0, 1, 2, 3, 4}
     Variable Lower Bound: {1: 3, 0: 2}
-    <span class="inline-code-highlight">Greedy Soluion: {1: 3, 0: 2, 2: 4.999999999999982} </span>
+    <span class="inline-code-highlight">Greedy Soluion: {1: 3, 0: 2, 2: 4.999999999999982}</span>
     Upperbound (Objective Value from Greedy algo): 3.779999999999996
     Branching Identifier: 11
     [?] Heuristic points to increasing objective, this node branches.
@@ -366,8 +367,57 @@ Branching Identifier:
       [~] Sub-Optimal; Branching is pruned. 
                 </code>
             </pre>
-
-            
+        <p>
+            The error that causes the issue is not the Binary number incorrectly representing the numbers. 
+            Although, that is the true underlying problem, but the real killer behind is how the error propagage 
+            through the braching process. 
+        </p>
+        <p>
+            Immediately after the first erronous solution caused by the binary floats representation, it propagates 
+            itself through another wave of rounding Errors. BOTH errors are affecting our algorithm. 
+        </p>
+        <p>
+            Let's get this clear by listing them as a point: 
+            <ul>
+                <li>
+                    The rounding error, or refers to as the catastrophic cancellation error, propagates through 
+                    the branch and bound algorithm because of a fixed lower bound on a certain variable. 
+                </li>
+                <li>
+                    The representation error of binary number misidentifies the feasibility of an integer solution or 
+                    vice versa, causing unwanted branching for the algorithm. 
+                </li>
+            </ul>
+        </p>
+        <h3>How Did I Reach the Above Conclusion</h3>
+        <p>
+            I compare the numerical results with the rational computation results. After limiting the rational computation
+            to computation on the greedy algorithm, I failed to control the propagation of the binary representation 
+            errors. Hence, via experiments, I know the propagation of the errors on the branching process is caused 
+            by repeated summing of the floats. 
+        </p>
+        </section>
+        <hr>
+        <section>
+            <h2>Mitigating the Errors</h2>
+            <p>
+                The catastrophic cancellation error (CC Error) is a major one, the binary representation error 
+                is a minor one. 
+            </p>
+            <p>
+                By rounding the solution, we might fix the misidentifications of feasibility of a given solution that 
+                appears to be close to an integral solution. But on the long turn, the build up on the CC Error 
+                will go back and obscure things, which in fact, causes the algorithm fails to terminate. 
+                It CYCLES around an integral solution and branches indefinitely until finally breaks off because the 
+                CC Error magnifies itself to the point of escaping the our round machanics. 
+            </p>
+            <p>
+                However, if the CC Error is fixed then consider the case where the solution misidentified an integral 
+                solution \(x_1 = 3\) as \(x_1 = 2.999999999999999\), then immediately after, it will branch into 
+                2 sub problem, the first fixed the lower bound, making \(x \geq 2\) and \( x \leq 3\), and THAT! The 
+                second branch gives forces the algorithm to compute based on the correct integral value, hence, 
+                re-crafting the solution! 
+            </p>
         </section>
         <div class="footer-padding">
 
