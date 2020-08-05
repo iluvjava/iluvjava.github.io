@@ -494,6 +494,36 @@ print(float(Frac(0.57)/Frac(0.19)))
                 doesn't have any errors compare to summing up with rational numbers. 
             </p>
             <!--Maybe plotting the errors here too. -->
+            
+            <div id="ploty-module"> 
+            </div>
+            <h3>How Are These Data Computed?</h3>
+            <p>
+                I use the Numpy.sum and the sum in python to sum up floats, and I compare the results to summing up using
+                python fractions module. The Error is the absolute value of the differences of the sums. 
+            </p> 
+            <p>
+                For each array size, I repeat the above process for 30 times and get the mean and the standard deviations. 
+                The upper bound and lower bound frame the 66% confidence interval (centered) for the true average errors. 
+                The average is ploted as the dots and the lines are the upper/lower bound of the confidence interval for
+                each dot. 
+            </p>
+            <p>
+                The experiment results matches the theoretical expectatsion. Numpy.sum uses pairwising summing and 
+                the error is: \(\log(N)\), where N is the size of the array. The Naive way of summing the array in the 
+                worse case, has an error that grows linear with the size of the array. 
+            </p>
+            <h3>Conclusion</h3>
+            <p>
+                The nump.sum and the sum in python both has errors when summing up an array of floats, they 
+                are expetected to occur over half of the time.
+            </p>
+            <h3>The math.fsum and Kahan Summation</h3>
+            <p>
+                They both have zero errors when printed out, or more precisely: 0.0, which means that the error 
+                is on a magnitude below 1e-17. However, the math.fsum is faster and it's likely that it's 
+                optimized by python. 
+            </p>
 
         </section>
         <div class="footer-padding">
