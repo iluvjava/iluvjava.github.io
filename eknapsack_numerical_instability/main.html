@@ -49,15 +49,43 @@
                     <li>
                         <a href="#intro">Intro</a>
                     </li>
+                    <li><a href="#inst">Numerical Instability</a></li>
+                    <li><a href="#branching">Impact on Branching</a></li>
+                    <li><a href="#mitigating-errors">Mitigating the Errors</a></li>
+                    <li><a href="#summing-algorithms">Stable Summation Algorithms</a></li>
+                    <li>
+                        <a href="#algorithm-execution-time">
+                            The Execution Time of Different Sums
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#comparing-with-pulp">
+                            Comparing with Pulp LP Solver
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
     <div id="side-bar">
         <ul>
-            <!--Section Links. -->
+            <!--Section links. -->
             <li>
                 <a href="#intro">Intro</a>
+            </li>
+            <li><a href="#inst">Numerical Instability</a></li>
+            <li><a href="#branching">Impact on Branching</a></li>
+            <li><a href="#mitigating-errors">Mitigating the Errors</a></li>
+            <li><a href="#summing-algorithms">Stable Summation Algorithms</a></li>
+            <li>
+                <a href="#algorithm-execution-time">
+                    The Execution Time of Different Sums
+                </a>
+            </li>
+            <li>
+                <a href="#comparing-with-pulp">
+                    Comparing with Pulp LP Solver
+                </a>
             </li>
         </ul>
     </div>
@@ -399,7 +427,7 @@ Branching Identifier:
         </p>
         </section>
         <hr>
-        <section>
+        <section id="mitigating-errors">
             <h2>Mitigating the Errors</h2>
             <p>
                 The catastrophic cancellation error (CC Error) is a major one, the binary representation error 
@@ -455,7 +483,7 @@ print(float(Frac(0.57)/Frac(0.19)))
                 And it will still give the wrong number... And unsurprisingly, the "Decimal" in fractions does the same. 
             </p> 
         </section>
-        <section>
+        <section id="summing-algorithms">
             <h2>Kahan's Summation Algorithm</h2>
             <p>
                 "Can I just use the python default sum() method?"
@@ -526,9 +554,15 @@ print(float(Frac(0.57)/Frac(0.19)))
             </p>
         </section>
         <hr>
-
+        <section id="algorithm-execution-time">
+            <h2>The Execution Time of Different Sums</h2>
+        </section>
+        <hr>
+        <section id="comparing-with-pulp">
+            <h2>Comparing with Pulp LP Solver</h2>
+            
+        </section>
         <div class="footer-padding">
-        
         </div>
     </div>
     <footer>

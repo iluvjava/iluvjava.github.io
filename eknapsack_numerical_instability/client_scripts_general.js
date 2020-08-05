@@ -80,7 +80,7 @@
             }; 
 
             let NumpySumStdUpper = {
-                x: Xs, y: theData["NumpySumStdLower"], 
+                x: Xs, y: theData["NumpySumStdUpper"], 
                 mode: "lines", 
                 name: "Numpy Error Upper Bound", 
                 marker: {
@@ -110,11 +110,13 @@
             }; 
 
             TitleFont = {
+                family: 'Courier New, monospace', 
                 size: 18,
                 color: 'lightgrey'
             }; 
+
             let LayOut = {
-                title: 'Errors of numpy.sum() and python default sum()',
+                title: 'Errors of numpy.sum() and python default sum()', 
                 xaxis: {
                   title: 'Array Size',
                   titlefont: TitleFont
