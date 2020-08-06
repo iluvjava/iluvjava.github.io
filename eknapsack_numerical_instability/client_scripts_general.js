@@ -34,8 +34,13 @@
 
     function assignStyleToPlotly()
     {
-        plotyModule = id("ploty-module")
-        plotyModule.style = "width:800;height:600;"; 
+        let plotyModule = id("plotly-module")
+        plotyModule.style = "width:800;height:900;"; 
+        plotyModule.style.marginLeft = "auto"; 
+        plotyModule.style.marginRight = "auto";
+        
+        plotyModule = id("plotly-module2")
+        plotyModule.style = "width:800;height:900;"; 
         plotyModule.style.marginLeft = "auto"; 
         plotyModule.style.marginRight = "auto";
         // plotyModule.style.overflow = "scroll"; 
@@ -62,7 +67,7 @@
             let PythonSumPlotMeanError = {
                 x: Xs, y: theData["ErrorsMeanPythonSum"], 
                 mode: "markers", 
-                tuype: "scatter", 
+                type: "scatter", 
                 name: "Python Sum Errors", 
                 marker: {
                     color: "rgb(50, 255, 50)"
@@ -138,7 +143,72 @@
                         NumpySumStdLower,
                         NumpySumStdUpper, 
                         ]; 
-            Plotly.newPlot(id("ploty-module"), data, LayOut); 
+            Plotly.newPlot(id("plotly-module"), data, LayOut); 
+
+        };
+        return fetch(source)
+            .then(response => response.json())
+            .then(populateData); 
+
+    }
+
+    function fetchDataAndPlot2(source)
+    {
+        
+        function populateData(theData)
+        {
+            let Xs = theData["Sizes"]; 
+            
+            let ThePlotsNames = ["Kahan Sum", "Numpy Sum", "Python Fsum", "Rational Sum"];
+            let TheColors = ["rgba(255, 50, 50, 150)", "rgba(50, 255, 50, 150)", "rgba(50, 50, 255, 150)", "rgba(50, 50, 50, 150)"];
+            let PlotSkeleton = 
+            {
+                x: Xs, mode: "markers", type: "scatter"
+            };
+            let TheTraces = [];
+
+            for(let I = 0; I < 4; I++)
+            {
+                
+                let BeingConstructed = Object.assign({}, PlotSkeleton); 
+                BeingConstructed.name = ThePlotsNames[I] + "Means";
+                BeingConstructed.y = theData[ThePlotsNames[I]]["Means"];
+                BeingConstructed.marker = {color: TheColors[I]};
+                TheTraces.push(BeingConstructed)
+
+                BeingConstructed = Object.assign({}, BeingConstructed); 
+                BeingConstructed.name = ThePlotsNames[I] + "Upper"; 
+                BeingConstructed.y = theData[ThePlotsNames[I]]["Upper"]; 
+                BeingConstructed.mode = "lines"; 
+                TheTraces.push(BeingConstructed);
+
+                BeingConstructed = Object.assign({}, BeingConstructed); 
+                BeingConstructed.name = ThePlotsNames[I] + "Lower"; 
+                BeingConstructed.y = theData[ThePlotsNames[I]]["Lower"]; 
+                BeingConstructed.mode = "lines"; 
+                TheTraces.push(BeingConstructed);
+            }
+
+            // let KahanSum = {
+            //     x: Xs, 
+            //     y: theData["Khan Sum"]["Means"], 
+            //     mode: "markers", 
+            //     marker: {
+            //         color: "rgb(255, 50, 50)"
+            //     }, 
+            //     type: "scatter", 
+            //     name: "Kahan sum mean"
+            // };
+            // let KahanSumLower = Object.assign({}, KahanSum);
+            // KahanSumLower.y = TheData["Khan Sum"]["Lower"];
+            // KahanSumLower.name = "Kahan sum lower"; 
+            // let KahanSumUpper = Object.assign({}, Kahan);
+            // KahanSumUpper.y = TheData["Khan Sum"]["Upper"];
+            // KahanSumUpper.name = "Kahan sum upper";
+
+            let LayOut = {height: 600};  
+
+            Plotly.newPlot(id("plotly-module2"), TheTraces, LayOut);
 
         };
         return fetch(source)
@@ -165,7 +235,10 @@
         }
         console.log("Loading Ploty module.");
         assignStyleToPlotly();
-        fetchDataAndPlot("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/errors.json");
+        fetchDataAndPlot
+        ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/errors.json");
+        fetchDataAndPlot2
+        ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/Execution%20time.json")
     }
 
     window.onload = main;

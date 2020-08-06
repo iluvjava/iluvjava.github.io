@@ -450,8 +450,8 @@ Branching Identifier:
             <p>
                 In addition to the previous points, The sub-routines of the greedy algorithm that provides 
                 heuristics for the algorithm depends on the accuracy of a running sum. Or simply speaking, when the 
-                algorithm tries to figure out what is the remaining of available weights of the knapsack as it adds as
-                many valable items as possible. It's subtracting weights of the items repeatedly.
+                algorithm tries to figure out what is the remaining available budget of the knapsack as it adds as
+                items decreasing in value, it's subtracting weights of the items repeatedly.
                 And thge accuracy of that procedure depends heavily on the numerical stability. 
             </p>
             <h3>Why Not use Rational/BigDecimals to Mitigate the Errors?</h3>
@@ -523,14 +523,14 @@ print(float(Frac(0.57)/Frac(0.19)))
                 improving the Nested Multiplication algorithm or polynomial evaluations. 
             </p>
             <p>
-                I benchedmarked those 4 algorithms in <a href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/Numerical%20Instability/numerical_instability_experiments.py">
+                I benchedmarked those 4 algorithms in <a target="_blank" href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/Numerical%20Instability/numerical_instability_experiments.py">
                 here</a>. And... to my surprise, the default sum() in python incorrectly summed up 95% of the floats 
                 arrays for size of 100, and np.sum() summed up 77% of them incorrectly, and Kahan's method's 
                 doesn't have any errors compare to summing up with rational numbers. 
             </p>
             <!--Maybe plotting the errors here too. -->
             
-            <div id="ploty-module"> 
+            <div id="plotly-module"> 
             </div>
             <h3>How Are These Data Computed?</h3>
             <p>
@@ -563,11 +563,39 @@ print(float(Frac(0.57)/Frac(0.19)))
         <hr>
         <section id="algorithm-execution-time">
             <h2>The Execution Time of Different Sums</h2>
+            <p>
+                I also did experiments to figure out the run-time of each of the algorithms, and here is the plot: 
+            </p>
+            <div id="plotly-module2">
+                
+            </div>
+            <p>
+                The Python implementation of the Kahan algorithm is not fast compare to math.fsum() in python, which 
+                shares the same accuracy. 
+            </p>
+            <p>
+                However, the implementations for the Kahan Running sum is very easy, and it can easily be extended 
+                to support summing up sequences of comnplex numbers. 
+            </p>
+            <p>
+                A Kahan Rumming Sum is a sum that allows the user to use the number as a accumulator, and then 
+                add floats to it in real time, making it more general and comfortable to use. It's simple and it gets 
+                the works done pretty elegantly. 
+            </p>
+            <p>
+                The simple implementation of Kahan Rumming Sum is 
+                <a target="_blank" href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/kahan_summation/core.py">here</a>. 
+            </p>
+
         </section>
         <hr>
         <section id="comparing-with-pulp">
             <h2>Comparing with Pulp LP Solver</h2>
-            
+            <p>
+                In terns of the quality and stability of the algorithm, my implementation in python beats the openn 
+                source Coint_CBC solver. 
+            </p>
+
         </section>
         <div class="footer-padding">
         </div>
