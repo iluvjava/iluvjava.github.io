@@ -447,6 +447,13 @@ Branching Identifier:
                 second branch is forced to compute solution again based on the correct integral value, hence, 
                 re-crafting the solution (without the CC Error)! 
             </p>
+            <p>
+                In addition to the previous points, The sub-routines of the greedy algorithm that provides 
+                heuristics for the algorithm depends on the accuracy of a running sum. Or simply speaking, when the 
+                algorithm tries to figure out what is the remaining of available weights of the knapsack as it adds as
+                many valable items as possible. It's subtracting weights of the items repeatedly.
+                And thge accuracy of that procedure depends heavily on the numerical stability. 
+            </p>
             <h3>Why Not use Rational/BigDecimals to Mitigate the Errors?</h3>
             <p>
                 This is an important one because many programmers will be tempted to resolve the problem with provided 
