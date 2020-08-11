@@ -1,5 +1,8 @@
 (function()
 {
+
+
+
     // It's Global, copied from stackoverflow. 
     window.mobileCheck = function() {
         let check = false;
@@ -46,11 +49,12 @@
         // plotyModule.style.overflow = "scroll"; 
     }
 
-    function fetchDataAndPlot(source)
+    function fetchDataAndPlot1(source)
     {
-
+        populateDataLocal();
         function populateData(theData)
         {
+            window.Storage["NumericalErrorPlots"] = theData; // backup the data. 
 
             let Xs = theData["Sizes"]; 
             let NumpySumPlotMeanError = {
@@ -146,21 +150,50 @@
             Plotly.newPlot(id("plotly-module"), data, LayOut); 
 
         };
-        return fetch(source)
-            .then(response => response.json())
-            .then(populateData); 
+        
+        function populateDataLocal()
+        {
+          if(window.Storage["NumericalErrorPlots"])
+          {
+            populateData(window.Storage["NumericalErrorPlots"])
+            return true; 
+          }
+          else
+          {
+            return false
+          }
+        };
 
+        promise =  fetch(source)
+            .then(response => response.json())
+            .then(populateData)
+            .catch(()=>{
+                console.log("Error occurred when handling the fetching of data:" +  
+                + "umerical Algorithm Errors Plot");
+                if(!populateDataLocal())
+                {
+                  console.log("Client side no back up, failed. ");
+                }
+            }); 
+        
+        function resizeHandler(){
+            populateDataLocal();
+        };
+        window.addEventListener("resize", resizeHandler);
+        return promise;
     }
 
     function fetchDataAndPlot2(source)
     {
-        
+        populateDataLocal();
         function populateData(theData)
         {
+            window.Storage["NumericalPerformance"] = theData;
             let Xs = theData["Sizes"]; 
             
             let ThePlotsNames = ["Kahan Sum", "Numpy Sum", "Python Fsum", "Rational Sum"];
-            let TheColors = ["rgba(255, 50, 50, 150)", "rgba(50, 255, 50, 150)", "rgba(50, 50, 255, 150)", "rgba(50, 50, 50, 150)"];
+            let TheColors = ["rgba(255, 50, 50, 150)", 
+            "rgba(50, 255, 50, 150)", "rgba(50, 50, 255, 150)", "rgba(50, 50, 50, 150)"];
             let PlotSkeleton = 
             {
                 x: Xs, mode: "markers", type: "scatter"
@@ -189,33 +222,44 @@
                 TheTraces.push(BeingConstructed);
             }
 
-            // let KahanSum = {
-            //     x: Xs, 
-            //     y: theData["Khan Sum"]["Means"], 
-            //     mode: "markers", 
-            //     marker: {
-            //         color: "rgb(255, 50, 50)"
-            //     }, 
-            //     type: "scatter", 
-            //     name: "Kahan sum mean"
-            // };
-            // let KahanSumLower = Object.assign({}, KahanSum);
-            // KahanSumLower.y = TheData["Khan Sum"]["Lower"];
-            // KahanSumLower.name = "Kahan sum lower"; 
-            // let KahanSumUpper = Object.assign({}, Kahan);
-            // KahanSumUpper.y = TheData["Khan Sum"]["Upper"];
-            // KahanSumUpper.name = "Kahan sum upper";
-
             let LayOut = {height: 600};  
 
             Plotly.newPlot(id("plotly-module2"), TheTraces, LayOut);
 
         };
-        return fetch(source)
-            .then(response => response.json())
-            .then(populateData); 
+        function populateDataLocal()
+        {
+            if (window.Storage["NumericalPerformance"])
+            {
+                populateData(window.Storage["NumericalPerformance"]);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-    }
+        promise = fetch(source)
+            .then(response => response.json())
+            .then(populateData).catch(
+                ()=>{
+                    console.log("Error occurred when handling the fetching of data:" +  
+                    + "umerical Algorithm Errors Plot");
+                    if(!populateDataLocal())
+                    {
+                      console.log("Client side no back up, failed. ");
+                    }
+                }
+            ); 
+
+        function resizeHandler()
+        {
+            populateDataLocal();
+        }
+        window.addEventListener("resize", resizeHandler);
+        return promise;
+    }  
 
     function main()
     {
@@ -235,7 +279,7 @@
         }
         console.log("Loading Ploty module.");
         assignStyleToPlotly();
-        fetchDataAndPlot
+        fetchDataAndPlot1
         ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/errors.json");
         fetchDataAndPlot2
         ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/Execution%20time.json")
