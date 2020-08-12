@@ -49,6 +49,9 @@
         // plotyModule.style.overflow = "scroll"; 
     }
 
+    /**
+     * First plot about the accuracies of floats summing algorithms. 
+     */
     function fetchDataAndPlot1(source)
     {
         populateDataLocal();
@@ -170,10 +173,6 @@
             .catch(()=>{
                 console.log("Error occurred when handling the fetching of data:" +  
                 + "umerical Algorithm Errors Plot");
-                if(!populateDataLocal())
-                {
-                  console.log("Client side no back up, failed. ");
-                }
             }); 
         
         function resizeHandler(){
@@ -183,6 +182,10 @@
         return promise;
     }
 
+    /**
+     * Second plots about the speed of floats summing algorithm. 
+     * @param {*} source 
+     */
     function fetchDataAndPlot2(source)
     {
         populateDataLocal();
@@ -246,20 +249,70 @@
                 ()=>{
                     console.log("Error occurred when handling the fetching of data:" +  
                     + "umerical Algorithm Errors Plot");
-                    if(!populateDataLocal())
-                    {
-                      console.log("Client side no back up, failed. ");
-                    }
                 }
             ); 
 
         function resizeHandler()
         {
             populateDataLocal();
-        }
+        }; 
         window.addEventListener("resize", resizeHandler);
         return promise;
     }  
+
+    /**
+     * Third plot about the speed of native python and python pulp + Coin_CBC solver, solving the Extended 
+     * Knapsack problem. 
+     * @param {*} source 
+     */
+    function fetchDataAndPlot3(source)
+    {
+        
+       
+
+        function populateData(theData){
+            let PythonExecTime = theData["GreedyBBSolver"]["Execution_Time"];
+            let PulpExecTime = theData["PulpSolver"]["Execution_Time"];
+            let PlotSkeleton = {
+                type: "box", 
+            }
+            let PythonPlot = {...PlotSkeleton, ...{y: PythonExecTime, 
+                name: "Python Exec Time"}};
+            let PulpPlot = {...PlotSkeleton, ...{y: PulpExecTime, 
+                name: "Pulp Exec Time"}};
+            let Layout = {
+                height: 700, title: "Speed comparison"
+            }; 
+            Plotly.newPlot(id("plotly-module3"), [PythonPlot, PulpPlot], 
+            Layout);
+            window.Storage["PythonPulpPlot"] = theData; // Save to local. 
+        }; 
+
+        function populateTheDataLocal()
+        {
+            
+            if (window.Storage["PythonPulpPlot"])
+            {
+                populateData(window.Storage["PythonPulpPlot"]);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }; 
+        populateTheDataLocal();
+
+        promise = fetch(source).then(res => res.json())
+        .then(populateData)
+        .catch(()=>
+        {
+            console.log("Fetch Error, Unable to load the third plot. ")
+        });
+        
+        window.addEventListener("resize", populateTheDataLocal);
+        return promise;
+    }
 
     function main()
     {
@@ -283,6 +336,8 @@
         ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/errors.json");
         fetchDataAndPlot2
         ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/Execution%20time.json")
+        fetchDataAndPlot3
+        ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/knapsack/Extended_knapsack_benchmark_results.json")
     }
 
     window.onload = main;

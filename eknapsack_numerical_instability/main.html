@@ -158,7 +158,8 @@
             <p>
                 However, the python outputs the following: 1.3800000000000001, which is an infeasible solution. 
                 The binary of this number that stores in the computer memory is correct, but when converting it 
-                to an integer in base 10, it ceased to be correct. See more here: 
+                to an integer in base 10, it ceased to be correct. See more 
+                <a href="https://stackoverflow.com/questions/588004/is-floating-point-math-broken">here</a>. 
             </p>
             <p>
                 One might doubt that: This might be an rare occurance and even if the weights are very close to 
@@ -593,8 +594,16 @@ print(float(Frac(0.57)/Frac(0.19)))
                 The python implementation of the algorithm has remarkable numerical accuracy, but terrible 
                 run-time compare to the Coin_CBC solver. 
             </p>
-            
-
+            <p>
+                The initialization offset of Coin_CBC is negligible compare to the slowness of python.  
+            </p>
+            <p>
+                But, over all the algorithm serves a great prototype for constructing the EKnapSack solver 
+                in other languages. And it demonstrated things well. 
+            </p>
+            <div id="plotly-module3">
+                <!--Plot it here. -->
+            </div>
         </section>
         <div class="footer-padding">
         </div>
