@@ -281,7 +281,8 @@
             let PulpPlot = {...PlotSkeleton, ...{y: PulpExecTime, 
                 name: "Pulp Exec Time"}};
             let Layout = {
-                height: 700, title: "Speed comparison"
+                height: 700, title: `Speed comparison, number of items` + 
+                ` in problem: ${theData["Problem_size"]}`
             }; 
             Plotly.newPlot(id("plotly-module3"), [PythonPlot, PulpPlot], 
             Layout);
