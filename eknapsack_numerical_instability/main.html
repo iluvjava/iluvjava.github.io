@@ -159,7 +159,7 @@
                 However, the python outputs the following: 1.3800000000000001, which is an infeasible solution. 
                 The binary of this number that stores in the computer memory is correct, but when converting it 
                 to an integer in base 10, it ceased to be correct. See more 
-                <a href="https://stackoverflow.com/questions/588004/is-floating-point-math-broken">here</a>. 
+                <a target="_blank" href="https://stackoverflow.com/questions/588004/is-floating-point-math-broken">here</a>. 
             </p>
             <p>
                 One might doubt that: This might be an rare occurance and even if the weights are very close to 
@@ -181,7 +181,7 @@
                 outputs, let's read it together, pay attention to the pink highlighted lines of outputs from the 
                 algorithm. 
             </p>
-            <pre>
+            <pre id="big-printout">
                 <code>
 BB executing with warm start solution and objective value: 
 {2: 5, 0: 2}
@@ -395,6 +395,25 @@ Branching Identifier:
       [~] Sub-Optimal; Branching is pruned. 
                 </code>
             </pre>
+            For your Covenience, I also prepare a UML diagram for illustrating the propagation of the errors: 
+            <div class="img-wrapper">
+                <img src="bbWithWithLatex.png">
+            </div>
+        <p>
+            The Graph: 
+            <ul>
+                <li>
+                    Each object is an instacne of a problem, with the greedy solution and the objective value of the solution. 
+                </li>
+                <li>
+                    The algorithm branches from left to right in a DFS manner, that is the correct order to read the tree.
+                </li>
+            </ul>
+        </p>
+        <p>
+            The algorithm misses the optimal solution on node: Root, P1, P11, caused another integral solution to be 
+            found at node P11000. 
+        </p>
         <p>
             The error that causes the issue is not the Binary number incorrectly representing the numbers. 
             Although, that is the true underlying problem, but the real killer behind is how the error propagage 
@@ -617,6 +636,14 @@ print(float(Frac(0.57)/Frac(0.19)))
         <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
         </script>
         <!--For MathJax Ends-->
+
+        <div class="fixed-bottom hide" id="footer-display">
+            <div class="row align-items-center" id="footer-display-inner">
+                <div class="col text-right">
+                    <button type="button" class="btn btn-primary toggle-btn">Toggle Big Printout</button>
+                </div>
+            </div>
+        </div>
     </footer>
 </body>
 </html>

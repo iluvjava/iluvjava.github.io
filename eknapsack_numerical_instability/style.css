@@ -27,6 +27,10 @@
   padding-inline-start: 2em;
 }
 
+#footer-display {
+  background-color: aqua;
+}
+
 pre {
   overflow-x: scroll;
 }
@@ -34,4 +38,8 @@ pre {
 h1, h2, h3 {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+
+.hide {
+  display: none;
 }

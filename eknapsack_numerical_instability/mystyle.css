@@ -19,10 +19,6 @@
   background-color: rgba(134,216,247, 0.5);
 }
 
-div.footer-padding {
-  margin-top: 10em;
-}
-
 #side-bar li, nav li {
   list-style-type: none;
   padding-left: 0%;
@@ -32,6 +28,16 @@ div.footer-padding {
 
 #side-bar ul {
   padding-inline-start: 2em;
+}
+
+#footer-display {
+  background-color:  rgba(249,184,210, 0.5);
+  color: cyan;
+  padding: 0.5em;
+}
+
+div.footer-padding {
+  margin-top: 10em;
 }
 
 nav ul {
@@ -70,4 +76,12 @@ nav li {
 
 .inline-code-highlight {
   background: pink;
+}
+
+.img-wrapper {
+  overflow-x: scroll;
+  overflow-y: scroll;
+  width: 100%;
+  height: 30em;
+  position: relative;
 }

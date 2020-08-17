@@ -1,8 +1,5 @@
 (function()
 {
-
-
-
     // It's Global, copied from stackoverflow. 
     window.mobileCheck = function() {
         let check = false;
@@ -27,7 +24,7 @@
 
     function q(queryString)
     {
-        return document.querySelector(queryString); 
+        return document.querySelector(queryString);
     }
 
     function menuBottonHandler()
@@ -267,9 +264,6 @@
      */
     function fetchDataAndPlot3(source)
     {
-        
-       
-
         function populateData(theData){
             let PythonExecTime = theData["GreedyBBSolver"]["Execution_Time"];
             let PulpExecTime = theData["PulpSolver"]["Execution_Time"];
@@ -315,6 +309,35 @@
         return promise;
     }
 
+    function prepareFooterDisplay()
+    {
+        function prepareTheButton(){
+            let TheBtn = q("#footer-display .toggle-btn");
+            TheBtn.addEventListener("click", ()=>{
+                id("big-printout").classList.toggle("hide");
+            });
+        };
+        function prepareTheDisplay(){
+            let Thedisplay = id("footer-display");
+            window.addEventListener("scroll", ()=>{
+                let Above = id("intro").scrollHeight + id("inst").scrollHeight;
+                let Below = Above + id("branching").scrollHeight;
+                let WindowTopPosition = window.scrollY;
+                let WindowMidPosition = window.innerHeight/2 + WindowTopPosition;
+                if (WindowMidPosition > Above && WindowMidPosition < Below)
+                {
+                    Thedisplay.classList.remove("hide");
+                }
+                else 
+                {
+                    Thedisplay.classList.add("hide");
+                }
+            });
+        };
+        prepareTheButton(); 
+        prepareTheDisplay();
+    }
+
     function main()
     {
         if (window.mobileCheck())
@@ -326,7 +349,7 @@
             MainContent.style.fontSize = "small"; 
             
             id("side-bar").classList.toggle("hide");
-            Menu = q("span.nav-hamburger-menu-icon")
+            Menu = q("span.nav-hamburger-menu-icon");
             Menu.classList.toggle("hide");
             addListenerTo(Menu, menuBottonHandler, "click"); 
             
@@ -336,9 +359,10 @@
         fetchDataAndPlot1
         ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/errors.json");
         fetchDataAndPlot2
-        ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/Execution%20time.json")
+        ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/Numerical%20Instability/Execution%20time.json");
         fetchDataAndPlot3
-        ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/knapsack/Extended_knapsack_benchmark_results.json")
+        ("https://raw.githubusercontent.com/iluvjava/Silly_Python_Stuff/master/knapsack/Extended_knapsack_benchmark_results.json");
+        prepareFooterDisplay();
     }
 
     window.onload = main;
