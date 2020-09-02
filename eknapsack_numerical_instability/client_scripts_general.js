@@ -314,12 +314,12 @@
         function prepareTheButton(){
             let TheBtn = q("#footer-display .toggle-btn");
             TheBtn.addEventListener("click", ()=>{
-                id("big-printout").classList.toggle("hide");
+                id("big-printout").classList.toggle("fixed-height");
             });
         };
         function prepareTheDisplay(){
             let Thedisplay = id("footer-display");
-            window.addEventListener("scroll", ()=>{
+            window.addEventListener("scroll", ()=> {
                 let Above = id("intro").scrollHeight + id("inst").scrollHeight;
                 let Below = Above + id("branching").scrollHeight;
                 let WindowTopPosition = window.scrollY;

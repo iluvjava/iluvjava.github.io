@@ -87,3 +87,9 @@ nav li {
   height: 30em;
   position: relative;
 }
+
+/* existed for scripts stuff */
+
+.fixed-height {
+    height: 500px;
+}
