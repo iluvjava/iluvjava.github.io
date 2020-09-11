@@ -125,7 +125,7 @@
               <h6 class="card-subtitle mb-2 text-muted">2019 Summer</h6>
               <p class="card-text">Made with for the purpose of practicing GRE verbal reasoning tests and
                 web-development</p>
-              <a href="grepassages.html" class="card-link">Page Link</a>
+              <a href="grepassages.html" class="btn btn-primary">Page Link</a>
             </div>
           </div>
         </div>
@@ -138,7 +138,7 @@
               <h6 class="card-subtitle mb-2 text-muted">2019 Fall</h6>
               <p class="card-text">This is a Conway's Game of life written in javascript. It runs fasts and it's really
                 cool. </p>
-              <a href="gameoflife/Game.html" class="card-link">Page Link</a>
+              <a href="gameoflife/Game.html" class="btn btn-primary">Page Link</a>
             </div>
           </div>
         </div>
@@ -152,13 +152,16 @@
               <p class="card-text">I wrote in details about the Knapsack problem,
                 with mathematical proofs and Psudo codes and link to repo with implementations, topics include:
               <ul>
-                <li>Primal/Dual Dynamic Programming. </li>
+                <li>Primal/Dual Dynamic Programming.</li>
                 <li>Approximation Algorithm and their bounds.</li>
                 <li>Branch and Bound and Mixed Heuristic.</li>
                 <li>Extended Knapsack and Linear Programming.</li>
               </ul>
               </p>
-              <a href="peek_into_np_hard/main.html" class="card-link">Page Link</a>
+              <a href="peek_into_np_hard/main.html" class="btn btn-primary">Page Link</a>
+              <a href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/knapsack/core.py" class="btn btn-primary" target="_blank">
+                Source Codes
+              </a>
             </div>
           </div>
         </div>
@@ -173,16 +176,35 @@
               <p class="card-text">
                 The Branch and bound algorithm for the extended knapsack, (or branch and bound algorithm for LP in 
                 general) experiences numerical instability due to the IEEE 754 representation of number. Which is a common 
-                standard for most programming language. Here we addresses the problem with the following: 
+                standard for most programming language. Here we have a discussion on the following:
               <ul>
-                <li>Where it occurs</li>
-                <li>How it occurs</li>
-                <li>The impact it has</li>
-                <li>How to detect</li>
-                <li>How to fix it/by pass it</li>
+                <li>
+                  Catastrophic Cancellation as the culprit of deviation from the global optimal.
+                </li>
+                <li>
+                  Visualizing how exactly Catastrophic Cancellations propagate in the Branch and Bound algorithm.
+                </li>
+                <li>
+                  Catastrophic Cencellation plays the major role and compromises of using rational computations 
+                  is not worth it because of efficiency. 
+                </li>
+                <li>
+                  Efficiency comparison with different solution to address the numerical instability with graphs.
+                </li>
+                <li>
+                  Efficiency comparison of Branch and Bound implementations in python with Coin_CBC open souce Mixed 
+                  Integer Solver.
+                </li>
+                <li>
+                  Visualizing the Optimal solution with Matplotlib.pyplot.
+                </li>
               </ul>
               </p>
-              <a href="eknapsack_numerical_instability/main.html" class="card-link">Page Link</a>
+              <a href="eknapsack_numerical_instability/main.html" class="btn btn-primary">Page Link</a>
+              <a href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/knapsack/extended_napsack_core3.py" 
+              class="btn btn-primary" target="_blank">
+                Source Codes Link
+              </a>
             </div>
           </div>
         </div>

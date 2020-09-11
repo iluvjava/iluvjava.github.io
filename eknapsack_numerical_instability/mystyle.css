@@ -59,6 +59,10 @@ nav li {
   padding-bottom: 1em;
 }
 
+img {
+  width: 80%;
+}
+
 .navbar, nav li{
   background-color: rgba(249,184,210, 0.5); 
   backdrop-filter: saturate(180%) blur(10px);
