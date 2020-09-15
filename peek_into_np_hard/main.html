@@ -160,7 +160,8 @@
               Optimization: 
               <ul>
                 <li>
-                  Only the previous column of T is used for each iteration, so that can be simplied by storing only previous column. 
+                  Only the previous column of T is used for each iteration, so that can be simplied by storing only 
+                  previous column. 
                 </li>
                 <li>
                   We need to keep track of the solution using a dictionary. 
@@ -436,14 +437,14 @@
             2 of the most important ingredient of the branch and bound algorithm are: 
             <ul>
               <li>The way order of branching.</li>
-              <li>The topology of growing the tree.</li>
-              <li>The precision of the Heuristic</li>
+              <li>The topology of growing tree. (DFS, BFS, or Maximum Heuristic, or some other kind)</li>
+              <li>The precision of the Heuristic.</li>
             </ul>
             <br>
             The easier heuristic to use is the greedy algorithm, it's fast, but it's not always 
             very accurate.
         </p>
-        <h3>Demo Psuedocodes: </h3>
+        <h3>Psuedocodes</h3>
         <p>
           Define a class name: Problem 
           <p>
@@ -487,7 +488,7 @@
             </li>
           </ul>
         </p>
-        <h4>Psuedo Codes: </h4>
+        <h4>The Codes</h4>
         <p>
           Inputs: 
           <ul>
@@ -623,39 +624,44 @@
       <section id="lp">
         <h2>Knapsack but Linear Programming</h2>
         <p>
-          This is a linear programming problem in its nature, and all above discussion is only for mathematical interests
-          however in practices, the reduction of this problem to linear programming is the easiest once a solver avaible. 
+          This is a linear programming problem in its nature, and all above discussions are only for mathematical interests
+          however in practices, the reduction of this problem to linear programming is the easiest once a solver is avaible. 
         </p>
         <h3>Extended Knapsack</h3>
         <p>
-          This problem so far deal with choosing an item that is 0/1, means for each item, we only have the choice 
+          This problem so far deals with binary choices, means for each item, we only have the choice 
           to: include, or not include. 
           However, as we already show that, inside the approximation algorithm, items can be rounded to the same weights, 
-          and it it's equivalent of having the same items, but with non-binary variable. 
+          and it it's equivalent of having the same items, but with non-binary decision variable.
 
-          Hence the new Knapsack probem is concerned with using an item multiple times, or more specifically: 
+          Hence the new Knapsack probem is concerned with taking multiple of the same item, or more specifically:
           $$x_i \in \lbrack 0, c_i\rbrack \cap \mathbb{Z}_+$$
           Which is the only changes made to the 0/1 Knapsack Problem. 
         </p>
         <p>
-          The major implementation of this problem is an invitable one: <a href="https://en.wikipedia.org/wiki/Truncation_error#:~:text=In%20numerical%20analysis%20and%20scientific,error%20is%20a%20truncation%20error.">
+          The major implementation challenge is an inevitable one: 
+          <a href="https://en.wikipedia.org/wiki/Truncation_error#:~:text=In%20numerical%20analysis%20and%20scientific,error%20is%20a%20truncation%20error.">
           Floating Point Truncation Errors</a>. 
-          For this reason, we cannot get absolute optimality for every well defined inputs. I think this is out of scope for 
+          For this reason, we cannot get absolute optimality for every well defined inputs. 
+          I think this is out of scope for 
           this dicussion about Knapsack and NP-Hardness, but I will review and and anal=yze it in the future. 
-          The problem is discovered by inputing some items with unrealistic distribution, and it mannage to produce inaccuracy on the optimality 
-          for both the COIN_CBC solver and my solver. This problem is profound and might be hard to solve. But I believe it's easy 
-          to do rational computations in python, so please don't worry about it too much, but it's a real concern. 
+          The problem is discovered by inputing some items with unrealistic distribution, and it mannage to produce
+          inaccuracy on the optimality 
+          for both the COIN_CBC solver and my solver. This problem is profound and might be hard to address.
+          But I believe it's easy 
+          to do rational computations in python, so we at least have something to fallback,
+          so please don't worry about it too much, but it's a real legit concern.
         </p>
         <p>
           The branch and bound implementation of the Extended-Knapsack can be viewed 
           <a href="https://github.com/iluvjava/Silly_Python_Stuff/blob/master/knapsack/extended_napsack_core2.py">here</a>:
         </p>
-        <h3>Branch and Bound</h3>
+        <h3>Branch and Bound Analogy</h3>
         <p>
           It's up to the reader to realize the trivial fact that the branch and bound algorithm for linear programming is equivalent 
           to the branch and bound algorithm using greedy approximation as the heuristic. 
         </p>
-        <h3>Gomory Cut</h3>
+        <h3>Gomory Cut and Approximation</h3>
         <p>
           It's left as an excercise for the readers to comtemplate the intuitive connection between using scaling and rounding
           as heuristic and Branch and Bound algorithm versus using Gomory cut on the linear programming problem. 
@@ -774,7 +780,7 @@ if __name__ == "__main__":
           method in the script. 
           <ul>
             <li>
-              rand_problem_exponential
+              rand_problem_ints
               <ul>
                 <li>This method generates item's with weights and profits from a uniform distribution. </li>
               </ul>
