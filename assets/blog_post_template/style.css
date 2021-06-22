@@ -1,0 +1,45 @@
+#main-content {
+  width: 95%;
+  padding-left: 250px;
+  font-size: large;
+  min-width: 500px;
+  overflow-x: scroll;
+}
+
+#side-bar {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 200px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 3em; /* Stay at the top */
+  left: 0;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
+}
+
+#side-bar li {
+  list-style-type: none;
+  padding-left: 0%;
+  padding-top: 1em;
+}
+
+#side-bar ul {
+  padding-inline-start: 2em;
+}
+
+#footer-display {
+  background-color: aqua;
+}
+
+pre {
+  overflow-x: scroll;
+}
+
+h1, h2, h3 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.hide {
+  display: none;
+}

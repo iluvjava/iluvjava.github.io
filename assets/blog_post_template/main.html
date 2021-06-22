@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Numerical Instability of Extended Knapsack</title>
+
+    <!--For Bootstrap style-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Bootstrap end-->
+
+    <!--MyStyle-->
+    <link rel="stylesheet" href="mystyle.css">
+    <!--End-->
+
+    <!--For plotting data and Adpating Webpage to mobile devices-->
+    <script src="client_scripts_general.js"></script>
+    <!-- End -->
+
+    <!--Plotly-->
+    <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
+    <!--FIX VERSION, new UPDATE has problem-->
+    <!--END-->
+
+    <!--JS hilight for the code blocks in the web: -->
+    <link rel="stylesheet" href="../assets/client_scripts/syntax_highlight_pack/styles/a11y-light.css">
+    <script src="../assets/client_scripts/syntax_highlight_pack/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <!--END-->
+
+</head>
+<body>
+    <nav class="navbar sticky-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <!-- Edit here -->
+                <a class="navbar-brand" href="../index.html">My WebPages</a>
+            </div>
+            <botton>
+                <span class="nav-hamburger-menu-icon hide"><img src="../assets/menu_hamburger.png" alt="menu"></span>
+            </botton>
+            <div class="collapse navbar-collapse">
+                <ul>
+                    <!--Section links. -->
+                    <li><a href="#intro">Intro</a></li>    
+                    <li><a href="#solving-it">Solving It</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="side-bar">
+        <ul>
+            <!--Section links. -->
+            <li><a href="#intro">Intro</a></li>
+            <li><a href="#solving-it">Solving It</a></li>
+        </ul>
+    </div>
+    <div id="main-content">
+        <section id="intro">
+            <h2>
+                Introduction
+            </h2>
+            <p>We are interested in comparing and visualizing the difference between using L1 norm as loss function and L2 norm as loss function for simple regression tasks.</p>
+            <p>It's equivalent to solving the following optimization problem: </p>
+            <p>
+$$
+\alpha^+ = \arg\min_x 
+    \Vert Ax - b\Vert_1
+$$
+            </p>
+            <ul>
+                <li>\(A\) is the row data matrix, or the vandermande matrix.</li>
+                <li>$x$ is the coefficients for the regression</li>
+                <li>$b$ is the regression value we are trying to fit</li>
+            </ul>
+        </section>
+        <hr>
+        <section id="solving-it">
+            <h2>Phrasing it as a Linear Programming Problem</h2>
+
+        </section>
+        <div class="footer-padding">
+        </div>
+    </div>
+    <footer>
+        <!--For MathJax-->
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
+        </script>
+        <!--For MathJax Ends-->
+        <div class="fixed-bottom hide" id="footer-display">
+            <div class="row align-items-center" id="footer-display-inner">
+                <div class="col text-right">
+                    <button type="button" class="btn btn-primary toggle-btn">Toggle Big Printout</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
