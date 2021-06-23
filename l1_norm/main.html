@@ -49,6 +49,7 @@
                     <li><a href="#lp">Linear Programming</a></li>
                     <li><a href="#cvxopt">Solving It</a></li> 
                     <li><a href="#bootstrap">Bootstraping</a></li>
+                    <li><a href="#results">Results</a></li>
                 </ul>
             </div>
         </div>
@@ -60,6 +61,7 @@
             <li><a href="#lp">Linear Programming</a></li>
             <li><a href="#cvxopt">Solving It</a></li>
             <li><a href="#bootstrap">Bootstraping</a></li>
+            <li><a href="#results">Results</a></li>
         </ul>
     </div>
     <div id="main-content">
@@ -76,7 +78,7 @@ $$
 $$
             </p>
             <ul>
-                <li>\($A\) is the row data matrix, or the vandermande matrix in our case because we want to use polynomial regression examples.</li>
+                <li>\($A\) is the row data matrix, or the vandermande matrix in our case because we want to use polynomial regression examples. (We want the rows for ones to be the last row of the vandermonde matrix)</li>
                 <li>\($x\) is the coefficients for the regression</li>
                 <li>\($b\) is the regression value we are trying to fit</li>
             </ul>
@@ -88,7 +90,7 @@ $$
 $$
             </p>
             <p>
-                Here is our list of objective
+                Here is our list of topics we are gonna cover in this website
             </p>
             <ul>
                 <li>Intro</li>
@@ -117,14 +119,19 @@ $$
             <p>There are other ways of solving this problem, somve of the alternatives includes: </p>
             <ul>
                 <li>
+                    Coordinate Descend
                 </li>
+                <li>
+                    Non-smooth Optimization Algorithm, eg: FISTA. 
+                </li>
+                <li>Exploting the symmetric properties of the L1 constraint to speed up computing the KTT conditions, which then, speeds up the interior points algorithm. See an link to this in the next section for more information.</li>
             </ul>
         </section>
         <hr>
         <section id="cvxopt">
             <h2>CVXOPT</h2>
             <p>For solving the system, I used a thing called: CVXOPT, available <a href="https://cvxopt.org/">here</a>, it uses Interior Points method, implemented in python using BLAS, which I believe it's not that bad of a solution. It's also currebtly maintained by <b>M. Andersen and L. Vandenberghe.</b> at UCLA.</p>
-            <p>CVXOPT provides a formulation of the L1 Loss function as a LP problem that exploits the symmetric structure of the matrix to improve the complexity of the algorithm. See <a href="https://cvxopt.org/examples/mlbook/l1.html">here</a> for more.</p>
+            <p>CVXOPT provides a formulation of the L1 Loss function as a LP problem that exploits the symmetric structure of the matrix to improve the complexity of the algorithm. Which I didn't use. See <a href="https://cvxopt.org/examples/mlbook/l1.html">here</a> for more.</p>
             <p>Here is the code using the CVXOPT to get the coefficients for the polynomial fit on the data with the L1 Norm Loss</p>
             <pre><code class="python">
 import matplotlib.pyplot as plt
@@ -157,27 +164,90 @@ def L1RegFit(X: np.ndarray, y:np.ndarray):
         <section id="bootstrap">
             <h2>Boostrap For Confidence Interval</h2>
             <p>Bootstrap, it's one of the way to estimate the variance of the model, when we don't know enough about the original generate model behind the data. Non-Parametric Bootstrap to be specific.</p>
-            <p>Given training data matrix \(A\), let \(\tilde{A}\) be a list subset of matrix created by sampling rows of \(A\) with replacement, which means that, it's absolutely possible, for all rows of \(\tilde{A}\) to be all the same row, but that is very unlikely when we have a lot of rows in matrix \(A\)</p>
+            <p>Given training data matrix \(A\), let \(\tilde{A}\) be a list subset of matrix created by sampling rows of \(A\) with replacement, \(k\) times, which means that, it's absolutely possible, for all rows of \(\tilde{A}\) to be all the same row, but that is very unlikely when we have a lot of rows in matrix \(A\)</p>
             <ul>
                 <li>\($B\) is the number of bootstrap we want to make. </li>
                 <li>\(\mathbb{II}\) variable to keep track of the number of iterations for the for loop.</li>
             </ul>
+            <h3>Bootstrap Psuedocodes</h2>
             <div class="indent-all">
                 Let \(\mathbb{M}\) be a set that holds trained model from the bootstrap for loop. 
-                Let \(X\) be the Vandermond Matrix for the training data set. 
+                <br>
+                Let \(X\) be the Vandermond Matrix for the testing data set. 
                 <br>
                 for \(\mathbb{II}\) = 1 to \(B\)
                 <div class="indent-all">
-                    Make Boostrap Data \(\tilde{A}\) from matrix \(A\). 
+                    Make Boostrap Data \(\tilde{A}\) from matrix \(A\), resampled with replacement \(k\) times. 
                     <br>
-                    Make model \(M\) using \(\tilde{A}\). 
+                    Make model \(\alpha\) using \(\tilde{A}\). 
                     <br>
-                    Add \(M\) to \(\mathbb{M}\). 
-                </div>
-                <div class="indent-all">
-                    
+                    Add \(\alpha\) to \(\mathbb{M}\). 
                 </div>
             </div>
+            <div class="indent-all">
+                Let \(\hat{Y}\) be row of data predict by all the models in \(\mathbb{M}\)
+                <br>
+                For \(\mathbb{M}\), \(M\) in Enumerate(\(\mathbb{M}\)): 
+                <div class="indent-all">
+                    \($\hat{Y}\)[\(\mathbb{II}\), :] := \(X\alpha\)
+                </div>
+                Let \(Y_{\text{Lower}}\) to be a row vector of the 2.5 percenttile of all rows of matrix \(Y_{\text{Lower}}\). 
+                <br>
+                Let \(Y_{\text{Upper}}\) to be a row vector of the 97.5 percenttile of all rows of matrix \(Y_{\text{Lower}}\). 
+            </div>
+            <h3>Code Implementation</h3>
+            <pre><code class="python">
+def RegBoopStrap(
+                X:np.ndarray,   # regression data
+                y:np.ndarray,   # labels
+                fxn:callable,   # model training function
+                queries=None,   # the points to query the confident interval
+                trials=None,    # number of times to make the boostrap the model
+                boostrapSize:int=None,
+                alpha:float=5 # confidence band interval
+                ):
+    """
+        Performs non-parametric boopstrap for regression models
+    :param X:
+    :param y:
+    :param fxn:
+    :param queries:
+    :param trials:
+    :param boostrapSize:
+    :return:
+    """
+    assert X.ndim == 2 and X.shape[0] == y.shape[0] and y.ndim == 1
+    assert X.ndim == 2
+    assert alpha < 50 and alpha > 0
+    m, n = X.shape
+    trials = X.shape[0] if trials is None else trials
+    queries = X[:, 1] if queries is None else queries
+    queries.sort()
+    bootstrapSize = m if boostrapSize is None else boostrapSize
+    assert trials > 20
+    assert bootstrapSize <= m, "don't recommend bootstrap size to be larger than sample size"
+    BoostrapYhat = []
+    for _ in tqdm(range(trials)):
+        Selection = np.random.randint(0, m, bootstrapSize)
+        Coefficient = fxn(X[Selection], y[Selection])
+        V = np.vander(queries, Coefficient.shape[0])
+        Yhat = (V@Coefficient[:, np.newaxis]).reshape(-1)
+        BoostrapYhat.append(Yhat)
+    OutputMatirx = np.array(BoostrapYhat)
+    ConfidenceBand = np.percentile(OutputMatirx, [alpha/2, 100 - alpha/2], axis=0)
+    return ConfidenceBand
+            </code></pre>
+        </section>
+        <hr>
+        <section class="results">
+            <h2>Results</h2>
+            <p>The generative model we used is \(\cos(\pi x)\), on the interval (-1, 1), with constant variance of 0.01, and 20% of the data are outliers set to be at a value of exactly -3. </p>
+            <p>Model with L1, L2 norm as loss function are trained, with 300 boopstraped models and \(k = n\) where \(n\) is the number of rows of matrix \(A\).</p> 
+            <p>The degree of polynomials we use to fit the generative model is: 4</p>
+            <p>Then, a confidence 99% confidence interval are produced, with a fine grid. </p>
+            <p>This is the results</p>
+            <img src="bootstrap-l1-l2.png" alt="L1, L2 Confidence Band">
+            <p>Observe that the confidence band of the model with L1 norm as loss function is narrower and its centering around the ground truth generative model. Comparing to the L2 model, which is much more suspectible to the effect of the outliers below the curve. </p>
         </section>
         <div class="footer-padding">
         </div>
