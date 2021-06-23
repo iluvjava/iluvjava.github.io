@@ -46,9 +46,9 @@
                 <ul>
                     <!--Section links. Edit Here -->
                     <li><a href="#intro">Intro</a></li>    
-                    <li><a href="#lp">Linear Programming</a></li>
-                    <li><a href="#cvxopt">Solving It</a></li> 
-                    <li><a href="#bootstrap">Bootstraping</a></li>
+                    <li><a href="#lp">Phrasing it as LP</a></li>
+                    <li><a href="#cvxopt">CVXOPT</a></li> 
+                    <li><a href="#bootstrap">Bootstrap and Confidence Interval</a></li>
                     <li><a href="#results">Results</a></li>
                 </ul>
             </div>
@@ -58,9 +58,9 @@
         <ul>
             <!--Section links. Edit Here-->
             <li><a href="#intro">Intro</a></li>
-            <li><a href="#lp">Linear Programming</a></li>
-            <li><a href="#cvxopt">Solving It</a></li>
-            <li><a href="#bootstrap">Bootstraping</a></li>
+            <li><a href="#lp">Phrasing it as LP</a></li>
+            <li><a href="#cvxopt">CVXOPT</a></li>
+            <li><a href="#bootstrap">Bootstrap and Confidence Interval</a></li>
             <li><a href="#results">Results</a></li>
         </ul>
     </div>
@@ -78,7 +78,7 @@ $$
 $$
             </p>
             <ul>
-                <li>\($A\) is the row data matrix, or the vandermande matrix in our case because we want to use polynomial regression examples. (We want the rows for ones to be the last row of the vandermonde matrix)</li>
+                <li>\($A\) is the row data matrix, or the vandermande matrix in our case because we want to use polynomial regression examples. (We want the column for ones to be the last column of the vandermonde matrix)</li>
                 <li>\($x\) is the coefficients for the regression</li>
                 <li>\($b\) is the regression value we are trying to fit</li>
             </ul>
@@ -99,6 +99,7 @@ $$
                 <li>Code</li>
                 <li>Results</li>
             </ul>
+            A repo with all the code involved can be viewed <a href="https://github.com/iluvjava/Serious-Python-Stuff/blob/main/L1-Norm-Boopstrap/core.py">here</a>
         </section>
         <hr>
         <section id="lp">
@@ -111,7 +112,7 @@ $$
                 \right\rbrace
             \end{aligned}$$</p>
             <p>
-                Where, there are a free variable \(x\) as a vector and \(v\) as a variable
+                Where, there are a free variable \(x, v\) and they are vectors. 
             </p>
             <p>
                 This is not the optimal way, nor the professional way of doing it, I will talk more about later. 
@@ -130,7 +131,7 @@ $$
         <hr>
         <section id="cvxopt">
             <h2>CVXOPT</h2>
-            <p>For solving the system, I used a thing called: CVXOPT, available <a href="https://cvxopt.org/">here</a>, it uses Interior Points method, implemented in python using BLAS, which I believe it's not that bad of a solution. It's also currebtly maintained by <b>M. Andersen and L. Vandenberghe.</b> at UCLA.</p>
+            <p>For solving the system, I used a thing called: CVXOPT, available <a href="https://cvxopt.org/">here</a>, it uses Interior Points method, implemented in python using BLAS, which I believe it's not that bad of a solution. It's also currebtly maintained by <b>M. Andersen and L. Vandenberghe, </b> at UCLA.</p>
             <p>CVXOPT provides a formulation of the L1 Loss function as a LP problem that exploits the symmetric structure of the matrix to improve the complexity of the algorithm. Which I didn't use. See <a href="https://cvxopt.org/examples/mlbook/l1.html">here</a> for more.</p>
             <p>Here is the code using the CVXOPT to get the coefficients for the polynomial fit on the data with the L1 Norm Loss</p>
             <pre><code class="python">
@@ -163,7 +164,7 @@ def L1RegFit(X: np.ndarray, y:np.ndarray):
         <hr>
         <section id="bootstrap">
             <h2>Boostrap For Confidence Interval</h2>
-            <p>Bootstrap, it's one of the way to estimate the variance of the model, when we don't know enough about the original generate model behind the data. Non-Parametric Bootstrap to be specific.</p>
+            <p>Bootstrap, it's one of the way to estimate the variance of the model, when we don't know enough about the original generative process behind the data and getting new data is impossible. Non-Parametric Bootstrap to be specific.</p>
             <p>Given training data matrix \(A\), let \(\tilde{A}\) be a list subset of matrix created by sampling rows of \(A\) with replacement, \(k\) times, which means that, it's absolutely possible, for all rows of \(\tilde{A}\) to be all the same row, but that is very unlikely when we have a lot of rows in matrix \(A\)</p>
             <ul>
                 <li>\($B\) is the number of bootstrap we want to make. </li>
@@ -175,7 +176,7 @@ def L1RegFit(X: np.ndarray, y:np.ndarray):
                 <br>
                 Let \(X\) be the Vandermond Matrix for the testing data set. 
                 <br>
-                for \(\mathbb{II}\) = 1 to \(B\)
+                for \(\mathbb{II}\) = \(1\) to \(B\)
                 <div class="indent-all">
                     Make Boostrap Data \(\tilde{A}\) from matrix \(A\), resampled with replacement \(k\) times. 
                     <br>
@@ -187,13 +188,13 @@ def L1RegFit(X: np.ndarray, y:np.ndarray):
             <div class="indent-all">
                 Let \(\hat{Y}\) be row of data predict by all the models in \(\mathbb{M}\)
                 <br>
-                For \(\mathbb{M}\), \(M\) in Enumerate(\(\mathbb{M}\)): 
+                For \(\mathbb{M}\), \(\alpha\) in Enumerate(\(\mathbb{M}\)): 
                 <div class="indent-all">
                     \($\hat{Y}\)[\(\mathbb{II}\), :] := \(X\alpha\)
                 </div>
-                Let \(Y_{\text{Lower}}\) to be a row vector of the 2.5 percenttile of all rows of matrix \(Y_{\text{Lower}}\). 
+                Let \(Y_{\text{Lower}}\) to be a row vector of the 2.5 percenttile of all columns of matrix \(Y_{\text{Lower}}\). 
                 <br>
-                Let \(Y_{\text{Upper}}\) to be a row vector of the 97.5 percenttile of all rows of matrix \(Y_{\text{Lower}}\). 
+                Let \(Y_{\text{Upper}}\) to be a row vector of the 97.5 percenttile of all columns of matrix \(Y_{\text{Lower}}\). 
             </div>
             <h3>Code Implementation</h3>
             <pre><code class="python">
