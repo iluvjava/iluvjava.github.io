@@ -44,18 +44,22 @@
             </botton>
             <div class="collapse navbar-collapse">
                 <ul>
-                    <!--Section links. -->
+                    <!--Section links. Edit Here -->
                     <li><a href="#intro">Intro</a></li>    
-                    <li><a href="#solving-it">Solving It</a></li>
+                    <li><a href="#lp">Linear Programming</a></li>
+                    <li><a href="#cvxopt">Solving It</a></li> 
+                    <li><a href="#bootstrap">Bootstraping</a></li>
                 </ul>
             </div>
         </div>
     </nav>
     <div id="side-bar">
         <ul>
-            <!--Section links. -->
+            <!--Section links. Edit Here-->
             <li><a href="#intro">Intro</a></li>
-            <li><a href="#solving-it">Solving It</a></li>
+            <li><a href="#lp">Linear Programming</a></li>
+            <li><a href="#cvxopt">Solving It</a></li>
+            <li><a href="#bootstrap">Bootstraping</a></li>
         </ul>
     </div>
     <div id="main-content">
@@ -72,15 +76,108 @@ $$
 $$
             </p>
             <ul>
-                <li>\($A\) is the row data matrix, or the vandermande matrix.</li>
+                <li>\($A\) is the row data matrix, or the vandermande matrix in our case because we want to use polynomial regression examples.</li>
                 <li>\($x\) is the coefficients for the regression</li>
                 <li>\($b\) is the regression value we are trying to fit</li>
             </ul>
+            <p>And for L2 Norm Loss function, we have: </p>
+            <p>
+$$
+\alpha^+ = \arg\min_x 
+    \Vert Ax - b\Vert_2^2
+$$
+            </p>
+            <p>
+                Here is our list of objective
+            </p>
+            <ul>
+                <li>Intro</li>
+                <li>Solving it as Linear Programming Problem</li>
+                <li>Non-Parametric Bootstrap</li>
+                <li>Code</li>
+                <li>Results</li>
+            </ul>
         </section>
         <hr>
-        <section id="solving-it">
-            <h2>Phrasing it as a Linear Programming Problem</h2>
+        <section id="lp">
+            <h2>Phrasing L1 Loss as a Linear Programming Problem</h2>
+            <p>$$\begin{aligned}
+                & \min_{x} \Vert Ax - b\Vert_1 
+                \\
+                =& \min_{v, x} \left\lbrace
+                    v : -v \le Ax - b \le v
+                \right\rbrace
+            \end{aligned}$$</p>
+            <p>
+                Where, there are a free variable \(x\) as a vector and \(v\) as a variable
+            </p>
+            <p>
+                This is not the optimal way, nor the professional way of doing it, I will talk more about later. 
+            </p>
+            <p>There are other ways of solving this problem, somve of the alternatives includes: </p>
+            <ul>
+                <li>
+                </li>
+            </ul>
+        </section>
+        <hr>
+        <section id="cvxopt">
+            <h2>CVXOPT</h2>
+            <p>For solving the system, I used a thing called: CVXOPT, available <a href="https://cvxopt.org/">here</a>, it uses Interior Points method, implemented in python using BLAS, which I believe it's not that bad of a solution. It's also currebtly maintained by <b>M. Andersen and L. Vandenberghe.</b> at UCLA.</p>
+            <p>CVXOPT provides a formulation of the L1 Loss function as a LP problem that exploits the symmetric structure of the matrix to improve the complexity of the algorithm. See <a href="https://cvxopt.org/examples/mlbook/l1.html">here</a> for more.</p>
+            <p>Here is the code using the CVXOPT to get the coefficients for the polynomial fit on the data with the L1 Norm Loss</p>
+            <pre><code class="python">
+import matplotlib.pyplot as plt
+import numpy as np
+import cvxopt as cvx
+import cvxopt.modeling as cvxm
+from cvxopt import solvers
+solvers.options["show_progress"] = False
+solvers.options["abstol"] = 1e-15
+solvers.options["reltol"] = 1e-10
+solvers.options["refinement"] = 10
 
+from tqdm import tqdm
+
+def L1RegFit(X: np.ndarray, y:np.ndarray):
+    assert X.ndim == 2 and X.shape[0] == y.shape[0]
+    m, n = X.shape
+    A = cvx.matrix(X)
+    x = cvxm.variable(n)
+    b = cvx.matrix(y)
+    Epsilon = cvxm.variable(m)
+    Lp = cvxm.op(cvxm.sum(Epsilon))
+    Lp.addconstraint(-Epsilon <= b - A*x)
+    Lp.addconstraint(b-A*x <= Epsilon)
+    Lp.solve()
+    return (np.array(x.value)).reshape(-1)
+            </code></pre>
+        </section>
+        <hr>
+        <section id="bootstrap">
+            <h2>Boostrap For Confidence Interval</h2>
+            <p>Bootstrap, it's one of the way to estimate the variance of the model, when we don't know enough about the original generate model behind the data. Non-Parametric Bootstrap to be specific.</p>
+            <p>Given training data matrix \(A\), let \(\tilde{A}\) be a list subset of matrix created by sampling rows of \(A\) with replacement, which means that, it's absolutely possible, for all rows of \(\tilde{A}\) to be all the same row, but that is very unlikely when we have a lot of rows in matrix \(A\)</p>
+            <ul>
+                <li>\($B\) is the number of bootstrap we want to make. </li>
+                <li>\(\mathbb{II}\) variable to keep track of the number of iterations for the for loop.</li>
+            </ul>
+            <div class="indent-all">
+                Let \(\mathbb{M}\) be a set that holds trained model from the bootstrap for loop. 
+                Let \(X\) be the Vandermond Matrix for the training data set. 
+                <br>
+                for \(\mathbb{II}\) = 1 to \(B\)
+                <div class="indent-all">
+                    Make Boostrap Data \(\tilde{A}\) from matrix \(A\). 
+                    <br>
+                    Make model \(M\) using \(\tilde{A}\). 
+                    <br>
+                    Add \(M\) to \(\mathbb{M}\). 
+                </div>
+                <div class="indent-all">
+                    
+                </div>
+            </div>
         </section>
         <div class="footer-padding">
         </div>

@@ -76,8 +76,10 @@ img {
   display: none;
 }
 
+/* This is for code only*/ 
 .indent-all {
-  margin-left: 2em ;
+  margin-left: 2em;
+  font-family: Consolas, monaco, monospace;
 }
 
 .inline-code-highlight {
