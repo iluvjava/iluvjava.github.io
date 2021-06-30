@@ -107,12 +107,17 @@ $$
             <p>$$\begin{aligned}
                 & \min_{x} \Vert Ax - b\Vert_1 
                 \\
+                & \min_{x} \vert \sum_{j = 1}^m a_{i, j} - b_i\vert \quad \forall 1 \le i \le n
+                \\
+                & \min_{t} \left\lbrace -t < \sum_{i = j}^m a_{i, j} - b_i < t \right\rbrace 
+                \quad \forall 1 \le  i \le n
+                \\
                 =& \min_{v, x} \left\lbrace
                     v : -v \le Ax - b \le v
                 \right\rbrace
             \end{aligned}$$</p>
             <p>
-                Where, there are a free variable \(x, v\) and they are vectors. 
+                Where \(x, v\) are vectors. 
             </p>
             <p>
                 This is not the optimal way, nor the professional way of doing it, I will talk more about later. 
@@ -167,8 +172,10 @@ def L1RegFit(X: np.ndarray, y:np.ndarray):
             <p>Bootstrap, it's one of the way to estimate the variance of the model, when we don't know enough about the original generative process behind the data and getting new data is impossible. Non-Parametric Bootstrap to be specific.</p>
             <p>Given training data matrix \(A\), let \(\tilde{A}\) be a list subset of matrix created by sampling rows of \(A\) with replacement, \(k\) times, which means that, it's absolutely possible, for all rows of \(\tilde{A}\) to be all the same row, but that is very unlikely when we have a lot of rows in matrix \(A\)</p>
             <ul>
-                <li>\($B\) is the number of bootstrap we want to make. </li>
-                <li>\(\mathbb{II}\) variable to keep track of the number of iterations for the for loop.</li>
+                <li>\(\;B\) is the number of bootstrap we want to make. </li>
+                <li>\(\;\mathbb{II}\) variable to keep track of the number of iterations for the for loop.</li>
+                <li>\(\;\tilde{A}\) is a matrix whose rows are sample from the matrix A with replacment, recall that the matrix \(A\) is the vandermonde matrix of all the training pints.</li> 
+                <li>\(\;Y\) constains all the rows of data predicted by all the models from the bootstrap process.</li>
             </ul>
             <h3>Bootstrap Psuedocodes</h2>
             <div class="indent-all">
@@ -192,9 +199,9 @@ def L1RegFit(X: np.ndarray, y:np.ndarray):
                 <div class="indent-all">
                     \($\hat{Y}\)[\(\mathbb{II}\), :] := \(X\alpha\)
                 </div>
-                Let \(Y_{\text{Lower}}\) to be a row vector of the 2.5 percenttile of all columns of matrix \(Y_{\text{Lower}}\). 
+                Let \(\hat{Y}_{\text{Lower}}\) to be a row vector of the 2.5 percenttile of all columns of matrix \(\hat{Y}_{\text{Lower}}\). 
                 <br>
-                Let \(Y_{\text{Upper}}\) to be a row vector of the 97.5 percenttile of all columns of matrix \(Y_{\text{Lower}}\). 
+                Let \(\hat{Y}_{\text{Upper}}\) to be a row vector of the 97.5 percenttile of all columns of matrix \(\hat{Y}_{\text{Upper}}\). 
             </div>
             <h3>Code Implementation</h3>
             <pre><code class="python">
@@ -259,6 +266,7 @@ def RegBoopStrap(
         <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
         </script>
         <!--For MathJax Ends-->
+        <!--For footer context botton-->
         <div class="fixed-bottom hide" id="footer-display">
             <div class="row align-items-center" id="footer-display-inner">
                 <div class="col text-right">
@@ -266,6 +274,7 @@ def RegBoopStrap(
                 </div>
             </div>
         </div>
+        <!--Ends-->
     </footer>
 </body>
 </html>
