@@ -30,7 +30,27 @@
     <script src="../assets/client_scripts/syntax_highlight_pack/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <!--END-->
-
+    <!--For Katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+            // customised options
+            // • auto-render specific keys, e.g.:
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            // • rendering keys, e.g.:
+            throwOnError : false
+            });
+        });
+    </script>
+    <!--END-->
 </head>
 <body>
     <nav class="navbar sticky-top">
@@ -78,9 +98,9 @@ $$
 $$
             </p>
             <ul>
-                <li>\($A\) is the row data matrix, or the vandermande matrix in our case because we want to use polynomial regression examples. (We want the column for ones to be the last column of the vandermonde matrix)</li>
-                <li>\($x\) is the coefficients for the regression</li>
-                <li>\($b\) is the regression value we are trying to fit</li>
+                <li>\(A\) is the row data matrix, or the vandermande matrix in our case because we want to use polynomial regression examples. (We want the column for ones to be the last column of the vandermonde matrix)</li>
+                <li>\(x\) is the coefficients for the regression</li>
+                <li>\(b\) is the regression value we are trying to fit</li>
             </ul>
             <p>And for L2 Norm Loss function, we have: </p>
             <p>
@@ -107,7 +127,7 @@ $$
             <p>$$\begin{aligned}
                 & \min_{x} \Vert Ax - b\Vert_1 
                 \\
-                & \min_{x} \vert \sum_{j = 1}^m a_{i, j}x_j - b_i\vert \quad \forall 1 \le i \le n
+                & \min_{x} \left\vert \sum_{j = 1}^m a_{i, j}x_j - b_i\right\vert \quad \forall 1 \le i \le n
                 \\
                 & \min_{t, x} \left\lbrace -t < \sum_{i = j}^m a_{i, j}x_j - b_i < t \right\rbrace 
                 \quad \forall 1 \le  i \le n
@@ -197,7 +217,7 @@ def L1RegFit(X: np.ndarray, y:np.ndarray):
                 <br>
                 For \(\mathbb{M}\), \(\alpha\) in Enumerate(\(\mathbb{M}\)): 
                 <div class="indent-all">
-                    \($\hat{Y}\)[\(\mathbb{II}\), :] := \(X\alpha\)
+                    \(\hat{Y}\)[\(\mathbb{II}\), :] := \(X\alpha\)
                 </div>
                 Let \(\hat{Y}_{\text{Lower}}\) to be a row vector of the 2.5 percenttile of all columns of matrix \(\hat{Y}_{\text{Lower}}\). 
                 <br>
@@ -262,9 +282,7 @@ def RegBoopStrap(
     </div>
     <footer>
         <!--For MathJax-->
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-        <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
-        </script>
+        
         <!--For MathJax Ends-->
         <!--For footer context botton-->
         <div class="fixed-bottom hide" id="footer-display">
