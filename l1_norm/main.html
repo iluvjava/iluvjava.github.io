@@ -107,9 +107,9 @@ $$
             <p>$$\begin{aligned}
                 & \min_{x} \Vert Ax - b\Vert_1 
                 \\
-                & \min_{x} \vert \sum_{j = 1}^m a_{i, j} - b_i\vert \quad \forall 1 \le i \le n
+                & \min_{x} \vert \sum_{j = 1}^m a_{i, j}x_j - b_i\vert \quad \forall 1 \le i \le n
                 \\
-                & \min_{t} \left\lbrace -t < \sum_{i = j}^m a_{i, j} - b_i < t \right\rbrace 
+                & \min_{t, x} \left\lbrace -t < \sum_{i = j}^m a_{i, j}x_j - b_i < t \right\rbrace 
                 \quad \forall 1 \le  i \le n
                 \\
                 =& \min_{v, x} \left\lbrace
