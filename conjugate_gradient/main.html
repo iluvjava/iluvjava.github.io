@@ -66,10 +66,7 @@
                 <ul>
                     <!--Section links. Edit Here -->
                     <li><a href="#intro">Intro</a></li>    
-                    <li><a href="#lp">Phrasing it as LP</a></li>
-                    <li><a href="#cvxopt">CVXOPT</a></li> 
-                    <li><a href="#bootstrap">Bootstrap and Confidence Interval</a></li>
-                    <li><a href="#results">Results</a></li>
+                    
                 </ul>
             </div>
         </div>
@@ -78,18 +75,233 @@
         <ul>
             <!--Section links. Edit Here-->
             <li><a href="#intro">Intro</a></li>
-            <li><a href="#lp">Phrasing it as LP</a></li>
-            <li><a href="#cvxopt">CVXOPT</a></li>
-            <li><a href="#bootstrap">Bootstrap and Confidence Interval</a></li>
-            <li><a href="#results">Results</a></li>
+            
         </ul>
     </div>
     <div id="main-content">
         <section id="intro">
+            <h2>Intro</h2>
+            <p>
+                We discuss the conjugate gradient algorithms in details and then we move on and show its application in deblurring images that is blurred by box blur kernel with odd sizes. 
+            </p>
+            <br>
+            <p>
+                Here is a list of things that are going to be discussed on this webpage: 
+            </p>
+            <ol>
+                <li>
+                    Conjugate Gradient Algorithm
+                    <ul>
+                        <li>
+                            Conjugate Direction and Conjugation Process
+                        </li>
+                        <li>
+                            <b>Proof</b>
+                        </li>
+                        <li>
+                            The algorithmic implementation
+                        </li>
+                        <li>
+                            Augmentations and adaptations
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    Box Blur
+                    <ul>
+                        <li>
+                            Kernel convolution on image is matrix vector multiplications
+                        </li>
+                        <li>
+                            Box Blur's matrix representation is a symmetric matrix 
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    Applying the conjugate gradient algorithm for deblurring imaged blurred by box blur
+                </li>
+            </ol>
+            <br>
+            <p>Here is what is needed from the readers: </p>
+            <ul>
+                <li>
+                    Knows non-trivial amount of multi-variable calculus and linear algebra. 
+                </li>
+                <li>
+                    Knows non-trivial amount of python programming.
+                </li>
+                <li>
+                    Has a background on Scientific Computing. 
+                </li>
+            </ul>
+            Basically if you are a traditional type of engineer, you know are good to go. 
+            <br>
+            <p>Here is what recommended to know in advanced so that reading can be sped up for the readers</p>
+            <ul>
+                <li>Properties of the Hermitian Matrices</li>
+                <li>The Gram Schmidt Process</li>
+                <li>Image Processing</li>
+                <li>Positive Definite Matrix</li>
+                <li>Graphs and Adjacency Matrix</li>
+                <li>Basics about iteratives solvers for linear systems</li>
+            </ul>
+            <p>It's not that I want to limit the readers for this webpage, it's just that if I were to explain everything from the ground up, this website will be 200 pages long. </p>
         </section>
         <hr>
         <section id="cg">
-            
+            <h2>Conjugate Gradient Method</h2>
+            <p>
+                Conjugate gradient is a class of optimizers for linear system. Some of other solvers of the same types includes: Bi-Conjugate Gradient, Bi-Conjugate Gradient Stabalized, and Generalized Minimial Residual Method, GMRes. 
+            </p>
+            <p>
+                These class of algorithm is iterative, meaning that it approximates the solution to the linear system $Ax = b$ better and better. They also comes with the advantage of not requiring to know what numbers are in the matrix $A$, unlike direct method such as Gaussian Eliminations, Cholesky or LU Decomposition. It can figure out the solution purey by interacting with the linear operator $A$. 
+            </p>
+            <p>
+                Their major applications are for solving PDEs, where differential operators such as the Laplacian are used and they needs to be inverted. 
+            </p>
+            <h3>Claim 1</h3>
+            <blockquote>
+                The solution to: 
+                $$
+                \arg\min_{x}\left\lbrace \frac{1}{2}x^TAx - b^T x + c \right\rbrace
+                $$
+                Is the solution to $Ax = b$  if $A \in \mathbb{R}^{n\times n}$ is Symmetric Positive Definite (SPD)
+            </blockquote>
+            <h3>Proof</h3>
+            <p>
+                The problem has a minima becase $A$ is positive definite, meaning that $x^TAx$ is always going to be larger than zero, therefore it's bounded from below and has a minima. 
+            </p>
+            <p>The minima can be computed via: </p>
+            <p>
+                $$
+                \begin{aligned}
+                f(x) &=\frac{1}{2}x^TAx - b^T x + c
+                \\
+                \nabla_x[f(x)] &= \frac{1}{2}(A^T + A)x - b
+                \\
+                \underset{(1)}{\implies}
+                \nabla_x[f(x)] &= Ax - b
+                \\
+                \text{Let: }\quad \nabla_x[f(x)] &= 0
+                \\
+                \implies 
+                    Ax & = b  
+                \end{aligned}
+                \tag{1}
+                $$
+            </p>
+            <p>(1): $A + A^T$ is $2A$ because $A$ is symmetric</p>
+            <p>Claim 1 is proven </p>
+            <h3>Inspirations for Conjugate Gradient</h3>
+            <p>
+                Steepest descend method doesn't work well when the matrix is not well conditioned. It will oscilates along the direction and slowly zig zag to the minimal, turning exactly 90 degress each time. We want a spart way of choosing the direction to descend to such that the energy normal always decrease. (The energy norm: $\Vert x\Vert_A = x^TA^TAx$) 
+            </p> 
+            <h3>Conjugate Vectors</h3>
+            <blockquote>
+                Vector $u, v$ are conjugate if $u^TAv = 0$ for some $A$ that is PD (Positive Definite) 
+            </blockquote>
+            <br>
+            <p>Let $x^{(i)}$ be the solution approximated at $i$ th step of the algorithm, let $d^{(i)}$ be the direction of descend chosen at $i$ th iterations of the algorithm, then, we want the algorithm to statisfies the following: </p>
+            <p>
+                $$
+                x^{(k + 1)} = x^{(k)} + \alpha_{k} d^{(k)}
+                \tag{2}
+                $$
+                $$
+                d^{(k + 1)} \perp \left\langle 
+                    d^{(1)}, d^{(2)}, \cdots,  d^{(k)}
+                \right\rangle_A
+                \tag{3}
+                $$
+            </p>
+            <p>
+                Where, the direction from the $k + 1$ th iteration is conjugate to all previous search direction and $\alpha$ is a step size that is left to be determined. 
+            </p>
+            <p>
+                Before we start, let's define a list of quantities that we are going to use: 
+                <h4>Defined Quantities</h4>
+                <ol>
+                    <li>$Ax_+ = b$</li>
+                    <li>$e^{(i)} = x^{(i)} - x_+$</li>
+                    <li>$r^{(i)} = b - Ax^{(i)}$</li>
+                    <li>$r^{(i)} = -Ae^{(i)} = -A(x^{(i)} - x_+) = -Ax^{(i)} + b$</li>
+                    <li>$r^{(i)} = -\nabla_x[f](x^{(i)})$</li>
+                </ol>
+            </p>
+            <h3>Claim 2</h3>
+            <blockquote>
+                By representing the error vector as a linear combinations of the conjugate vectors, we an show that the algorithm termintes after at most n steps of literations, if we walk along the direction $d^{(k)}$ such that it minimizes the objective function $f(x)$. 
+                $$
+                \begin{aligned}
+                    e^{(0)} &= \sum_{j = 0}^{n - 1}\delta_jd^{(j)} 
+                \end{aligned}
+                \tag{4} \implies e^{(n)} = \mathbf{0}
+                $$
+            </blockquote>
+            <h3>Claim 3</h3>
+            <blockquote>
+                The step size into the conjugate direction: $\alpha_k$ is the same as the weight given to representing the error vector as linear combinations of the conjugate directions, and it also gives the steepest descend along the conjugate direction for the objective function. 
+                $$
+                    \delta_k = -\alpha_k
+                    \tag{5}
+                $$
+            </blockquote>
+            <h3>Claim 2 Proof</h3>
+            <p>
+                $$
+                \begin{aligned}
+                    e^{(0)} &= \sum_{j = 0}^{n - 1}\delta_jd^{(j)} 
+                    \\
+                    Ae^{(0)} &= 
+                    \sum_{j = 0}^{n - 1}
+                        \delta_j Ad^{(j)}
+                    \\
+                    d^{(k)}Ae^{(0)} 
+                    &=
+                    \underbrace{\sum_{j = 0}^{n - 1}
+                        \delta_j d^{(k)T}Ad^{(j)}}_{\delta_kd^{(k)}Ad^{(k)}}
+                    \\
+                    \delta_k 
+                    &= 
+                    \frac{d^{(k)T}Ae^{(0)}}
+                    {
+                        d^{(k)T}Ad^{(k)}
+                    }
+                    \\
+                    \underset{
+                        (1)
+                    }
+                    {\implies}
+                    \delta_k
+                    &= 
+                    \frac{
+                        d^{(k)T}A(e^{(0)} + \sum_{j = 0}^{k-1} \alpha_jd^{(j)})
+                    }
+                    {
+                        d^{(k)T}Ad^{(k)}
+                    }
+                    \\
+                    \underset{(2)}{
+                        \implies
+                    }
+                    \delta_k &= 
+                    \frac{
+                        d^{(k)T}Ae^{(k)}
+                    }{
+                        d^{(k)T}Ad^{(k)}
+                    }
+                    \\
+                    \delta_k &= 
+                    \frac{-d^{(k)T}r^{(k)}}{\Vert d^{(k)}\Vert_A^2}
+                \end{aligned}
+                \tag{6}
+                $$
+            </p>
+            <p>
+                (1): At this point, we just added $\sum_{j = 0}^{k - 1}\alpha_jd^{j}$, but because all the $d^{(i)} \;\forall\; 0 \le i \le k - 1$ are $A$ orthogonal to $d^{(k)}$, so expanding it out will just give us zero. 
+                <br>
+                (2): Because $e^{(k)} = x^{(k)} - x^{+} = x^{(0)} + \sum_{j = 0}^{k - 1}\alpha_kd^{(k)} - x^{+} = e^{(0)} + \sum_{j = 0}^{k - 1}\alpha_kd^{(k)}$. Recalled section <b>Defined Quantities. </b>
+            </p>
         </section>
         <hr>
         <section id="boxblur">

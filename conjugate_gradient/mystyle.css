@@ -37,9 +37,6 @@
   padding: 0.5em;
 }
 
-div.footer-padding {
-  margin-top: 10em;
-}
 
 nav ul {
   padding-inline-start: 0em;
@@ -62,6 +59,20 @@ nav li {
 img {
   width: 80%;
 }
+
+blockquote {
+  margin: 0 7px 0 5px;
+  padding: 10px 16px 10px 10px;
+  border-left-width: 5px;
+  border-left-style: solid;
+  border-color: pink;
+  background-color: rgba(134,216,247, 0.2);
+}
+
+div.footer-padding {
+  margin-top: 10em;
+}
+
 
 .navbar, nav li{
   background-color: rgba(249,184,210, 0.5); 
