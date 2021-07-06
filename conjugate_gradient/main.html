@@ -66,7 +66,25 @@
                 <ul>
                     <!--Section links. Edit Here -->
                     <li><a href="#intro">Intro</a></li>    
-                    
+                    <li>
+                        <a href="#cg">Conjugate Gradient</a>
+                        <ul>
+                            <li>
+                                <a href="#claim-1">claim 1</a>
+                            </li>
+                            <li>
+                                <a href="#claim-2">claim 2</a>
+                            </li>
+                            <li>
+                                <a href="#claim-3">claim 3</a>
+                            </li>
+                            <li><a href="#gs-conjugation">Gram Schimdt Conjugation</a></li>
+                            <li><a href="#claim-4">cliam 4</a></li>
+                            <li><a href="#claim-5">claim 5</a></li>
+                            <li><a href="#claim-6">claim 6</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#cg-algo">CG Algorithm Implementations</a></li>
                 </ul>
             </div>
         </div>
@@ -75,7 +93,25 @@
         <ul>
             <!--Section links. Edit Here-->
             <li><a href="#intro">Intro</a></li>
-            
+            <li>
+                <a href="#cg">Conjugate Gradient</a>
+                <ul>
+                    <li>
+                        <a href="#claim-1">claim 1</a>
+                    </li>
+                    <li>
+                        <a href="#claim-2">claim 2</a>
+                    </li>
+                    <li>
+                        <a href="#claim-3">claim 3</a>
+                    </li>
+                    <li><a href="#gs-conjugation">Gram Schimdt Conjugation</a></li>
+                    <li><a href="#claim-4">cliam 4</a></li>
+                    <li><a href="#claim-5">claim 5</a></li>
+                    <li><a href="#claim-6">claim 6</a></li>
+                </ul>
+            </li>
+            <li><a href="#cg-algo">CG Algorithm Implementations</a></li>
         </ul>
     </div>
     <div id="main-content">
@@ -144,6 +180,7 @@
                 <li>Positive Definite Matrix</li>
                 <li>Graphs and Adjacency Matrix</li>
                 <li>Basics about iteratives solvers for linear systems</li>
+                <li>Gradient Descned: Steeptest Descend</li>
             </ul>
             <h3>Why all the "Prerequisite"?</h3>
             <blockquote>
@@ -172,7 +209,7 @@
             <p>
                 Their major applications are for solving PDEs, where differential operators such as the Laplacian are used and they needs to be inverted. 
             </p>
-            <h3>Claim 1</h3>
+            <h3 id="claim-1">Claim 1</h3>
             <blockquote>
                 The solution to: 
                 $$
@@ -241,7 +278,7 @@
                     <li>$r^{(i)} = -\nabla_x[f](x^{(i)})$</li>
                 </ol>
             </p>
-            <h3>Claim 2</h3>
+            <h3 id="claim-2">Claim 2</h3>
             <blockquote>
                 By representing the error vector as a linear combinations of the conjugate vectors, we an show that the algorithm termintes after at most n steps of literations, if we walk along the direction $d^{(k)}$ such that it minimizes the objective function $f(x)$. 
                 $$
@@ -251,7 +288,7 @@
                 \tag{4} \implies e^{(n)} = \mathbf{0}
                 $$
             </blockquote>
-            <h3>Claim 3</h3>
+            <h3 id="claim-3">Claim 3</h3>
             <blockquote>
                 The step size into the conjugate direction: $\alpha_k$ is the same as the weight given to representing the error vector as linear combinations of the conjugate directions, and it also gives the steepest descend along the conjugate direction for the objective function. 
                 $$
@@ -383,12 +420,12 @@
                 Most literatures explain it that, the algorithm will choose the search direction such that the energy norm with matrix $A$ is decreased as much as possible. 
             </p>
             <p>
-                Some other suggests the gemetric interpretation of the fact that conjugate vectors are orthogonal after being transformed with matrix $A^{-1}$, and it's up to the reader to know that $A^{-1}$ exists when $A$ is symmetric and positive definite. 
+                Some other suggests the geometric interpretation of the fact that conjugate vectors are orthogonal after being transformed with matrix $A^{-1}$, and it's up to the reader to know that $A^{-1}$ exists when $A$ is symmetric and positive definite. 
             </p>
             <p>
-                Well, my interpretations is based on eigenvectors. If you make $d^{(0)}$ to be the eigenvector of $A$, then the algorithm will find the solution right away because the eigenvector of the Hermitian Matrix has the geometric interpretations that they are the principal axis of the transformation. 
+                Well, my interpretations is based on eigenvectors. If you make $d^{(0)}$ to be the eigenvector of $A$, then the algorithm will find the solution right away because the eigenvector of the Hermitian Matrix has the geometric interpretations that they are the principal axis of the transformation. (Or some algebra can also be a convincing argument)
                 <br>
-                In addition, using the fact that eigenvectors of matrix $A$ are orthogonal, it's not hard to see eigenvectors they are conjugate of each other. And, if the vector $u, v$ when represented under the eigenspace are orthogonal, it's not hard to see that they will also be orthogonal. That is my interpretation. 
+                In addition, using the fact that eigenvectors of matrix $A$ are orthogonal, then eigenvectors they are conjugate of each other. And, if the vector $u, v$ when represented under the eigenspace are orthogonal, it's not hard to see that they will also be orthogonal. Now recall that Eigenvectors are also the principal axises for the transformations of the Hermitian matrix. Think about it in your head and you will know why everything makes sense.  That is my interpretation. 
             </p>
             <h3>There is still a Big Problem</h3>
             <blockquote>
@@ -397,7 +434,7 @@
         </section>
         <hr>
         <section id="gs-conjugation">
-            <h2>Gram Schimdt Conjutation</h2>
+            <h2 id="gs-conjugation">Gram Schimdt Conjutation</h2>
             <p>
                 It's the same idea as the Gram Schimdt orthogonalization process, but this time we wish to produce conjugate vectors instead of orthogonal vectors. 
                 <ul>
@@ -447,18 +484,21 @@
                 \tag{10}
             $$
             <h4>Exercise for the Readers</h4>
-            <p>Reformulate the GS Conjugation without the orthogonality assumption on $u_k$. I will be too easy on the readers if it's just me who is doing the math. Regardless of who you are, I encourage you to think about it, because you are reading it, you should think about it even if you are a recruiter who stumbled upon my websites.</p>
+            <blockquote>
+                Reformulate the GS Conjugation without the orthogonality assumption on $u_k$. I will be too easy on the readers if it's just me who is doing the math. Regardless of who you are, I encourage you to think about it, because you are reading it, you should think about it even if you are a recruiter who stumbled upon my websites.
+            </blockquote>
+            
             <h3>The Magical Ingredient: $r^{(k)}$</h3>
             <p>
                 Using the residual vector the guide the generative process of the conjugate directions will tremendously reduce the complexity of the GS conjugation, because it won't need all previous $d^{(i < k - 1)}$ vectors anymore. 
             </p>
-            <h4>Claim 4</h4>
+            <h4 id="claim-4">Claim 4</h4>
             <blockquote>
                 The residual direction at the $j$ of the iteration is orthogonal to all previous conjugate direction, assuming conjugate directions for the steepest gradient descend, mathematically: 
                 $$r^{(j)T}d^{(i)} = 0 \quad \forall i < j$$
             </blockquote>
             <h4>Claim 4 Proof</h4>
-            <p>Recalled from Defined Quantities and Consider</p>
+            <p>Recalled from Defined Quantities, let $i < j$ and Consider</p>
             $$
             \begin{aligned}
                 e^{(k)} &= e^{(0)} + \sum_{j = 0}^{k - 1}\alpha_jd^{(j)}
@@ -471,7 +511,7 @@
                 e^{(k)}&= 
                 \sum_{j = k}^{n - 1} \delta_j d^{(j)}
                 \\
-                \underset{\text{let: } k = j}{\implies}
+                \underset{\text{let: } k \leftrightarrow j}{\implies}
                 e^{(j)} &= \sum_{k = j}^{n - 1} \delta_kd^{(k)}
                 \\
                 Ae^{(j)} &= \sum_{k = j}^{n - 1}
@@ -483,13 +523,13 @@
             \end{aligned}\tag{11}
             $$
             <p>Claim 4 is proven $\blacksquare$</p>
-            <h4>Claim 5</h4>
+            <h4 id="claim-5">Claim 5</h4>
             <blockquote>
                 In addition to $r^{(k)}$ being orthogonal to all previous conjugate vectors, it's also authogonal to all previous $u_i$ that assists with the generative process of the conjugate vectors.
                 $$r^{(i)}\perp u_{j} \quad \forall i < j$$
             </blockquote>
             <h4>Claim 5 Proof</h4>
-            <p>Choose $j >  i$ then consider: </p>
+            <p>Choose $j >  i$ then consider:</p>
             $$
             \begin{aligned}
                 d^{(i)} &= u_i + \sum_{k = 0}^{i - 1} \beta_{i, k}d^{(k)}
@@ -501,7 +541,7 @@
             $$
             <p>Observe that, choosing $i = j$, we have $r^{(i)T}d^{(i)} = r^{(i)T}u_i$</p>
             <p>Claim 5 is proven $\blacksquare$</p>
-            <h4>Claim 6</h4>
+            <h4 id="claim-6">Claim 6</h4>
             <p>
                 We are getting close to the essence of the conjugate gradient algorithm. 
             </p>
@@ -510,9 +550,212 @@
             </blockquote>
             <br>
             <h4>Claim 6 Justification</h4>
-
+            <p>Congrat you made all the way to here, the next few steps is basically using the residual vectors during the iterations as the set of $\{u_i\}_{i = 1}^n$ for assisting the generation of the conjugate search directions. </p>
+            <p>
+                From the Gram Schimdt conjugation process we have: 
+                $$
+                    \beta_{k, m} = 
+                    - \frac
+                    {
+                        d^{(m)T}Au_{k}
+                    }
+                    {
+                        \Vert d^{(m)}\Vert_A^2
+                    }
+                $$
+                Let $u_k = r^{(k)}$  then $\beta_{k, m} = \frac{d^{(m)T}Ar^{(k)}}{\Vert d^{(m)}\Vert_A^2}$ and we need to find $r^{(k)T}Ad^{(m)}$. 
+            </p>
+            <p>
+                Consider the residual at the $j + 1$ iteration of the algorithm then: 
+                $$
+                \begin{aligned}
+                    r^{(j + 1)} &= -Ae^{(j + 1)}
+                    \\
+                    &= -A(e^{(j)} + \alpha_{j} d^{(j)})
+                    \\
+                    &= r^{(j)} - \alpha_{j} Ad^{(j)}
+                    \\
+                    r^{(i)T}r^{(j + 1)} &=  r^{(i)T}r^{(j)} - \alpha_{j} r^{(i)T}Ad^{(j)}
+                    \\
+                    \alpha_{j}r^{(i)T}Ad^{(j)} &= r^{(i)T}r^{(j)} - r^{(i)}r^{(j + 1)}
+                \end{aligned}
+                \tag{14}
+                $$
+            </p>
+            <p>
+                Now, there are several cases of values for $\alpha_i$, and it depends on the value of $i, j$. 
+                <ul>
+                    <li>Consider $i < j$, from claim 5, replacing $u_j$ with $r^{(j)}$, when $i < j$, the right handside is always zero, which implies that $\beta_{i, j} = 0$. </li>
+                    <li>When $i = j$ it's $\Vert r^{(i)}\Vert_2^2$, however we don't need this for the conjutation, it's not in the summation. </li>
+                    <li>Consider $i = j + 1$, then </li>
+                </ul>
+                $$
+                \begin{aligned}
+                \alpha_{j}r^{(j + 1)T}Ad^{(j)} &= r^{(j + 1)T}r^{(j)} - r^{(j + 1)}r^{(j + 1)}
+                \\
+                r^{(j + 1)T}Ad^{(j)} &= \frac{-\Vert r^{(j + 1)}\Vert_2^2}{\alpha_j}
+                \\
+                \frac{r^{(j + 1)T}Ad^{(j)}}{\Vert d^{(j)}\Vert_A^2}
+                &= 
+                \frac{-\Vert r^{(j + 1)}\Vert_2^2}{\alpha_j \Vert d^{(j)}\Vert_A^2}
+                \\
+                -\beta_{j + 1, j} &= \frac{-\Vert r^{(j + 1)}\Vert_2^2}{\alpha_j \Vert d^{(j)}\Vert_A^2}
+                \\
+                \beta_{j + 1, j} &= \frac{\Vert r^{(j + 1)}\Vert_2^2}{\alpha_j \Vert d^{(j)}\Vert_A^2}
+                \end{aligned}\tag{15}
+                $$
+            </p>
+            <p>
+                The only quantity left is when $i = j + 1$, and therefore, we only need to keep the residual vector from the preious iterations and the conjugate direction to figure out the next conjugate search direction. At this point, claim 6 has been justified. $\blacksquare$
+            </p>
         </section>
+        <hr>
+        <section id="cg-algo">
+            <h2>The Conjugate Gradient Algorithm</h2>
+            <p>
+                Now, we have all the components for the Conjugate Gradient Algorithm. Let's take a look at the quantities that need to be updated and maintained throughout the algorithm
+                <ul>
+                    <li>
+                        $\alpha_k$, the step size into the conjugate direction. 
+                    </li>
+                    <li>
+                        $\beta_{k + 1, k}$, the weighting for the next conjugate direction. 
+                    </li>
+                    <li>
+                        $r^{(k)}$, $d^{(k)}$, $x^{(k)}$, the usual deal.
+                    </li>
+                </ul>
+            </p>
+            <p>Let's consider $\beta_{i + 1, i}$, and recall that from claim 3, we have $\alpha_k = \frac{r^{(k)T}d^{(k)}}{\Vert d^{(k)}\Vert_A^2}$</p>
+            <p>
+                Recall from the proof of claim 5, with the observation $r^{(i)T}d^{(i)} = r^{(i)}u_i$, and we know that $u_i = r^{(i)}$, then we have: 
+                $$
+                    \begin{aligned}
+                        \alpha_k &= 
+                        \frac{r^{(k)T}r^{(k)}}{\Vert d^{(k)}\Vert_A^2}                    
+                        \\
+                        \implies 
+                        \beta_{j + 1, j} &= \frac{\Vert r^{(j + 1)}\Vert_2^2}{\Vert r^{(j)} \Vert_2^2}
+                    \end{aligned}
+                $$
+            </p>
+            <p>
+                And here is the final updating sequence for each of the variable, for notation convenience, $\beta_{i + 1, i}$ is $\beta_{i + 1}$, and then we have: 
+                $$
+                    \begin{aligned}
+                        d^{(0)} &= b - Ax^{(0)} 
+                        \\
+                        \alpha_{i} &= \frac{\Vert r^{(i)}\Vert_2^2}
+                        {\Vert d^{(i)}\Vert_A^2}
+                        \\
+                        x^{(i + 1)} &= x^{(i)} + \alpha_i d^{(i)}
+                        \\
+                        r^{(i + 1)} &= r^{(i)} - \alpha_iAd^{(i)} = b - Ax^{(i + 1)}
+                        \\
+                        \beta_{i + 1} &= \frac{\Vert r^{(j + 1)}\Vert_2^2}{\Vert r^{(i)}\Vert_2^2}
+                        \\
+                        d^{(i + 1)} &= r^{(i + 1)} + \beta_{i + 1}d^{(i)}
+                    \end{aligned}
+                $$
+            </p>
+            <h3>CG implemented Python</h3>
+            <pre>
+                <code class="python hljs">
+def AbstractCGGenerate(A:callable, b, x0, maxitr:int=100):
+    """
+        A generator for the Conjugate Gradient method, so whoever uses it
+        has the pleasure to collect all the quantities at runtime.
+    :param A:
+    :param b:
+    :param x0:
+    :return:
+        itr, r, x
+    """
+    x = x0
+    d = r = b - A(x)
+    Itr = 0
+    while Itr < maxitr:
+        alpha = np.sum(r * r) / np.sum(d * A(d))
+        if alpha < 0:
+            warnings.warn(f"CG negative energy norm! Matrix Not symmetric and SPD! Convergence might fail.")
+        x += alpha * d
+        # rnew = r - alpha * A(d)
+        rnew = b - A(x)
+        beta = np.sum(rnew * rnew) / np.sum(r * r)
+        d = rnew + beta * d
+        r = rnew
+        Itr += 1
+        yield Itr, r, x
+                </code>
+            </pre>
+            <h4>A list of Things for the Algorithm</h4>
+            <ul>
+                <li>It's a generic subroutine.</li>
+                <li>For better numerical precision, we implemented $b - Ax^{(i + 1)}$ for getting the residual</li>
+                <li>The algorithm almost never converge complete after $n$ iterations because of numerical instability</li>
+                <li>This algorithm treat $A$ as a blackbox, and all vectors can be left as tensor, representing images, or whatever it's under the concern for the linear operator, but it has to be a numpy arrray type</li>
+                <li>The positive definite precondition of the algorithm puts a warning for the user instead of asserting it. </li>
+                <li>This algorithm doesn't support the use of preconditioners because I haven't talk about thta part yet. </li>
+            </ul>
+            <h3>Exercise for the Readers</h3>
+            <blockquote>
+                I don't care who you are, but doing this will enhance your understanding of what we just discussed. 
+                <ol>
+                    <li>Implement this in C/C++. </li>
+                
+                    <li>Extra points if it's implemented on GPU. Extra Extra points if it supports preconditioners.</li>
+                    
+                    <li>Extra Extra Extra points if you got both. </li>
+                    
+                    <li>Go do your doctoral thesis if you can improve the numerical stability for badly conditioned $A$.(You should not be goofying around on my website and reading this if that is the case).</li>
+                </ol>
+                
+            </blockquote>
+            <h3>THE END of Vanilla Conjugate Gradient</h3>
+        </section>
+        <hr>
+        <section id="cg-aug">
+            <h2>Adaptations and Augmentaions for Conjugate Gradient</h2>
+            <p>
+                This section is concerned about applying the algorithm to different situations, and potential interesting behaviors when it's not used properly. Keep in mind that, if an approximation matrix $M$ is found for $A$, then preconditioners can be applied to improve the convergence of the algorithm, but that is skipped here. 
+            </p>
+            <h3>Symmmetric Positive Semi-Definite Matrices</h3>
+            <p>
+                Suppose that matrix $A$ is positive semi-definite, meaning that $\exists x: x^TAx = 0$, then according to claim 1, the problem has infinitely many solutions, and it's up to the initial guess to say which one the algorithm will land us on. 
+                <br>
+                One can find the use of adding some extra terms for the objective function useful, potentially limiting the number of solutions. But such an approach will involve changing the algorithm a bit to support the regularizations. 
+            </p>
+            <h3>
+                Symmetric Matrices
+            </h3>
+            <p>
+                If given matrix that is only symmetric, then it's possible that it's positive semi-definite, negative semi-definite, or definite. In such cases, CG can't be diretly applied. 
+                <h4>Assuming that $A$ is Negative Definite, or Semi-Definite</h4>
+                <p>
+                    Then $-A$ is positive definite or semi-definite. Solve $-Ax = -b$ instead, or make it into gradient ascend instead of descend. 
+                </p>
+                <h4>Assuming $A$ is Neither</h4>
+                <p>Consider</p>
+                $$
+                    \begin{aligned}
+                        Ax &= b
+                        \\
+                        A^TAx &= A^Tb
+                        \\
+                        A^2x &= Ab
+                    \end{aligned}
+                $$
+                Then, $A^2$ is positive definite or semi-definite, solve that instead, at the cost of poorer conditioning for the matrix $A^2$. 
+            </p>
+            <h3>$A$ is not Symmetric</h3>
+            <p>
+                Then $A^TA$ is symmetric, solve $A^TA = A^Tb$ instead, at the cost of poorer conditioning and there is no way of treating the problem as a blackbox anymore. Or, consider using GMRes algorithm, which is applicable for all types of matrices and it's able to treat then as a blackbox. 
+            </p>
+        </section>
+        <hr>
         <section id="boxblur">
+            <h2>Box Blurring</h2>
+
         </section>
         <div class="footer-padding">
         </div>
