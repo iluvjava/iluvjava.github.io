@@ -152,6 +152,8 @@
             <h3>Why are all these math necessary?</h3>
             <blockquote>
                 A lot of programmer won't care about this, but they will be making a big mistake by not knowing it from a deeper level, it will inhibit their creativity when it comes to problem solving, limit their ability to find noval applications for the algorithms and then when the algorithms failed to do what they expected, blaming the algorithm instead of knowing exactly why and suggest alternatives. 
+                <br>
+                Personally, I love the math and it's the math that make the Conjugate Gradient Algorithm special. It has a very interesting flavor to it. 
             </blockquote>
         </section>
         <hr>
@@ -198,7 +200,7 @@
                 $$
             </p>
             <p>(1): $A + A^T$ is $2A$ because $A$ is symmetric</p>
-            <p>Claim 1 is proven </p>
+            <p>Claim 1 is proven $\blacksquare$</p>
             <h3>Inspirations for Conjugate Gradient</h3>
             <p>
                 Steepest descend method doesn't work well when the matrix is not well conditioned. It will oscilates along the direction and slowly zig zag to the minimal, turning exactly 90 degress each time. We want a smart way of choosing the direction to descend to such that the energy normal always decrease. (The energy norm: $\Vert x\Vert_A^2 = x^TAx$) 
@@ -253,7 +255,7 @@
                     \tag{5}
                 $$
             </blockquote>
-            <h3>Claim 2 Proof</h3>
+            <h3>Consider Claim 2</h3>
             <p>
                 $$
                 \begin{aligned}
@@ -360,17 +362,95 @@
                 \end{aligned}\tag{8}
                 $$
             </p>
-            <p>Compare $\alpha_k$ with $\delta_k$ from (8) and (7) and observe that claim 3 has been proven. </p>
+            <p>Compare $\alpha_k$ with $\delta_k$ from (8) and (7) and observe that claim 3 has been proven. $\blacksquare$</p>
+            <p>Using the fact from claim 3, and then the definition of $e^{(0)}$, observe that if conjugate gradient is tshe search direction and we use the $\alpha_k$ found in the proof, then claim 2 is proved as well. $\blacksquare$</p>
             <h3>Morals of the story so far</h3>
             <p>
                 As we can see, there is indeed a way of choosing the directions of descend such that the convergence after $n$ interations is promised, and we can also observe that, the error vector, when measured using energy norm, is always decreasing too. $\Vert e^{(k + 1)}\Vert \le \Vert e^{(k)}\Vert_A$. 
             </p>
-            <h3>Intutions</h3>
+            <h3>Intuitions</h3>
             <p>
                 As explained in different literatures, there are a lot of different interpretations in choosing conjugate direction and how it exactly decreases the objective function in such an optimal way. 
             </p>
+            <p>
+                Most literatures explain it that, the algorithm will choose the search direction such that the energy norm with matrix $A$ is decreased as much as possible. 
+            </p>
+            <p>
+                Some other suggests the gemetric interpretation of the fact that conjugate vectors are orthogonal after being transformed with matrix $A^{-1}$, and it's up to the reader to know that $A^{-1}$ exists when $A$ is symmetric and positive definite. 
+            </p>
+            <p>
+                Well, my interpretations is based on eigenvectors. If you make $d^{(0)}$ to be the eigenvector of $A$, then the algorithm will find the solution right away because the eigenvector of the Hermitian Matrix has the geometric interpretations that they are the principal axis of the transformation. 
+                <br>
+                In addition, using the fact that eigenvectors of matrix $A$ are orthogonal, it's not hard to see eigenvectors they are conjugate of each other. And, if the vector $u, v$ when represented under the eigenspace are orthogonal, it's not hard to see that they will also be orthogonal. That is my interpretation. 
+            </p>
+            <h3>There is still a Big Problem</h3>
+            <blockquote>
+                How do we find Conjugate Vectors as search direction for the algorithm?     
+            </blockquote>
         </section>
         <hr>
+        <section id="gs-conjugation">
+            <h2>Gram Schimdt Conjutation</h2>
+            <p>
+                It's the same idea as the Gram Schimdt orthogonalization process, but this time we wish to produce conjugate vectors instead of orthogonal vectors. 
+                <ul>
+                    <li>GS Conjugation: Orthogonal Vectors $\rightarrow$ Conjugate Vectors</li>
+                    <li>GS Orthogonalization: Any Linearly Independent vectors $\rightarrow$ Orthogonal Vectors</li>
+                </ul>
+            </p>
+            <blockquote>
+                Given a set of orthogonal vectors $\{u_i\}_{i = 1}^n$ that spans the whole $\mathbb{R}^{n}$ (Standard Basis vectors are an ok choice here), where, the matrix $A$ is $n\times n$.
+                <br>
+                To construct a set of vectors that are $A$ orthogonal, we would need to subract from the vector $u_i$ with components span by the vectors $d^{(i< k)}$. Mathematically:
+                $$
+                \begin{aligned}
+                    d^{(k)} &= u_{k} + \sum_{i = 1}^{k - 1}
+                        \beta_{k, i} d^{(i)}
+                \end{aligned}
+                \tag{9}
+                $$
+            </blockquote>
+            <h3>Looking for $\beta_{k, i}$</h3>
+            Choose $m < k$ and consider: 
+            $$
+                \begin{aligned}
+                    d^{(m)T}Ad^{(k)} &= d^{(m)T}Au_{k} + d^{(m)T}A 
+                        \sum_{i = 1}^{k - 1}\beta_{k, i}d^{(i)}
+                    \\
+                    0 &= d^{(m)T}Au_{k} + \beta_{k, m}d^{(m)T}Ad^{(m)}
+                    \\
+                    \beta_{k, m} &= 
+                    - \frac
+                    {
+                        d^{(m)T}Au_{k}
+                    }
+                    {
+                        \Vert d^{(m)}\Vert_A^2
+                    }
+                    \\
+                    \implies 
+                    d^{(k)} &= u_{k} - \sum_{i = 1}^{k - 1}
+                    \frac{
+                        d^{(i)T}Au_{k}
+                    }{
+                        \Vert d^{(i)}\Vert_A^2
+                    }
+                    d^{(i)}
+                \end{aligned}
+                \tag{10}
+            $$
+            <h3>Exercise for the Readers</h3>
+            <p>Reformulate the GS Conjugation without the orthogonality assumption on $u_k$. I will be too easy on the readers if it's just me who is doing the math. Regardless of who you are, I encourage you to think about it, because you are reading it, you should think about it even if you are a recruiter who stumbled upon my websites.</p>
+            <h3>The Magical Ingredient: $r^{(k)}$</h3>
+            <p>
+                Using the residual vector the guide the generative process of the conjugate directions will tremendously reduce the complexity of the GS conjugation, because it won't need all previous $d{(i < k - 1)}$ vectors anymore. 
+            </p>
+            <h3>Claim 4</h3>
+            <blockquote>
+                The residual direction at the $j$ of the iteration is orthogonal to all previous conjugate direction, assuming conjugate directions for the steepest gradient descend, mathematically: 
+                $$r^{(j)T}d^{(i)} = 0 \quad \forall i < j$$
+            </blockquote>
+        </section>
         <section id="boxblur">
         </section>
         <div class="footer-padding">
