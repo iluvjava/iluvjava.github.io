@@ -155,6 +155,10 @@
                 <br>
                 Personally, I love the math and it's the math that make the Conjugate Gradient Algorithm special. It has a very interesting flavor to it. 
             </blockquote>
+            <h3>Jupyter Notebook</h3>
+            <p>
+                Some of the experimentation with my homebrewed conjugate gradient can be found <a href="./Reverse_Boxblur_CG.html">here </a> in a jupyter notebook. 
+            </p>
         </section>
         <hr>
         <section id="cg">
@@ -188,7 +192,7 @@
                 \\
                 \nabla_x[f(x)] &= \frac{1}{2}(A^T + A)x - b
                 \\
-                \underset{(1)}{\implies}
+                \underset{[1]}{\implies}
                 \nabla_x[f(x)] &= Ax - b
                 \\
                 \text{Let: }\quad \nabla_x[f(x)] &= 0
@@ -199,7 +203,7 @@
                 \tag{1}
                 $$
             </p>
-            <p>(1): $A + A^T$ is $2A$ because $A$ is symmetric</p>
+            <p>[1]: $A + A^T$ is $2A$ because $A$ is symmetric</p>
             <p>Claim 1 is proven $\blacksquare$</p>
             <h3>Inspirations for Conjugate Gradient</h3>
             <p>
