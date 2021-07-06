@@ -145,7 +145,14 @@
                 <li>Graphs and Adjacency Matrix</li>
                 <li>Basics about iteratives solvers for linear systems</li>
             </ul>
-            <p>It's not that I want to limit the readers for this webpage, it's just that if I were to explain everything from the ground up, this website will be 200 pages long. </p>
+            <h3>Why all the "Prerequisite"?</h3>
+            <blockquote>
+                It's not that I want to limit the readers for this webpage, it's just that if I were to explain everything from the ground up, this website will be 200 pages long. 
+            </blockquote>
+            <h3>Why are all these math necessary?</h3>
+            <blockquote>
+                A lot of programmer won't care about this, but they will be making a big mistake by not knowing it from a deeper level, it will inhibit their creativity when it comes to problem solving, limit their ability to find noval applications for the algorithms and then when the algorithms failed to do what they expected, blaming the algorithm instead of knowing exactly why and suggest alternatives. 
+            </blockquote>
         </section>
         <hr>
         <section id="cg">
@@ -194,7 +201,7 @@
             <p>Claim 1 is proven </p>
             <h3>Inspirations for Conjugate Gradient</h3>
             <p>
-                Steepest descend method doesn't work well when the matrix is not well conditioned. It will oscilates along the direction and slowly zig zag to the minimal, turning exactly 90 degress each time. We want a spart way of choosing the direction to descend to such that the energy normal always decrease. (The energy norm: $\Vert x\Vert_A = x^TA^TAx$) 
+                Steepest descend method doesn't work well when the matrix is not well conditioned. It will oscilates along the direction and slowly zig zag to the minimal, turning exactly 90 degress each time. We want a smart way of choosing the direction to descend to such that the energy normal always decrease. (The energy norm: $\Vert x\Vert_A^2 = x^TAx$) 
             </p> 
             <h3>Conjugate Vectors</h3>
             <blockquote>
@@ -301,6 +308,66 @@
                 (1): At this point, we just added $\sum_{j = 0}^{k - 1}\alpha_jd^{j}$, but because all the $d^{(i)} \;\forall\; 0 \le i \le k - 1$ are $A$ orthogonal to $d^{(k)}$, so expanding it out will just give us zero. 
                 <br>
                 (2): Because $e^{(k)} = x^{(k)} - x^{+} = x^{(0)} + \sum_{j = 0}^{k - 1}\alpha_kd^{(k)} - x^{+} = e^{(0)} + \sum_{j = 0}^{k - 1}\alpha_kd^{(k)}$. Recalled section <b>Defined Quantities. </b>
+            </p>
+            <h3>Claim 3 Proof</h3>
+            <p>
+                Optimizing the function along the conjugate direction requires considering the optimality conditions forest, by taking the derivative wrt $\alpha_k$ and then set it to zero: 
+            </p>
+            <p>
+                $$
+                \begin{aligned}
+                    \partial_\alpha [f(x^{(k + 1)})] &= 
+                    \partial_\alpha[f(x^{(k)} + \alpha d^{(k)})]
+                    \\
+                    &= 
+                    \nabla_x[f(x^{(k + 1)})]^Td^{(k)}
+                    \\
+                    \text{set:}\quad 
+                    \partial_\alpha [f(x^{(k + 1)})] &= 0
+                    \\
+                    \underset{(1)}{\implies}
+                    r^{(k + 1)T}d^{(k)} &= 0
+                    \\
+                    \implies 
+                    Ae^{(k + 1)T}d^{(k)} &= 0
+                \end{aligned}
+                \tag{7}
+                $$
+            </p>
+            <p>
+                However, the optimality conditions doesn't seem to involve the qautntity $\alpha$ explictly, therefore we need to find it by expanding on $e^{(k + 1)}$, so then we have: 
+            </p>
+            <p>
+                $$
+                \begin{aligned}
+                    r^{(k + 1)T}d^{(k)} 
+                    &= 0
+                    \\
+                    [b - Ax^{(k + 1)}]^Td^{(k)} &= 0
+                    \\
+                    [b - A(x^{(k)} + \alpha_k  d^{(k)})]^Td^{(k)} &= 0
+                    \\
+                    [b - Ax^{(k)} - \alpha_k A d^{(k)}]^Td^{(k)} &= 0
+                    \\
+                    [r^{(k)} - \alpha_k Ad^{(k)}]^Td^{(k)} &= 0 
+                    \\
+                    \alpha_k &= \frac{r^{(k)T}d^{(k)}}{d^{(k)T}Ad^{(k)}}
+                    \\
+                    \alpha_k &= \frac{r^{(k)T}d^{(k)}}
+                    {
+                        \Vert d^{(k)}\Vert_A^2
+                    }
+                \end{aligned}\tag{8}
+                $$
+            </p>
+            <p>Compare $\alpha_k$ with $\delta_k$ from (8) and (7) and observe that claim 3 has been proven. </p>
+            <h3>Morals of the story so far</h3>
+            <p>
+                As we can see, there is indeed a way of choosing the directions of descend such that the convergence after $n$ interations is promised, and we can also observe that, the error vector, when measured using energy norm, is always decreasing too. $\Vert e^{(k + 1)}\Vert \le \Vert e^{(k)}\Vert_A$. 
+            </p>
+            <h3>Intutions</h3>
+            <p>
+                As explained in different literatures, there are a lot of different interpretations in choosing conjugate direction and how it exactly decreases the objective function in such an optimal way. 
             </p>
         </section>
         <hr>
