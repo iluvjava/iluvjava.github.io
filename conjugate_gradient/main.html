@@ -488,7 +488,8 @@
                 In addition to $r^{(k)}$ being orthogonal to all previous conjugate vectors, it's also authogonal to all previous $u_i$ that assists with the generative process of the conjugate vectors.
                 $$r^{(i)}\perp u_{j} \quad \forall i < j$$
             </blockquote>
-            <h4>Claim 5 proof</h4>
+            <h4>Claim 5 Proof</h4>
+            <p>Choose $j >  i$ then consider: </p>
             $$
             \begin{aligned}
                 d^{(i)} &= u_i + \sum_{k = 0}^{i - 1} \beta_{i, k}d^{(k)}
@@ -498,6 +499,7 @@
                 \underset{\text{claim 4}}{\implies} 0 &= r^{(j)T}u_i
             \end{aligned}\tag{12}
             $$
+            <p>Observe that, choosing $i = j$, we have $r^{(i)T}d^{(i)} = r^{(i)T}u_i$</p>
             <p>Claim 5 is proven $\blacksquare$</p>
             <h4>Claim 6</h4>
             <p>
@@ -506,6 +508,9 @@
             <blockquote>
                 Using the residual vector during the iterations will simplify the GS Conjugation process significantly. basically let $u_i = r^{(i)}$. 
             </blockquote>
+            <br>
+            <h4>Claim 6 Justification</h4>
+
         </section>
         <section id="boxblur">
         </section>
