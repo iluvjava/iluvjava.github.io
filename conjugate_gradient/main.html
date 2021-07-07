@@ -823,7 +823,7 @@ def AbstractCGGenerate(A:callable, b, x0, maxitr:int=100):
                     \end{bmatrix}
                 $$
 
-                Where $\text{vec}$ denotes the bidirectional vectorization procedures given any matrices, so then we can say that: 
+                Where $\text{vec}$ denotes the bidirectional vectorization procedures given any tensor, so then we can say that: 
                 $$
                     \exist A \in \mathbb{R}^{(\text{Height} \times \text{Width})\times(\text{Height} \times \text{Width})}: \text{vec}(\widetilde{M}) = A \text{vec}(M) \wedge A^T = A
                 $$
@@ -833,7 +833,7 @@ def AbstractCGGenerate(A:callable, b, x0, maxitr:int=100):
                 To prove that, we will need to show that the $k$ th column and rows of the matrix $A$ are the same. Now, listen carefully, because I will be clarifying what the rows and the clumn of the matrix is doing to every pixel in the image. 
                 <ul>
                     <li>
-                        The $i$ row of the matrix tells us how each pixel at position $$
+                        The $i$ row of the matrix tells us how each pixel at position $\left\lfloor \frac{i}{\text{Width}} + i\% N\right\rfloor$ for all 3 layers are affected by values of its neighbours. 
                     </li>
                 </ul>
             </p>

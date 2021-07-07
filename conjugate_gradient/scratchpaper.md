@@ -45,3 +45,5 @@ $$
 \exist A \in \mathbb{R}^{(\text{Height} \times \text{Width})\times(\text{Height} \times \text{Width})}
 : \text{vec}(\widetilde{M}) = A \text{vec}(M) \wedge A^T =
 $$
+
+$\left\lfloor \frac{i}{\text{Width}} + i\% N\right\rfloor$
