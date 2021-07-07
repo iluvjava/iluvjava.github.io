@@ -17,7 +17,6 @@
     <meta name="twitter:title" content="Conjugate Gradient for Deblurring Box Blur" />
     <meta name="twitter:description" content="A detailed look into Conjugate Gradient Method and it's applications."">
     <!---->
-
     <!--For Bootstrap style-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -98,6 +97,7 @@
                         </ul>
                     </li>
                     <li><a href="#cg-algo">CG Algorithm Implementations</a></li>
+                    <li><a href="#boxblur">Box Blur</a></li>
                 </ul>
             </div>
         </div>
@@ -125,6 +125,7 @@
                 </ul>
             </li>
             <li><a href="#cg-algo">CG Algorithm Implementations</a></li>
+            <li><a href="#boxblur">Box Blur</a></li>
         </ul>
     </div>
     <div id="main-content">
@@ -193,7 +194,7 @@
                 <li>Positive Definite Matrix</li>
                 <li>Graphs and Adjacency Matrix</li>
                 <li>Basics about iteratives solvers for linear systems</li>
-                <li>Gradient Descned: Steeptest Descend</li>
+                <li>Gradient Descend: Steepest Descend</li>
             </ul>
             <h3>Why all the "Prerequisite"?</h3>
             <blockquote>
@@ -762,15 +763,82 @@ def AbstractCGGenerate(A:callable, b, x0, maxitr:int=100):
             </p>
             <h3>$A$ is not Symmetric</h3>
             <p>
-                Then $A^TA$ is symmetric, solve $A^TA = A^Tb$ instead, at the cost of poorer conditioning and there is no way of treating the problem as a blackbox anymore. Or, consider using GMRes algorithm, which is applicable for all types of matrices and it's able to treat then as a blackbox. 
+                Then $A^TA$ is symmetric, solve $A^TA = A^Tb$ instead, at the cost of poorer conditioning and there is no way of treating the problem as a blackbox anymore. Or, consider using GMRes algorithm, which is applicable for all types of matrices and it's able to treat then as a blackbox.
             </p>
         </section>
         <hr>
         <section id="boxblur">
             <h2>Box Blurring</h2>
             <p>
-                Let the kernel size be $M\times N$, then the Kernel is given as: 
+                Let the kernel size be $m\times n$, and let the image be represented by a tensor $M$, so then it's $\text{Height}\times \text{Width} \times 3$, then the output image, called it $\widetilde{M}$, is going to be: 
+                $$
+                \begin{aligned}
+                    \widetilde{M}[i, j, k] = 
+                    \sum_{\alpha = i - \frac{m}{2}}^{i  + \frac{m}{2}}
+                    \sum_{\beta = j - \frac{n}{2}}^{j - \frac{n}{2}}
+                        \frac{1}{mn}
+                            M \left[ 
+                                \alpha \% \text{Height}, 
+                                \beta \% \text{Width}, 
+                                k
+                                \right]
+                \end{aligned}
+                $$
+                Where $\%$ is the modulo operator. Notice that this is a linear transform because the new pixel is expressed as the weighted sum of it's neigbouring pixels. Observe that this is only for periodic boundary conditions and for our purposes we will only consider blurring algorithm that doesn't change the shape after transformation, which means limiting the type of boundary conditions for the blurring algorithm. 
             </p>
+            <h3>Claim 7</h3>
+            <blockquote> 
+                For the box blur kernel, when it's odd size and it's a box, it's can be represented by a symmetric matrix. An odd size kernel is 
+                $$\text{Kernel}\in \mathbb{R}^{(2m + 1)\times (2m + 1)}\quad \forall m \in \mathbb{Z}_{\ge 0} \wedge m \le \left\lfloor\frac{\min(\text{Height}, \text{Width})}{2}\right\rfloor$$
+                <br>
+                To rephrase the above statement and be more specified, we want to show that: 
+                <br>
+                Let $A$ reprents the operators for box blurring, and it's a $(m\times n\times 3) \times (m\times n\times 3)$ matrix, for the image $M$. Let's also define the vectorized image to be all the rows from the imagee stacked into a vector $x$, mathematically: 
+                $$
+                    \text{vec}(M) = 
+                    \begin{bmatrix}
+                        M[1, :, 1]
+                        \\
+                        M[2, :, 1]
+                        \\
+                        \vdots
+                        \\
+                        M[\text{Height}, :1]
+                        \\
+                        M[1, :, 2]
+                        \\
+                        M[2, :, 2]
+                        \\
+                        \vdots
+                        \\
+                        M[\text{Height}, :2]
+                        \\
+                        M[1, :, 3]
+                        \\
+                        M[2, :, 3]
+                        \\
+                        \vdots
+                        \\
+                        M[\text{Height}, :3]
+                    \end{bmatrix}
+                $$
+
+                Where $\text{vec}$ denotes the bidirectional vectorization procedures given any matrices, so then we can say that: 
+                $$
+                    \exist A \in \mathbb{R}^{(\text{Height} \times \text{Width})\times(\text{Height} \times \text{Width})}: \text{vec}(\widetilde{M}) = A \text{vec}(M) \wedge A^T = A
+                $$
+            </blockquote>
+            <h3>Claim 7 Proof</h3>
+            <p>
+                To prove that, we will need to show that the $k$ th column and rows of the matrix $A$ are the same. Now, listen carefully, because I will be clarifying what the rows and the clumn of the matrix is doing to every pixel in the image. 
+                <ul>
+                    <li>
+                        The $i$ row of the matrix tells us how each pixel at position $$
+                    </li>
+                </ul>
+            </p>
+
+
         </section>
         <div class="footer-padding">
         </div>
