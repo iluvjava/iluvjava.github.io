@@ -98,6 +98,12 @@
                     </li>
                     <li><a href="#cg-algo">CG Algorithm Implementations</a></li>
                     <li><a href="#boxblur">Box Blur</a></li>
+                    <ul>
+                        <li><a href="#claim-7">claim 7</a></li>
+                    </ul>
+                    <li><a href="#results">Results</a></li>
+                    <li><a href="#epilogue">Epilogue</a></li>
+                    <li><a href="#ref">References</a></li>
                 </ul>
             </div>
         </div>
@@ -126,6 +132,12 @@
             </li>
             <li><a href="#cg-algo">CG Algorithm Implementations</a></li>
             <li><a href="#boxblur">Box Blur</a></li>
+            <ul>
+                <li><a href="#claim-7">claim 7</a></li>
+            </ul>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#epilogue">Epilogue</a></li>
+            <li><a href="#ref">References</a></li>
         </ul>
     </div>
     <div id="main-content">
@@ -825,20 +837,103 @@ def AbstractCGGenerate(A:callable, b, x0, maxitr:int=100):
 
                 Where $\text{vec}$ denotes the bidirectional vectorization procedures given any tensor, so then we can say that: 
                 $$
-                    \exist A \in \mathbb{R}^{(\text{Height} \times \text{Width})\times(\text{Height} \times \text{Width})}: \text{vec}(\widetilde{M}) = A \text{vec}(M) \wedge A^T = A
+                    \exist A \in \mathbb{R}^{(\text{Height} \times \text{Width}\times 3)\times(\text{Height} \times \text{Width}\times 3)}: \text{vec}(\widetilde{M}) = A (\text{vec}(M)) \wedge A^T = A
                 $$
             </blockquote>
-            <h3>Claim 7 Proof</h3>
+            <h4>Note</h4>
+            <p>Any order of vectorization on the fiber of tensor $M$ going to be the same, but each of them will have a different $A$, but all symmetric. </p>
+            <h3 id="claim-7">Claim 7 Proof Strategy</h3>
             <p>
                 To prove that, we will need to show that the $k$ th column and rows of the matrix $A$ are the same. Now, listen carefully, because I will be clarifying what the rows and the clumn of the matrix is doing to every pixel in the image. 
                 <ul>
                     <li>
-                        The $i$ row of the matrix tells us how each pixel at position $\left\lfloor \frac{i}{\text{Width}} + i\% N\right\rfloor$ for all 3 layers are affected by values of its neighbours. 
+                        The $i$ row of the matrix tells us how each pixel at position $\left\lfloor \frac{i}{\text{Width}}\right\rfloor + i\% N$ for all 3 layers are affected by values of its neighbours. 
+                    </li>
+                    <li>
+                        The $i$ column of the matrix $A$ tells us how each pixel at position $\left\lfloor \frac{i}{\text{Width}}\right\rfloor + i\% N$ is contributing to the sum of its neighbours. 
+                    </li>
+                    <li>We want to show thta these 2 vectors are the same</li>
+                </ul>
+                <h4>Proof</h4>
+                <ol>
+                    <li>
+                        From each pixel, draw an weighed outgoing edge to its neigbours that is going to be summed up by the box kernel, and the weight is the $1/(2m + 1)^2$
+                    </li>
+                    <li>
+                        For each pixel, draw an weighted incoming edge from its neigbours that is included by the box kernel if the piexel is going to be summed up by it's neighbours. 
+                    </li>
+                    <li>
+                        Construct such a weighted digraph on all pixels for all 3 layers. 
+                    </li>
+                    <li>
+                        All edges on the graph is bidirectional and has the same weight for both direction by definition above and how box blur works 
+                    </li>
+                    <li>
+                        The Adjacency matrix of this graph is the matrix $A$. 
+                    </li>
+                    <li>
+                        Because of reason (5.), (4.), the matrix symmetric. 
+                    </li>
+                </ol>
+                <h4>About this Proof</h4>
+                <p>
+                    I was talking to my friend, go by the name Nost on discord about this. I was inspired by his graphical intereptation by the convolutional procedures, and then came out with this proof 40 mins after finishing reading about the Arnoldi Iterations. 
+                </p>
+            </p>
+            <h3>Exercise for the Readers</h3>
+            <blockquote>
+                Listen again, I don't care who you are, but if you are reading this you need to think. Here is the question I have for you: 
+                <ul>
+                    <li>
+                        Using the above $\text{vec}$ we defined, come up with an compact expression for the matrix $A$, for periodic boundary conditions. 
                     </li>
                 </ul>
+                Hint: Use Kron Product and some matrix that shifts the rows. It should have a really good structure to it.  
+            </blockquote>
+        </section>
+        <hr>
+        <section id="results">
+            <h2>Some Results when Applied to Deblurring</h2>
+            <p>
+                Here is a deblurring carried out on my Unicorn OC:
+                <img src="./images/cg-box-deblurred-alto-blep.png" alt="alto blep deburred">
             </p>
-
-
+            <p>
+                Here is a deblurring carried out on the character Snow Drop, also my friend's choice: 
+                <img src="./images/cg-box-deblurred-nost.png" alt="nost deblurred">
+            </p>
+            <h3>Python implementation <a href="https://github.com/iluvjava/Serious-Python-Stuff/blob/main/Conjugate_Gradient/box_deblurr.py">here</a>. </h3>
+            <p>
+                For more experimentation on more aggressive blurring that involves multiple successive kernel passes, go back to the <a href="#intro">intro</a> to look for the Jupyter Notebook link. 
+            </p>
+            <h3>Exercise for the Readers</h3>
+            <blockquote>
+                Go read my Jupyter notebook and and answer: 
+                <br>
+                <ul>
+                    <li>
+                        What type of symmetric matrix is the box blurring operator with square odd sizes?
+                    </li> 
+                </ul>
+            </blockquote>
+        </section>
+        <section id="epilogue">
+            <h2>Epilogue</h2>
+            <p>
+                Firstly, to make sure you actually read and understand it, discuss the exercise with me, my email is on the top right corner of the main page. 
+            </p>
+            <p>
+                Secondly, I didn't talk about preconditioners, and judging by how much efforts are involved to put together this website, I might never talk about it in here. Therefore... 
+            </p>
+            <h3>Excercise for the Readers</h3>
+            <blockquote>
+                Implemenet the Conjugate Gradient Method with Preconditioning for the matrix, and apply it to box deblurring, compare the decay of the Energy Norm of the error vector $e^{(k)}$ to show that your shoice of preconditioners worked well. 
+            </blockquote>
+        </section>
+        <br>
+        <section id="ref">
+            <h2>References</h2>
+            Some of the more involved proofs  are adapted from <a href="https://sites.math.washington.edu/~morrow/498_13/conjgrad.pdf">here</a>, which is notes from 1994, by Jonathan Richard Shewchuk, and it's used for Math 498, a reading class with professor Morrow at UW.
         </section>
         <div class="footer-padding">
         </div>
