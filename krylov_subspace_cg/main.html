@@ -149,7 +149,7 @@
             <h2>Krylov Subpace</h2>
             Definition: 
             $$
-            \langle \mathcal{K}_k\rangle = \langle b, Ab, A^2b, \cdots A^{k}b \rangle
+            \langle \mathcal{K}_k\rangle = \langle b, Ab, A^2b, \cdots A^{k-1}b \rangle
             $$
             <h3>Property 1</h3>
             $$
@@ -289,6 +289,9 @@
             </p>
             <p>
                 Please compare the above formulation of Krylov Subspace to <a href="../conjugate_gradient/main.html#claim-1">claim 1</a> in previous discussion of Conjugate Gradient. 
+            </p>
+            <p>
+                Claim 1 is partially justified. IF, we have a list of A-Orthogonal vectors that is. $\blacksquare$
             </p>
         </section>
         <hr>
