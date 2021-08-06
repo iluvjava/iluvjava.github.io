@@ -178,10 +178,12 @@
                     \\
                     -c_0I_n &=  
                     c_1A + c_2A^2 \cdots c_nA^n
+                    \\
+                    -I_n &= \frac{c_1}{c_0}A + \frac{c_2}{c_0}A^2 \cdots \frac{c_n}{c_0}A^n
                     \\\implies
-                    A^{- 1} &= \frac{c_1}{c_0}I_n + \frac{c_2}{c_0}A \cdots \frac{c_n}{c_0}A^{n - 1}
+                    -A^{- 1} &= \frac{c_1}{c_0}I_n + \frac{c_2}{c_0}A \cdots \frac{c_n}{c_0}A^{n - 1}
                     \\\implies
-                    b &= \frac{c_1}{c_0}Ab + \frac{c_2}{c_0}A^2b \cdots \frac{c_n}{c_0}A^nb
+                    -b &= \frac{c_1}{c_0}Ab + \frac{c_2}{c_0}A^2b \cdots \frac{c_n}{c_0}A^nb
                 \end{aligned}
                 $$
                 Apply vector $b$ on both side of the equation, the krylov subspace spans the range of the inverse matrix. Which means that we can solve for any vector using the Krylov Subspace, if $A$ can be inverted. 
@@ -301,6 +303,9 @@
                     $e^{(k)} \perp_A \langle \mathcal{K}_{k}\rangle$
                     The error vector at the $k$ th step is the orthogonal to the Krylov Subspace $\mathcal{K}_k$, because the minimization process removes the components represented by $d_i$ for $\mathcal{K}_{k}$
                 </blockquote>            
+                
+            </p>
+            <p>
                 This is a direct consequence of how the optimization problem is phrased. No proof will be given here. 
             </p>
             <h3>Claim 1 Corollary 2</h3>
@@ -340,7 +345,36 @@
                 $$
             </p>
             <h3>Claim 1 Corollary 3</h3>
+            <p>
+                <blockquote>
+                    $\langle r^{(k)}, r^{(j)}\rangle = 0$ for all $0 \le j \le k - 1$
+                </blockquote>
+            </p>
             
+            <h4>Claim 1 Corrolary 3 Proof</h4>
+            <p>
+                Note the property of Krylov Subspace is: 
+                <br>
+                $$
+                \langle  \mathcal{K}_1\rangle \subseteq \langle  \mathcal{K}_2\rangle \subseteq \langle  \mathcal{K}_3\rangle \cdots \subseteq \langle  \mathcal{K}_n\rangle
+                $$
+                <br>
+                Here we assume that the subsets are strict, again, because the matrix is SPD. 
+                <br>
+                From corrolary 2, $r^{(k)} \notin \langle \mathcal{K}_{k - 1} \rangle$ and $r^{(k)} \in \langle \mathcal{K}_{k} \rangle$ then $r^{(k)}\in \langle \mathcal{K}_{k} \rangle\setminus \langle \mathcal{K}_{k - 1} \rangle$ 
+                <br>
+                So then basically, $r^{(j)}\in \langle \mathcal{K}_{k - 2} \rangle$ for all $0 \le j \le k- 1$, but then this means $\langle r^{(j)}, r^{(k)}\rangle = 0$ for all $0 \le j \le k - 1$ by that property of the Krylov Subspace. 
+            </p>
+        </section>
+        <hr>
+        <section id="the-res">
+            <h2>The Residual Magic (Explained)</h2>
+            <h3>Claim 2</h3>
+            <p>
+                <blockquote>
+                    Then, A-orthogonalizing the vector $r^{(k)}$ against the last search direction will allow us to get the next search directions. This is to say that, the residual vector generated at the $k$ iteration of the algorithm, $r^{(k)}$ is A-Orthogonal to all $d_j$ for $0\le j \le k - 2$. Which is convenient for A-Orthogonalizing and getting the next vector. 
+                </blockquote>
+            </p>
         </section>
         <div class="footer-padding">
         </div>
