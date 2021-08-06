@@ -4,19 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <!--Edit Here-->
-    <title>CG and Box Deblurring</title>
+    <title>Conjugate Gradient with Krylov Subspace</title>
     <!--Open graph protocol EDIT HERE-->
-    <meta property="og:title" content="Conjugate Gradient for Deblurring Box Blur">
+    <meta property="og:title" content="Conjugate Gradient with Krylov Subspace">
     <meta property="og:type" content="article">
     <meta property="og:description"
-    content="A detailed look into Conjugate Gradient Method and it's applications.">
-    <meta property="og:image" content="https://iluvjava.github.io/conjugate_gradient/images/cg-box-deblurred-alto-blep.png" >
+    content="A new derivation of the same conjugate gradient algorithm using minimization on energy norm of the error on the krylov subspace.">
+    <meta property="og:image" content="./energy_norm.png" >
     <!--END-->
     <!--Edit Here -->
     <!-- ForTwitter-->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Conjugate Gradient for Deblurring Box Blur" />
-    <meta name="twitter:description" content="A detailed look into Conjugate Gradient Method and its applications deblurring boxed blurred images.">
+    <meta name="twitter:title" content="Conjugate Gradient with Krylov Subspace" />
+    <meta name="twitter:description" content="A new derivation of the same conjugate gradient algorithm using minimization on energy norm of the error on the krylov subspace.">
     <!---->
     <!--For Bootstrap style-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -79,32 +79,7 @@
                 <ul>
                     <!--Section links. Edit Here -->
                     <li><a href="#intro">Intro</a></li>    
-                    <li>
-                        <a href="#cg">Conjugate Gradient</a>
-                        <ul>
-                            <li>
-                                <a href="#claim-1">claim 1</a>
-                            </li>
-                            <li>
-                                <a href="#claim-2">claim 2</a>
-                            </li>
-                            <li>
-                                <a href="#claim-3">claim 3</a>
-                            </li>
-                            <li><a href="#gs-conjugation">Gram Schimdt Conjugation</a></li>
-                            <li><a href="#claim-4">cliam 4</a></li>
-                            <li><a href="#claim-5">claim 5</a></li>
-                            <li><a href="#claim-6">claim 6</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#cg-algo">CG Algorithm Implementations</a></li>
-                    <li><a href="#boxblur">Box Blur</a></li>
-                    <ul>
-                        <li><a href="#claim-7">claim 7</a></li>
-                    </ul>
-                    <li><a href="#results">Results</a></li>
-                    <li><a href="#epilogue">Epilogue</a></li>
-                    <li><a href="#ref">References</a></li>
+                    
                 </ul>
             </div>
         </div>
@@ -113,32 +88,7 @@
         <ul>
             <!--Section links. Edit Here-->
             <li><a href="#intro">Intro</a></li>
-            <li>
-                <a href="#cg">Conjugate Gradient</a>
-                <ul>
-                    <li>
-                        <a href="#claim-1">claim 1</a>
-                    </li>
-                    <li>
-                        <a href="#claim-2">claim 2</a>
-                    </li>
-                    <li>
-                        <a href="#claim-3">claim 3</a>
-                    </li>
-                    <li><a href="#gs-conjugation">Gram Schimdt Conjugation</a></li>
-                    <li><a href="#claim-4">cliam 4</a></li>
-                    <li><a href="#claim-5">claim 5</a></li>
-                    <li><a href="#claim-6">claim 6</a></li>
-                </ul>
-            </li>
-            <li><a href="#cg-algo">CG Algorithm Implementations</a></li>
-            <li><a href="#boxblur">Box Blur</a></li>
-            <ul>
-                <li><a href="#claim-7">claim 7</a></li>
-            </ul>
-            <li><a href="#results">Results</a></li>
-            <li><a href="#epilogue">Epilogue</a></li>
-            <li><a href="#ref">References</a></li>
+            
         </ul>
     </div>
     <div id="main-content">
@@ -146,9 +96,14 @@
             <h2>Intro</h2>
             <p>
                 Last formulation of the conjugate gradient algorithm failed to reveal more than what conjugate gradient is, as if, it's just a matter of "do things in this way then we have the right thing."
+                
             </p>
             <p>
                 But why? Why is it that the energy norm monotonically decreases? Why is steepest gradient along conjugate direction works? 
+            </p>
+            <p>
+                <h3>Prerequisite</h3>
+                The previous derivation of the conjugate gradient: <a href="../conjugate_gradient/main.html">here</a>. 
             </p>
             <h3>Major Ideas</h3>
             <blockquote>
@@ -170,7 +125,108 @@
                 Minimization using Krylov Subspace defines a class of Iterative Methods for linear system, and Conjugate Gradient is just one of them. Nearly all other iterative has some kind of connection to minimization in Krylov Subpsace. 
             </p>
             <h3>List of Quantities and Assumptions</h3>
+            <p>
+                <ol>
+                    <li>$\langle \bullet \rangle$ means that span of a set of vectors that are in the angle bracket. </li>
+                    <li>$\langle u,v \rangle$ is the inner product of 2 vectors</li>
+                    <li>$\langle u, v \rangle_A$ is the inner product of 2 vectors under the A (Symmetric Positive Definite)SPD matrix, basically: $u^TAv$</li>
+                    <li>$Ax^+ = b$ the equation and it's soltuion is $x^+$, regarded as the optimal value $x^+$. </li>
+                    <li>$e^{(k)} = x^{(k)} - x^+$ The error vector, when the solution $x^{(k)}$ is converging. </li>
+                    <li>$r^{(k)} = b - Ax^{(k)}$, the residual vector, how far we are from the correct solution on the output space of matrix $A$. </li>
+                    <li>$Ae^{(k)} = - r^{(k)}$, The relation between the input space error vector and the output space residual vector. </li>
+                    <li>$\Vert x\Vert_A$ is the Energy norm of a vector $\Vert x\Vert_A^2 = x^TAx$, where $A$ is assumed to be SPD. </li>
+                </ol>
+            <ol>
+                Assume that matrix $A$ is SPD, squared. 
+            </ol>
+        
+        </p>
             
+        </section>
+        <hr>
+        <section id="krylov">
+            <h2>Krylov Subpace</h2>
+            Definition: 
+            $$
+            \langle \mathcal{K}_k\rangle = \langle b, Ab, A^2b, \cdots A^{k}b \rangle
+            $$
+            <h3>Property 1</h3>
+            $$
+                \langle \mathcal{K}_0\rangle\subseteq
+                \langle \mathcal{K}_1 \rangle \subseteq  
+                \langle \mathcal{K}_2 \rangle \subseteq 
+                \langle \mathcal{K}_3 \rangle \cdots 
+            $$
+            <p>It's trivial to justify it.</p>
+            <h3>Property 2</h3>
+            <p>
+                $\mathcal{K}$ spans $\mathbb{R}^n$ if $A$ is invertible. 
+            </p>
+            <h4>Justification</h4>
+            <p>
+                This is the characteristic polynomials of a matrix A, it's monic with $c_{n - 1} = 1$ and $c_0 = (-1)^n|A|$. 
+                $$
+                    p(\lambda) = \sum_{i = 0}^{n}
+                    c_0 \lambda^i = |A - \lambda I|
+                $$
+                Using the <a href="https://en.wikipedia.org/wiki/Cayley%E2%80%93Hamilton_theorem">Cayley-Hamilton Theorem</a> , putting the matrix $A$ into the polynoial will result in the zero matrix. Therefore, The inverse matrix $A^{-1}$ can be represented using the coefficients of the characteristic polynomial. Here is the proof if we assume the matrix is PSD: 
+                $$
+                \begin{aligned}
+                    \mathbf{0} &= 
+                        c_0I_n + c_1A + c_2A^2 \cdots c_nA^n
+                    \\
+                    -c_0I_n &=  
+                    c_1A + c_2A^2 \cdots c_nA^n
+                    \\\implies
+                    A^{- 1} &= \frac{c_1}{c_0}I_n + \frac{c_2}{c_0}A \cdots \frac{c_n}{c_0}A^{n - 1}
+                    \\\implies
+                    b &= \frac{c_1}{c_0}Ab + \frac{c_2}{c_0}A^2b \cdots \frac{c_n}{c_0}A^nb
+                \end{aligned}
+                $$
+                Apply vector $b$ on both side of the equation, the krylov subspace spans the range of the inverse matrix. Which means that we can solve for any vector using the Krylov Subspace, if $A$ can be inverted. 
+            </p>
+            
+        </section>
+        <hr>
+        <section id="cg_theory">
+            <h2>Conjugate Gradient: Theory</h2>
+            <h3>Claim 1</h3>
+            <p>
+                <blockquote>
+                    The conjugate graidient algorithm minimizes the energy norm of the error vector at each iterations of the algorithm, which is to say: 
+                    $$
+                    \begin{aligned}
+                        x^{(k + 1)} &= \arg\min_{x\in \langle K_{k + 1}\rangle} 
+                            \Vert x - x^+\Vert_A^2
+                    \end{aligned} \quad  \text{where: } Ax^+ = b
+                    $$
+                    If we do this for every $x^{k}$ then we have the conjugate gradient algorithm. 
+                </blockquote>
+            </p>
+            <h3>A-Orthogonal Directions</h3>
+            <p>
+                2 Vectors are said to be A-Orthogonal if $u^TAv = 0$. This is previously referred to as being conjugate vectors. The reason as to why conjugate vector is used is because it comes handy with the energy norm, it's especially good if we can find a set of conjugate vectors that are all A-Orthogonal. 
+            </p>
+            <h3>Inductive Hypothesis</h3>
+            <p>
+                <blockquote>
+                    $$
+                    \begin{aligned}
+                    \langle  d_0\rangle  &= \langle  b\rangle = \langle \mathcal{K}_0 \rangle
+                    \\
+                    \langle d_0, d_1\rangle &= \langle b, Ab\rangle = \langle \mathcal{K}_1 \rangle
+                    \\
+                    \langle d_0, d_1, \cdots d_{k - 1}\rangle &= \langle b, Ab, \cdots A^{k - 1}b \rangle = \langle \mathcal{K}_{k - 1} \rangle
+                    \end{aligned}
+                    $$
+                    Inductively, let's also assume that: 
+                    $$
+                    x^{(k)} \in \langle \mathcal{K}_k \rangle
+                    $$
+                    And there exists a set of $n$ A-Orthogonal vector $d_i$ that spans $\mathcal{K}_n$ eventually. Recall that, this is possible through the process of <a href="../conjugate_gradient/main.html#gs-conjugation">Gram Schimdtz Conjugation</a> from the previous section. It can be used to make A-Orthogonal vectors using the Evolving Krylov Subspace. Therefore, this assumption is legit. 
+                </blockquote>
+
+            </p>
         </section>
 
         <div class="footer-padding">
