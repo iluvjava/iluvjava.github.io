@@ -10,7 +10,7 @@
     <meta property="og:type" content="article">
     <meta property="og:description"
     content="A new derivation of the same conjugate gradient algorithm using minimization on energy norm of the error on the krylov subspace.">
-    <meta property="og:image" content="./energy_norm.png" >
+    <meta property="og:image" content="https://iluvjava.github.io/krylov_subspace_cg/energy_norm.png" >
     <!--END-->
     <!--Edit Here -->
     <!-- ForTwitter-->
@@ -135,6 +135,7 @@
                     <li>$r^{(k)} = b - Ax^{(k)}$, the residual vector, how far we are from the correct solution on the output space of matrix $A$. </li>
                     <li>$Ae^{(k)} = - r^{(k)}$, The relation between the input space error vector and the output space residual vector. </li>
                     <li>$\Vert x\Vert_A$ is the Energy norm of a vector $\Vert x\Vert_A^2 = x^TAx$, where $A$ is assumed to be SPD. </li>
+                    <li>$u\perp_A v$, vector $u, v$ are A-orthogonal to each other, it's equivalent to $\langle u, v \rangle_A$</li>
                 </ol>
             <ol>
                 Assume that matrix $A$ is SPD, squared. 
@@ -160,16 +161,16 @@
             <p>It's trivial to justify it.</p>
             <h3>Property 2</h3>
             <p>
-                $\mathcal{K}$ spans $\mathbb{R}^n$ if $A$ is invertible. 
+                $\mathcal{K}_n$ spans $\mathbb{R}^n$ if $A$ is invertible. 
             </p>
             <h4>Justification</h4>
             <p>
-                This is the characteristic polynomials of a matrix A, it's monic with $c_{n - 1} = 1$ and $c_0 = (-1)^n|A|$. 
+                This is the characteristic polynomials of a matrix A, it's monic with $c_{n} = 1$ and $c_0 = (-1)^n|A|$. 
                 $$
                     p(\lambda) = \sum_{i = 0}^{n}
                     c_0 \lambda^i = |A - \lambda I|
                 $$
-                Using the <a href="https://en.wikipedia.org/wiki/Cayley%E2%80%93Hamilton_theorem">Cayley-Hamilton Theorem</a> , putting the matrix $A$ into the polynoial will result in the zero matrix. Therefore, The inverse matrix $A^{-1}$ can be represented using the coefficients of the characteristic polynomial. Here is the proof if we assume the matrix is PSD: 
+                Using the <a href="https://en.wikipedia.org/wiki/Cayley%E2%80%93Hamilton_theorem">Cayley-Hamilton Theorem</a> , putting the matrix $A$ into the polynoial will result in the zero matrix. Therefore, The inverse matrix $A^{-1}$ can be represented using the coefficients of the characteristic polynomial.
                 $$
                 \begin{aligned}
                     \mathbf{0} &= 
@@ -184,6 +185,9 @@
                 \end{aligned}
                 $$
                 Apply vector $b$ on both side of the equation, the krylov subspace spans the range of the inverse matrix. Which means that we can solve for any vector using the Krylov Subspace, if $A$ can be inverted. 
+            </p>
+            <p>
+                The proof for Cayleys-Hamilton Theorem is skipped, under the case where $A$ is SPD, it's very easy, but other the general case, I don't understand the proof for it yet. 
             </p>
             
         </section>
@@ -227,8 +231,117 @@
                 </blockquote>
 
             </p>
-        </section>
+            <h3>Setting Up Some Variables</h3>
+            <p>
+                By the assumption that $x^{(k)} \in \mathcal{K}_k$, we know that $x^{(k)}\in \langle d_0, d_1, \cdots d_{k - 1}\rangle$, giving us: 
 
+                $$
+                \begin{aligned}
+                    x^{(0)} &= \sum_{j = 0}^{n-1} a^{(0)}_j d_j
+                    \\
+                    x^{(k)} &= \sum_{j = 0}^{k - 1} a^{(k)}_j d_j
+                    \\
+                    x^{+} &= \sum_{j = 0}^{n - 1} a_j^+d_j
+                \end{aligned}\tag{1}
+                $$
+                            
+                Note: $x^{(0)}, x^+$ need to be expressed using all the conjugate, if we assume that the system is, solvable, it's solvable only if $b\in \langle\mathcal{K}_j\rangle$, $1 \le j \le n$. 
+                <br>            
+                To verify claim 1, we need to minimize the energy norm of $x$ under the subspace $\langle \mathcal{K}_{k + 1} \rangle$. 
+                <br>
+                Which them means the statement we consider in **claim 1** would be 
+                <br>
+                $$
+                \begin{aligned}
+                    x^{(k+ 1)} &= \arg\min_{x\in \mathcal{K}_{k + 1}} \Vert x - x^+\Vert_A^2
+                    \\
+                    \underset{[2]}{\implies}\text{let: } x &= \sum_{j = 0}^{k-1} a_j d_j 
+                    \\
+                    x^{(k+ 1)} &= \arg\min_{x\in \mathcal{K}_{k + 1}} 
+                    \left\Vert
+                        \underbrace{\sum_{j = 0}^{k} (a_j - a_j^+)d_j}_{\in \mathcal{K}_{k + 1}}
+                        + 
+                        \sum_{j = k}^{n - 1} a_j^+ d_j
+                    \right\Vert_A^2
+                    \\
+                    \underset{[1]}{\implies} x^{(k+ 1)} &= \sum_{j = 0}^{k}a_j^+d_j \in 
+                    \langle  \mathcal{K}_{k + 1}\rangle
+                \end{aligned}\tag{2}
+                $$
+                <br>
+                [1]: Take notice that, because $d_j$ vector is A-Ortho, therefore, it's directly:           
+                $$
+                    \sum_{j = 0}^{k}(a_j - a_j^+)^2 - \sum_{j = k + 1}^{n - 1}(a_j^+)^2
+                $$
+                We are implicitly using the PSD property of the matrix $A$ here. 
+                <br>
+                [2]: By the fact that $x\in \mathcal{K}_{k + 1}$, the subscript for the denoted minimizer. However, because $a_j$ where $1 \le j \le k$ corresponds to components that spans $\mathcal{K}_{k + 1}$, the minimization problem is just directly setting the conjugate vector to zero. 
+            </p>
+            <h3>Readers Please Observe</h3>
+            <p>
+                The inductive assumtpion $x\in \langle \mathcal{K}_k \rangle$ holds true. 
+            </p>
+            <p>
+                We found an expression for $x^{(k + 1)}$ from it, which is going to be the next guess produced by the conjugate gradient algorithm. If this is 
+                iteratively applied, then each time we only determine the component (the projection of $x^+$ onto) $d_k$ for vector $x^{(k + 1)}$. In this case, we jump right to the vector $x^{(k + 1)}$ directly. 
+            </p>
+            <p>
+                Please compare the above formulation of Krylov Subspace to <a href="../conjugate_gradient/main.html#claim-1">claim 1</a> in previous discussion of Conjugate Gradient. 
+            </p>
+        </section>
+        <hr>
+        <section id="consequence">
+            <h2>Other Consequences of the Theory</h2>
+            <p>
+                There are 3 corollaries that come with what I just did. It's some of the same details from previous discussion, but this time it's proved using Krylov Subspace. Which terms out to be more beautiful. 
+            </p>
+            <h3>Claim 1 Corollary 1</h3>
+            <p>
+                <blockquote>
+                    $e^{(k)} \perp_A \langle \mathcal{K}_{k}\rangle$
+                    The error vector at the $k$ th step is the orthogonal to the Krylov Subspace $\mathcal{K}_k$, because the minimization process removes the components represented by $d_i$ for $\mathcal{K}_{k}$
+                </blockquote>            
+                This is a direct consequence of how the optimization problem is phrased. No proof will be given here. 
+            </p>
+            <h3>Claim 1 Corollary 2</h3>
+            <p>
+                <blockquote>
+                    $r^{(k)}\notin \langle \mathcal{K}_{k - 1} \rangle$, but $r^{(k)}\in \langle \mathcal{K}_{k} \rangle$, which them means that $r^{(k + 1)}\notin \langle \mathcal{K}_{k} \rangle$ then $\langle r^{(k + 1)}, r^{(k)}  \rangle = 0$
+                </blockquote>
+            </p>
+            <h4>Claim 1 Cororllary 2 Proof</h4>
+            <p>
+                Consider the inductive hypothesis and the variables that we setup for minimization on the Krylov Subspace. 
+                $$
+                \begin{aligned}
+                    x^{(k)} &=  \sum_{j = 0}^{k - 1} a_j^{+} d_j \in 
+                    \langle \mathcal{K}_k \rangle
+                    \\
+                    b = Ax^+  \implies  b &= \sum_{j = 0}^{n - 1} a^+_jAd_j
+                    \\
+                    \implies
+                    b - Ax^{(k)} &= - \sum_{j = k}^{n - 1}a_j^{+}Ad_j
+                    \\
+                    \implies 
+                    \forall 0 \le i \le k - 1 & \quad 
+                    \left\langle  
+                        \sum_{j = k}^{n}
+                        a_j^+Ad_j,
+                        d_i
+                    \right\rangle = 0
+                    \\
+                    \implies
+                    r^{(k)} & \notin \langle d_0, d_1, \cdots d_{k - 1} \rangle
+                    \\
+                    \implies 
+                    r^{(k)} & \notin \langle \mathcal{K}_{k - 1} \rangle
+                \end{aligned}
+                \tag{3}
+                $$
+            </p>
+            <h3>Claim 1 Corollary 3</h3>
+            
+        </section>
         <div class="footer-padding">
         </div>
     </div>
