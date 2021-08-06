@@ -184,9 +184,11 @@
                     -A^{- 1} &= \frac{c_1}{c_0}I_n + \frac{c_2}{c_0}A \cdots \frac{c_n}{c_0}A^{n - 1}
                     \\\implies
                     -b &= \frac{c_1}{c_0}Ab + \frac{c_2}{c_0}A^2b \cdots \frac{c_n}{c_0}A^nb
+                    \\\implies
+                    -A^{-1}b &= \frac{c_1}{c_0}b + \frac{c_2}{c_0}Ab \cdots \frac{c_n}{c_0}A^{n - 1}b
                 \end{aligned}
                 $$
-                Apply vector $b$ on both side of the equation, the krylov subspace spans the range of the inverse matrix. Which means that we can solve for any vector using the Krylov Subspace, if $A$ can be inverted. 
+                The last line of statement indicates that the solution, $x^{+}$, is in the span of the Krylov Subspace. 
             </p>
             <p>
                 The proof for Cayleys-Hamilton Theorem is skipped, under the case where $A$ is SPD, it's very easy, but other the general case, I don't understand the proof for it yet. 
@@ -280,94 +282,33 @@
                 [2]: By the fact that $x\in \mathcal{K}_{k + 1}$, the subscript for the denoted minimizer. However, because $a_j$ where $1 \le j \le k$ corresponds to components that spans $\mathcal{K}_{k + 1}$, the minimization problem is just directly setting the conjugate vector to zero. 
             </p>
             <h3>Readers Please Observe</h3>
+            <p>The inductive assumtpion $x^{(k)}\in \langle \mathcal{K}_k \rangle$ holds true. </p>
+            <p>We found an expression for $x^{(k + 1)}$ from it, which is going to be the next guess produced by the conjugate gradient algorithm. </p>
+            <p>At each iterations, the vector compnents for $x^{k}$ will get projected onto a A-Orthogonal Direction $d_{k}$. One by One, we get closer and closer to $x^{+}$, measured under the energy norm. And Mathematically, I am saying that: </p>
             <p>
-                The inductive assumtpion $x\in \langle \mathcal{K}_k \rangle$ holds true. 
+                $$
+                x^{(k + 1)} - x^{(k)} = a_k^+d_k
+                $$
             </p>
-            <p>
-                We found an expression for $x^{(k + 1)}$ from it, which is going to be the next guess produced by the conjugate gradient algorithm. If this is 
-                iteratively applied, then each time we only determine the component (the projection of $x^+$ onto) $d_k$ for vector $x^{(k + 1)}$. In this case, we jump right to the vector $x^{(k + 1)}$ directly. 
-            </p>
-            <p>
-                Please compare the above formulation of Krylov Subspace to <a href="../conjugate_gradient/main.html#claim-1">claim 1</a> in previous discussion of Conjugate Gradient. 
-            </p>
-            <p>
-                Claim 1 is partially justified. IF, we have a list of A-Orthogonal vectors that is. $\blacksquare$
-            </p>
+            
         </section>
         <hr>
         <section id="consequence">
             <h2>Other Consequences of the Theory</h2>
             <p>
-                There are 3 corollaries that come with what I just did. It's some of the same details from previous discussion, but this time it's proved using Krylov Subspace. Which terms out to be more beautiful. 
+                We formulated the problem as an optimization problem, and we pointed out the hypothesis involving the conjugate directions and the energy norm. Now we need to pause and think about the consequences of what is implied what is shown above. 
             </p>
-            <h3>Claim 1 Corollary 1</h3>
-            <p>
-                <blockquote>
-                    $e^{(k)} \perp_A \langle \mathcal{K}_{k}\rangle$
-                    The error vector at the $k$ th step is the orthogonal to the Krylov Subspace $\mathcal{K}_k$, because the minimization process removes the components represented by $d_i$ for $\mathcal{K}_{k}$
-                </blockquote>            
-                
-            </p>
-            <p>
-                This is a direct consequence of how the optimization problem is phrased. No proof will be given here. 
-            </p>
-            <h3>Claim 1 Corollary 2</h3>
-            <p>
-                <blockquote>
-                    $r^{(k)}\notin \langle \mathcal{K}_{k - 1} \rangle$, but $r^{(k)}\in \langle \mathcal{K}_{k} \rangle$, which them means that $r^{(k + 1)}\notin \langle \mathcal{K}_{k} \rangle$ then $\langle r^{(k + 1)}, r^{(k)}  \rangle = 0$
-                </blockquote>
-            </p>
-            <h4>Claim 1 Cororllary 2 Proof</h4>
-            <p>
-                Consider the inductive hypothesis and the variables that we setup for minimization on the Krylov Subspace. 
-                $$
-                \begin{aligned}
-                    x^{(k)} &=  \sum_{j = 0}^{k - 1} a_j^{+} d_j \in 
-                    \langle \mathcal{K}_k \rangle
-                    \\
-                    b = Ax^+  \implies  b &= \sum_{j = 0}^{n - 1} a^+_jAd_j
-                    \\
-                    \implies
-                    b - Ax^{(k)} &= - \sum_{j = k}^{n - 1}a_j^{+}Ad_j
-                    \\
-                    \implies 
-                    \forall 0 \le i \le k - 1 & \quad 
-                    \left\langle  
-                        \sum_{j = k}^{n}
-                        a_j^+Ad_j,
-                        d_i
-                    \right\rangle = 0
-                    \\
-                    \implies
-                    r^{(k)} & \notin \langle d_0, d_1, \cdots d_{k - 1} \rangle
-                    \\
-                    \implies 
-                    r^{(k)} & \notin \langle \mathcal{K}_{k - 1} \rangle
-                \end{aligned}
-                \tag{3}
-                $$
-            </p>
-            <h3>Claim 1 Corollary 3</h3>
-            <p>
-                <blockquote>
-                    $\langle r^{(k)}, r^{(j)}\rangle = 0$ for all $0 \le j \le k - 1$
-                </blockquote>
-            </p>
+            <h3>Claim 1 Corolary 1</h3>
+            <blockquote>
+                $e^{(k)} \perp_A \langle \mathcal{K}_{k}\rangle$
+                The error vector at the $k$ th step is the orthogonal to the Krylov Subspace $\mathcal{K}_k$, because the minimization process removes the components represented by $d_i$ for $\mathcal{K}_{k}$
+            </blockquote>
+            <h3>Claim 1 Corollary 2 [^1]</h3>
+            <blockquote>
+                $\forall\; k \;: r^{(k)} \perp \langle \mathcal{K}_{k} \rangle$, which it then conveniently implies $r^{(k)}\perp \langle d_0, d_1, \cdots d_{k - 1}\rangle$
+            </blockquote>
+
             
-            <h4>Claim 1 Corrolary 3 Proof</h4>
-            <p>
-                Note the property of Krylov Subspace is: 
-                <br>
-                $$
-                \langle  \mathcal{K}_1\rangle \subseteq \langle  \mathcal{K}_2\rangle \subseteq \langle  \mathcal{K}_3\rangle \cdots \subseteq \langle  \mathcal{K}_n\rangle
-                $$
-                <br>
-                Here we assume that the subsets are strict, again, because the matrix is SPD. 
-                <br>
-                From corrolary 2, $r^{(k)} \notin \langle \mathcal{K}_{k - 1} \rangle$ and $r^{(k)} \in \langle \mathcal{K}_{k} \rangle$ then $r^{(k)}\in \langle \mathcal{K}_{k} \rangle\setminus \langle \mathcal{K}_{k - 1} \rangle$ 
-                <br>
-                So then basically, $r^{(j)}\in \langle \mathcal{K}_{k - 2} \rangle$ for all $0 \le j \le k- 1$, but then this means $\langle r^{(j)}, r^{(k)}\rangle = 0$ for all $0 \le j \le k - 1$ by that property of the Krylov Subspace. 
-            </p>
         </section>
         <hr>
         <section id="the-res">
@@ -378,6 +319,10 @@
                     Then, A-orthogonalizing the vector $r^{(k)}$ against the last search direction will allow us to get the next search directions. This is to say that, the residual vector generated at the $k$ iteration of the algorithm, $r^{(k)}$ is A-Orthogonal to all $d_j$ for $0\le j \le k - 2$. Which is convenient for A-Orthogonalizing and getting the next vector. 
                 </blockquote>
             </p>
+        </section>
+        <hr>
+        <section id="footnote">
+            
         </section>
         <div class="footer-padding">
         </div>
