@@ -78,8 +78,27 @@
             <div class="collapse navbar-collapse">
                 <ul>
                     <!--Section links. Edit Here -->
-                    <li><a href="#intro">Intro</a></li>    
-                    
+                    <li><a href="#intro">Intro</a></li> 
+                    <li><a href="#krylov">Krylov Subspace</a></li>
+                    <li><a href="#cg-theory">Theory of Conjugate Gradient</a></li>
+                    <ul>
+                        <li><a href="#claim-1">Claim 1</a></li>
+                    </ul>
+                    <li><a href="#consequence">The Consequences</a></li>
+                    <ul>
+                        <li><a href="#claim-1-c1">Claim 1 Corollary 1</a></li>
+                        <li><a href="#claim-1-c2">Claim 1 Corollary 2</a></li>
+                    </ul>
+                    <li><a href="#the-res">The Magic of Residual Vector</a></li>
+                    <ul>
+                        <li><a href="#claim-2">Claim 2</a></li>
+                    </ul>
+                    <li><a href="#step-size">Determine Stepsize and Conjugate Directions</a></li>
+                    <ul>
+                        <li><a href="#claim-3">Claim 3</a></li>
+                        <li><a href="#claim-3-c1">Claim 3 Corollary 1</a></li>
+                    </ul>
+                    <li><a href="#cg">Conjugate Gradient</a></li>
                 </ul>
             </div>
         </div>
@@ -88,7 +107,26 @@
         <ul>
             <!--Section links. Edit Here-->
             <li><a href="#intro">Intro</a></li>
-            
+            <li><a href="#krylov">Krylov Subspace</a></li>
+            <li><a href="#cg-theory">Theory of Conjugate Gradient</a></li>
+            <ul>
+                <li><a href="#claim-1">Claim 1</a></li>
+            </ul>
+            <li><a href="#consequence">The Consequences</a></li>
+            <ul>
+                <li><a href="#claim-1-c1">Claim 1 Corollary 1</a></li>
+                <li><a href="#claim-1-c2">Claim 1 Corollary 2</a></li>
+            </ul>
+            <li><a href="#the-res">The Magic of Residual Vector</a></li>
+            <ul>
+                <li><a href="#claim-2">Claim 2</a></li>
+            </ul>
+            <li><a href="#step-size">Determine Stepsize and Conjugate Directions</a></li>
+            <ul>
+                <li><a href="#claim-3">Claim 3</a></li>
+                <li><a href="#claim-3-c1">Claim 3 Corollary 1</a></li>
+            </ul>
+            <li><a href="#cg">Conjugate Gradient</a></li>
         </ul>
     </div>
     <div id="main-content">
@@ -196,9 +234,9 @@
             
         </section>
         <hr>
-        <section id="cg_theory">
+        <section id="cg-theory">
             <h2>Conjugate Gradient: Theory</h2>
-            <h3>Claim 1</h3>
+            <h3 id="claim-1">Claim 1</h3>
             <p>
                 <blockquote>
                     The conjugate graidient algorithm minimizes the energy norm of the error vector at each iterations of the algorithm, which is to say: 
@@ -298,7 +336,7 @@
             <p>
                 We formulated the problem as an optimization problem, and we pointed out the hypothesis involving the conjugate directions and the energy norm. Now we need to pause and think about the consequences of what is implied what is shown above. 
             </p>
-            <h3>Claim 1 Corollary 1</h3>
+            <h3 id="claim-1-c1">Claim 1 Corollary 1</h3>
             <p>
                 <blockquote>
                     $e^{(k)} \perp_A \langle \mathcal{K}_{k}\rangle$
@@ -330,7 +368,7 @@
             <p>
                 However, as long as $e^{(k)}$ is not zero, it will be the case that $e^{(k)}\in \langle \mathcal{K}_n \rangle\setminus\langle \mathcal{K}_{k}\rangle$ $\blacksquare$
             </p>
-            <h3>Claim 1 Corollary 2 <sup>[1]</sup></h3>
+            <h3 id="claim-1-c2">Claim 1 Corollary 2 <sup>[1]</sup></h3>
             <p>
                 <blockquote>
                 $\forall\; k \;: r^{(k)} \perp \langle \mathcal{K}_{k} \rangle$, which it then conveniently implies $r^{(k)}\perp \langle d_0, d_1, \cdots d_{k - 1}\rangle$
@@ -368,7 +406,7 @@
         <hr>
         <section id="the-res">
             <h2>The Residual Magic (Explained)</h2>
-            <h3>Claim 2</h3>
+            <h3 id="claim-2">Claim 2</h3>
             <p>
                 <blockquote>
                     Then, A-orthogonalizing the vector $r^{(k)}$ against the last search direction will allow us to get the next search directions. This is to say that, the residual vector generated at the $k$ iteration of the algorithm, $r^{(k)}$ is A-Orthogonal to all $d_j$ for $0\le j \le k - 2$. Which is convenient for A-Orthogonalizing and getting the next vector. 
@@ -420,7 +458,7 @@
             <p>
                 We are going to use all the above cliams and corollaries to find the correct weights that update the search directions, and the right stepsize along the A-Orthongal direction vector $d_k$.
             </p>
-            <h3>Claim 3</h3>
+            <h3 id="claim-3">Claim 3</h3>
             <p>
                 <blockquote>
                     $r^{(k)}\perp \langle d_0, r^{(1)}, r^{(2)}, \cdots, r^{(k-1)}\rangle \; \forall \; n\ge k\ge 1$, Which implies that if $d_0 = r^{(0)}$, then the set of residual vector generated by the algorithm is all orthogonal to each other. 
@@ -444,7 +482,7 @@
             </p>
             <p>[1]: The left hand side reduce to zero, this is true by Corollary 2 of Claim 1</p>
             <p>[2]: the second term on the right hand side reduce to zero, also due to </p>
-            <h3>Claim 3 Corollary 1</h3>
+            <h3 id="claim-3-c1">Claim 3 Corollary 1</h3>
 
             <blockquote>$r^{(k)T}d_k = \Vert r^{(k)} \Vert_2^2$ for all $k$. </blockquote>
 
