@@ -298,17 +298,72 @@
             <p>
                 We formulated the problem as an optimization problem, and we pointed out the hypothesis involving the conjugate directions and the energy norm. Now we need to pause and think about the consequences of what is implied what is shown above. 
             </p>
-            <h3>Claim 1 Corolary 1</h3>
-            <blockquote>
-                $e^{(k)} \perp_A \langle \mathcal{K}_{k}\rangle$
-                The error vector at the $k$ th step is the orthogonal to the Krylov Subspace $\mathcal{K}_k$, because the minimization process removes the components represented by $d_i$ for $\mathcal{K}_{k}$
-            </blockquote>
-            <h3>Claim 1 Corollary 2 [^1]</h3>
-            <blockquote>
+            <h3>Claim 1 Corollary 1</h3>
+            <p>
+                <blockquote>
+                    $e^{(k)} \perp_A \langle \mathcal{K}_{k}\rangle$
+                    The error vector at the $k$ th step is the orthogonal to the Krylov Subspace $\mathcal{K}_k$, because the minimization process removes the components represented by $d_i$ for $\mathcal{K}_{k}$
+                </blockquote>
+            </p>
+            <h3>Proof</h3>
+            <p>
+                Reconsider the results from expression (2).
+            </p>
+            <p>
+            $$
+            \begin{aligned}
+                e^{(k)} &= - \sum_{j = k}^{n - 1}
+                    a_j^+ d_j
+                \\\iff
+                \langle e^{(k)}, d_j \rangle_A &= 0\quad \forall 
+                \; 0 \le j \le k - 1
+                \\ \iff
+                e^{k} &\perp_A \langle 
+                    d_0, d_1, \cdots d_{k - 1}
+                \rangle
+                \\\iff
+                e^{(k)} &\perp_A
+                \langle \mathcal{K}_k \rangle
+            \end{aligned}\tag{3}
+            $$
+            </p>
+            <p>
+                However, as long as $e^{(k)}$ is not zero, it will be the case that $e^{(k)}\in \langle \mathcal{K}_n \rangle\setminus\langle \mathcal{K}_{k}\rangle$ $\blacksquare$
+            </p>
+            <h3>Claim 1 Corollary 2 <sup>[1]</sup></h3>
+            <p>
+                <blockquote>
                 $\forall\; k \;: r^{(k)} \perp \langle \mathcal{K}_{k} \rangle$, which it then conveniently implies $r^{(k)}\perp \langle d_0, d_1, \cdots d_{k - 1}\rangle$
-            </blockquote>
-
-            
+                </blockquote>
+            </p>
+            <h4>Proof</h4>
+            <p>
+                Let's consider another that proof that is based on claim 1 corollary 1, choose any $k$, then we have: 
+            </p>
+            <p>
+                $$
+                \begin{aligned}
+                    e^{(k)} & \perp_A \langle \mathcal{K}_k \rangle 
+                    \\
+                    \iff 
+                    \langle e^{(k)}, A^jb \rangle_A &= 0
+                    \quad \forall \; 0 \le j \le k - 1 
+                    \\
+                    \underset{[1]}{\iff}
+                    \langle Ae^{(k)}, A^jb \rangle &= 0
+                    \quad \forall \; 0 \le j \le k - 1 
+                    \\\iff
+                    \langle r^{(k)}, A^{j}b \rangle &= 0
+                    \quad \forall \; 0 \le j \le k - 1 
+                    \\
+                    \iff 
+                    r^{(k)} &\perp \langle \mathcal{K}_{k} \rangle
+                \end{aligned}\tag{4}
+                $$
+            </p>
+            <p>
+                [1]: Take note that$\langle u, v \rangle_A = u^TAv = u^TA^Tv$$\blacksquare$
+            </p>
         </section>
         <hr>
         <section id="the-res">
@@ -319,10 +374,184 @@
                     Then, A-orthogonalizing the vector $r^{(k)}$ against the last search direction will allow us to get the next search directions. This is to say that, the residual vector generated at the $k$ iteration of the algorithm, $r^{(k)}$ is A-Orthogonal to all $d_j$ for $0\le j \le k - 2$. Which is convenient for A-Orthogonalizing and getting the next vector. 
                 </blockquote>
             </p>
+            <h3>Proof</h3>
+            <p>By the corollary 1 of claim 1, we have $e^{(k)} \perp_A \mathcal{K}_{k}$, but then this also means </p>
+            <p>Then: </p>
+            <p>
+            $$
+            \begin{aligned}
+                \langle e^{(k)}, A^jb\rangle_A &= 0 \quad \forall\; 0 \le j \le k - 1
+                \\
+            \end{aligned}
+            $$
+            </p>
+            <p>Consider:</p>
+            <p>
+                $$
+                \begin{aligned}
+                    & \langle r^{(k)}, A^jb \rangle_A = 0
+                    \\
+                    &\langle Ae^{(k)}, A^jb \rangle_A = 0
+                    \\
+                    \underset{[1]}{\iff} &  
+                    \langle e^{(k)}, A^{j + 1}b \rangle_A = 0
+                    \\
+                    \underset{[2]}{\iff} &
+                    -1 \le j \le k - 2
+                    \\
+                    \underset{[3]}{\implies} &
+                    r^{(k)} \perp_A \langle \mathcal{K}_{k - 1} \rangle
+                    \\
+                    \implies & 
+                    r^{(k)} \perp_A \langle d_0, d_1, \cdots, d_{k - 2} \rangle
+                \end{aligned}\tag{5}
+                $$
+            </p>
+            <p>Therefore, we only need to orthogonalize the vector $r^{(k)}$ against $d_{k - 1}$ to determine the next A-Orthogonal (or the next conjugate vector) search direction. </p>
+            <p>Explanations</p>
+            <p>[1]: Moving the $A$ from left to right inside the angle bracket, using the fact that $A$ is PSD. </p>
+            <p>[2]: Using Claim 1 corollary 1 and the previous line, we can determine the range for $j$. </p>
+            <p>[3]: Using the fact that for all $0 \le j \le k - 2$ makes $\langle e^{(k)}, A^{j + 1}b\rangle_A$ true, hence it's also true for $\langle r^{(k)}, A^jb\rangle_A$</p>
+            <p>Claim 2 is proven $\blacksquare$ </p>
+        </section>
+        <hr>
+        <section id="step-size">
+            <h2>Determining the Stepsize and Search Directions</h2>
+            <p>
+                We are going to use all the above cliams and corollaries to find the correct weights that update the search directions, and the right stepsize along the A-Orthongal direction vector $d_k$.
+            </p>
+            <h3>Claim 3</h3>
+            <p>
+                <blockquote>
+                    $r^{(k)}\perp \langle d_0, r^{(1)}, r^{(2)}, \cdots, r^{(k-1)}\rangle \; \forall \; n\ge k\ge 1$, Which implies that if $d_0 = r^{(0)}$, then the set of residual vector generated by the algorithm is all orthogonal to each other. 
+                </blockquote>
+            </p>
+            <h3>Proof</h3>
+            <p>The proof will make use of **Corollary 2 from Claim 1**, and the conjugation constant $b_k$ derived in (7), consider this: </p>
+            <p>
+                $$
+                \begin{aligned}
+                    r^{(k)T}d_j &= r^{(k)T}(r^{(j)} + \beta_{j - 1}d_{j - 1}) \; \forall 1 \le j \le k - 1
+                    \\\underset{[1]}{\implies}
+                    0 &= r^{(k)T}(r^{(j)} + \beta_{j - 1}d_{j - 1}) \; \forall 1 \le j \le k - 1
+                    \\
+                    0 &= \langle  r^{(k)}, r^{(j)}\rangle + 
+                    \beta_{j - 1}\langle r^{(k)},  d_{j - 1}\rangle \; \forall 1 \le j \le k - 1
+                    \\\underset{[2]}{\implies} 
+                    0 &= \langle  r^{(k)}, r^{(j)}\rangle \;\forall \; 1 \le j \le k - 1
+                \end{aligned}\tag{8}
+                $$
+            </p>
+            <p>[1]: The left hand side reduce to zero, this is true by Corollary 2 of Claim 1</p>
+            <p>[2]: the second term on the right hand side reduce to zero, also due to </p>
+            <h3>Claim 3 Corollary 1</h3>
+
+            <blockquote>$r^{(k)T}d_k = \Vert r^{(k)} \Vert_2^2$ for all $k$. </blockquote>
+
+            <p>We are still going to use the Corollary 2 of Claim 1, consider: </p>
+            <p>
+                $$
+                \begin{aligned}
+                    r^{(k)T} d_k &= r^{(k)T}r^{(k)} + \underbrace{\beta_{k - 1}r^{(k)T}d_{k - 1}}_{ = 0}
+                    \\
+                    \langle r^{(k)}, d_k \rangle &= \Vert r^{(k)}\Vert_2^2
+                \end{aligned}\tag{9}
+                $$
+            </p>
+            <p>Corollary 1 of Claim 3 $\blacksquare$</p>
+            <h3>Alternate Form for $\beta_k, \alpha_k$</h3>
+            <p>Consider simplifying the results for stepsizes and conjugate weight: </p>
+            <p>
+            $$
+            \begin{aligned}
+                \beta_k &= - \frac{\langle d_k, r^{(k + 1)}\rangle_A}
+                {
+                    \Vert d_k\Vert_A^2
+                }
+                \\\underset{(5)}{\implies}
+                \beta_k &= - \frac{\langle e^{(k + 1)} - e^{(k)}, r^{(k + 1)} \rangle_A}
+                {\alpha_k \Vert d_k\Vert_A^2}
+                \\\underset{[1]}{\implies}
+                \beta_k &= -
+                \frac{\langle -r^{(k + 1)} + r^{(k)}, r^{(k + 1)}\rangle}
+                {
+                    \alpha_k \Vert d_k\Vert_A^2
+                }
+                \\\underset{[2]}{\implies}
+                \beta_k &=
+                \frac{\Vert r^{(k + 1)}\Vert_2^2}
+                {
+                    \alpha_k \Vert d_k\Vert_A^2
+                }
+                \\\underset{[3]}{\implies}
+                \beta_k &= \frac{\Vert r^{(k + 1)}\Vert_2^2}
+                {
+                    \langle d_k, r^{(k)} \rangle
+                }
+            \end{aligned}\tag{10}
+            $$
+            </p>
+            <p>[1]: We moved the subscript into the inner product. $\langle u, v\rangle_A = \langle u, Av\rangle$. </p>
+            <p>[2]: Using Claim 3 to simplify the RHS, also canceling out the negative sign. </p>
+            <p>[3]: using the results from (5), substitute it into $\alpha_k$ and then simplify it. </p>
+            <p>Using Corollary Claim 3 we can further simplify results from (10), giving us: </p>
+            <p>
+                $$
+                \alpha_k = \frac{\langle r^{(k)}, r^{(k)} \rangle}
+                                {\langle d_k, d_k \rangle_A}
+                \quad 
+                \beta_k = \frac{\Vert r^{(k + 1)}\Vert_2^2}
+                {
+                    \langle r^{(k)}, r^{(k)} \rangle
+                }\tag{11}
+                $$
+            </p>
+        </section>
+        <hr>
+        <section id="cg">
+            <h2>The Conjugate Gradient Algorithm</h2>
+            <p>
+                <blockquote>
+                    Choose any $x^{(0)}$ as the initial guess for the conjugate gradient iterations. 
+                    $$
+                    \begin{aligned}
+                        & d_0 = r^{(0)}
+                        \\
+                        & \text{for } k = 0, 1, \cdots , n - 1
+                        \\ 
+                        &\hspace{2em}
+                        \begin{aligned}
+                            & r^{(k)} = b - Ax^{(k)}
+                            \\
+                            & \alpha_k = \frac{\Vert r^{(k)}\Vert_2^2}
+                            {
+                                \Vert d_k\Vert_A^2
+                            }
+                            \\
+                            & x^{(k + 1)} = x^{(k)} + \alpha_k d_k
+                            \\
+                            & \beta_k = \frac{\Vert r^{(k + 1)}\Vert_2^2}
+                            {\Vert r^{(k)}\Vert_2^2}
+                            \\
+                            & d_{k + 1} = d_{k} + \beta_k d_k
+                        \end{aligned}
+                    \end{aligned}\tag{12}
+                    $$
+                </blockquote>                
+            </p>
+            <p>
+                Claim 1 has been proven  $\blacksquare$
+            </p>
+            <h3>Potential Failure</h3>
+            <p>This algorithm fails when the matrix is Symmetric Semi-Definite, but no positive definite.  </p>
+            <p>Depending on the Conditioning of the matrix $A$, a small residual doesn't imply a small error.</p>
         </section>
         <hr>
         <section id="footnote">
-            
+            <h2>Footnote</h2>
+            <p>
+                [1]: This is the same as <a href="../conjugate_gradient/main.html#claim-4">Claim 4 in Conjugate Gradient</a>. 
+            </p>
         </section>
         <div class="footer-padding">
         </div>
