@@ -100,6 +100,7 @@
                     </ul>
                     <li><a href="#res2">The Residual Magic: Residuals are Orthogonal</a></li>
                     <li><a href="#cg">Conjugate Gradient</a></li>
+                    <li><a href="#lancosz">Hidden Connection</a></li>
                 </ul>
             </div>
         </div>
@@ -129,6 +130,7 @@
             </ul>
             <li><a href="#res2">The Residual Magic: Residuals are Orthogonal</a></li>
             <li><a href="#cg">Conjugate Gradient</a></li>
+            <li><a href="#lancosz">Hidden Connection</a></li>
         </ul>
     </div>
     <div id="main-content">
@@ -296,12 +298,12 @@
                 Which them means the statement we consider in **claim 1** would be 
                 <br>
                 $$
-                \begin{aligned}
-                    x^{(k+ 1)} &= \arg\min_{x\in \mathcal{K}_{k + 1}} \Vert x - x^+\Vert_A^2
+                    \begin{aligned}
+                    x^{(k+ 1)} &= \arg\min_{x\in \langle  \mathcal{K}_{k + 1}\rangle} \Vert x - x^+\Vert_A^2
                     \\
-                    \underset{[2]}{\implies}\text{let: } x &= \sum_{j = 0}^{k-1} a_j d_j 
+                    \underset{[2]}{\implies}\text{let: } x &= \sum_{j = 0}^{k} a_j d_j 
                     \\
-                    x^{(k+ 1)} &= \arg\min_{x\in \mathcal{K}_{k + 1}} 
+                    x^{(k+ 1)} &= \arg\min_{x\in \langle  \mathcal{K}_{k + 1}\rangle} 
                     \left\Vert
                         \underbrace{\sum_{j = 0}^{k} (a_j - a_j^+)d_j}_{\in \mathcal{K}_{k + 1}}
                         + 
@@ -310,7 +312,12 @@
                     \\
                     \underset{[1]}{\implies} x^{(k+ 1)} &= \sum_{j = 0}^{k}a_j^+d_j \in 
                     \langle  \mathcal{K}_{k + 1}\rangle
-                \end{aligned}\tag{2}
+                    \\
+                    \implies
+                    \underbrace{x^{(k + 1)} - x^{+}}_{e^{(k + 1)}} 
+                    &= 
+                    - \sum_{j = k + 1}^{n - 1}a_j^+ d_j
+                    \end{aligned}\tag{2}
                 $$
                 <br>
                 [1]: Take notice that, because $d_j$ vector is A-Ortho, therefore, it's directly:           
@@ -644,6 +651,21 @@
             <h3>Potential Failure</h3>
             <p>This algorithm fails when the matrix is Symmetric Semi-Definite, but no positive definite.  </p>
             <p>Depending on the Conditioning of the matrix $A$, a small residual doesn't imply a small error.</p>
+        </section>
+        <hr>
+        <section id="lancosz">
+            <h2>Hidden Connection</h2>
+            <p>
+                If we are dealing with Krylov Subspace, and we know that Krylov Subspace are also relevant to Arnoldi Iterations, and Lancosz Iterations in the Symmetric Case. 
+                Therefore, there exists an Lancosz Iterations interpretations of the conjugate gradient algorithm,  
+                It's linked to Claim 3. 
+            </p>
+            <p>
+                Celeverly rearranging the residual vectors from consequentive iterations can reveal the same type of recurrence highlighted by the lancosz iterations. 
+            </p>
+            <p>
+                For more about this, check out Tyler Chen's Website, which he covers in section 4.1 in his works <a href="https://chen.pw/research/cg/cg.pdf">here</a>. 
+            </p>
         </section>
         <hr>
         <section id="footnote">
