@@ -230,6 +230,496 @@
                 This leads to the next part of the article. There is another state of the art solution that is easier to implement, and when implemented in julia, it <b> produces up to 500 times speed up compare to the <code>JuMP.jl + COSMO.jl</code> approach </b>. It's called the Proximal Gradient Descend Method.
             </p>
         </section>
+        <hr>
+        <section id="pgd">
+            <h2>Proximal Gradient Descend</h2>
+            <p>
+                It's gradient descend that can handle the sum of 2 convex functions $g(x) + h(x)$ where $h(x)$ is non-smooth but convex. In this section we will derive everything we need for th Lasso Path problem cause it's not that hard to be honest. In addition, we will make the assumption that the function $f(x)$ is convex, and it's bounded above by the quadratic with convexity of $\beta$, in the sense that: 
+                $$
+
+                    f(y) \le (y - x)^T\nabla f(x) + \frac{\beta}{2}\Vert y - x \Vert_2^2
+                $$
+                Which then we have: 
+                $$
+                    g(x) + h(x) \le g(x) + (y - x)^T\nabla g(x) + \frac{\beta}{2}\Vert y - x\Vert_2^2 + h(x)
+                $$
+
+            </p>
+            <h3>Defintion: The Proximal Gradient</h3>
+            <p>
+                <blockquote>
+                    $$
+                    \underset{h, t}{\text{prox}}(
+                        z
+                    ) = 
+                    \arg\min_x \left\lbrace
+                        \frac{1}{2t}
+                        \left\Vert
+                            x - z
+                        \right\Vert^2
+                        + 
+                        h(x)
+                    \right\rbrace
+                    $$
+                </blockquote>
+            </p>
+            <p>
+                The proximal operator find the closest point, it take the non-smooth function $h(x)$ into considerations. The proximal operator is paramaterized by a parameter $t$. 
+            </p>
+            <h3>Claim 1</h3>
+
+            <p>
+                To get on step for proximal gradient descned, we need to minmize this, which will cause a proximal operator to arise.   
+                <blockquote>
+                    $$
+                    \arg\min_y \left\lbrace
+                        g(x) + \nabla g(x)^T(y - x) + \frac{\beta}{2}
+                        \Vert y - x\Vert + h(x)
+                    \right\rbrace \tag{1}
+                    $$                    
+                </blockquote>
+            </p>
+            <p>
+                In which, we are trying to minimize the parabolic curve with convexity $\beta$, while also keeping the non-smooth function on the right hand side. 
+            </p>
+            <h3>proof</h3>
+            <p>
+                $$
+                \begin{aligned}
+                    & g(x) + \nabla g(x)^T(y - x) + \frac{\beta}{2} \Vert y - x\Vert^2
+                    \\
+                    =&
+                    g(x) + \nabla g(x)^T x - \nabla g(x)^T x + 
+                    \frac{\beta}{2}\Vert x\Vert^2 + \frac{\beta}{2} \Vert x\Vert^2
+                    -\beta y^T x + h(x)
+                    \\
+                    =& 
+                    \left(
+                        g(x) - \nabla g(x)^Tx + \frac{\beta }{2} \Vert x\Vert^2
+                    \right) + 
+                    \underbrace{\left(
+                        \nabla g(x) - \beta x
+                    \right)^T y + \frac{\beta}{2} \Vert y\Vert + h(y)}_{\text{Optimize This!}}
+                \end{aligned}\tag{2}
+                $$
+            </p>
+            <p>
+                We choose to optimize the part where, parameter $y$ is involved. 
+            </p>
+            <p>
+                $$
+                \begin{aligned}
+                    & \arg\min_y \left\lbrace
+                    g(x) + \nabla g(x)^T(y - x) + \frac{\beta}{2} \Vert y - x\Vert^2
+                    \right\rbrace
+                    \\
+                    =&
+                    \arg\min_y \left\lbrace
+                        \underbrace{\left(
+                            \nabla g(x) - \beta x
+                        \right)^T y + \frac{\beta}{2} \Vert y\Vert^2}_{\text{the smooth part}} + h(y)
+                    \right\rbrace 
+                \end{aligned}\tag{3}
+                $$
+            </p>
+            <p>
+                Only the smooth part is able to be optimized in this case, now let's focus on that part. 
+            </p>
+            <p>
+                $$
+                \begin{aligned}
+                    \underbrace{\left(\nabla g(x) - \beta x\right)^T}_{b} y + \underbrace{\frac{\beta}{2}}_{a} \Vert y\Vert =&
+                    b^Ty + a \Vert y\Vert^2
+                    \\
+                    =&
+                    a \left(
+                        \frac{b^T}{a}y + \Vert y\Vert^2
+                    \right)
+                    \\
+                    =& 
+                    a \left(
+                        \frac{b^T}{a}y + \Vert y\Vert^2 + 
+                        \left\Vert\frac{b^T}{2a}\right\Vert^2
+                        - 
+                        \left\Vert
+                             \frac{b^T}{2a}
+                        \right\Vert^2
+                    \right)
+                    \\
+                    =& 
+                    a \left(
+                        \underbrace{\left\Vert
+                              y + \frac{b}{2a}
+                        \right\Vert^2}_{\text{Optimize This part}}
+                        -
+                        a \left\Vert
+                             \frac{b^T}{2a}
+                        \right\Vert^2
+                    \right)
+                    \\
+                    \left\Vert
+                        \frac{b}{2a} + y
+                    \right\Vert^2
+                    =& 
+                    \left\Vert
+                         \frac{\nabla g(x) - \beta x}{\beta} + y
+                    \right\Vert^2 
+                    \\
+                    =& 
+                    \left\Vert
+                        y - \left(x - \frac{\nabla g(x)}{\beta}\right)
+                    \right\Vert^2
+                \end{aligned}\tag{4}
+                $$
+            </p>
+            <p>
+                What we did is called: Completing the square, just some grade school math, and then, we susbtitute it back to the original expression and have: 
+                $$
+                \begin{aligned}
+                    =& 
+                    \arg\min_y\left\lbrace
+                        \left(
+                            \nabla g(x) - \beta x
+                        \right)^T y + \frac{\beta}{2} \Vert y\Vert
+                        + h(x)
+                    \right\rbrace 
+                    \\
+                    =& 
+                    \arg\min_y\left\lbrace
+                        \frac{\beta}{2}\left\Vert
+                        y - \left(x - \frac{\nabla g(x)}{\beta}\right)
+                    \right\Vert^2 + h(x)
+                    \right\rbrace
+                    \\
+                    =& 
+                    \underset{h, t}{\text{prox}} \left(x - \frac{\nabla g(x)}{\beta}\right) \text{ where: } t= \frac{1}{\beta}
+                \end{aligned}\tag{5}
+                $$
+            </p>
+            <p>
+                Therefore, the minimization along the parabolic with the non-smooth convex function is the same as solving the above proximal operator. The proximal opeartor should be anchored at $x = x^{(k)}$, the guess from the previous iteration, while solving for the next step in the gradient descend. <b>This can be generalized to ANY step sizes.</b>  
+            </p>
+            <h3>Formulation of the Algorithm</h3>
+            <p>
+                In our case, we will be using Nesterov Accelerated Gradient, with the Proximal Operator, giving us:
+                <blockquote>
+                    $$
+                    \begin{aligned}
+                        & x_{k + 1} = \underset{1/\beta, h}{\text{prox}}\left(
+                            y_k - \frac{1}{\beta}\nabla f(y_k)
+                        \right)
+                        \\
+                        & t_{k + 1} = \frac{1 + \sqrt{1 + 4t_k^2}}{2}
+                        \\
+                        & y_{k + 1} = x_{k + 1} + \frac{t_k - 1}{t_{k + 1}}(x_{k + 1} - x_k)
+                    \end{aligned}
+                    $$
+                </blockquote>
+            </p>
+            <h3>Proximal Operator for the L1-Reguarlization</h3>
+            <p> The proximal solution for the nonsmooth part is the same as this problem: </p>
+            <p>
+                $$
+                \arg\min_x \left\lbrace
+                    \frac{1}{2t} \Vert x - y \Vert^2 + \lambda\Vert x\Vert_1
+                \right\rbrace
+                $$
+            </p>
+            
+                    
+            <p> Our objective is to solve this. Consider this: </p>
+            
+            <p>
+            $$
+            \begin{aligned}
+                x^+=& \arg \min_x \left\lbrace
+                    \frac{1}{2t} \Vert x - y \Vert^2 + \lambda\Vert x\Vert_1
+                \right\rbrace 
+                \\
+                =& 
+                \arg\min_{x_1, x_2 \cdots x_n} \left\lbrace
+                \sum_{i = 1}^{n}\left(
+                        \frac{1}{2t} (x_i - y_i)^2 + \lambda |x_i|
+                    \right)
+                \right\rbrace
+                \\
+                \implies 
+                x^+_i =& \arg\min_{x_i}\left\lbrace
+                    \frac{1}{2t}(x_i - y_i)^2 + \lambda |x_i|
+                \right\rbrace
+            \end{aligned}
+            $$
+            </p>
+                    
+            <p> We need to solve for each element of $x_i$, and will need to discuss them by cases because $|x_i|$ is not smooth. </p>
+                    
+            <p> Assuming that $x_i \neq 0$, then: </p>
+                
+            <p>
+                $$
+                \begin{aligned}
+                    \bar{\partial}\left[
+                        \frac{1}{2t}(x_i - y_i)^2 + \lambda |x_i|
+                    \right] &= 0
+                    \\
+                    \frac{1}{t}(x_i - y_i) \pm \lambda &= 0
+                    \\
+                    x_i - y_i \pm \lambda t &= 0
+                    \\
+                    x_i &= y_i \mp \lambda t
+                \end{aligned}
+                $$
+            </p>
+            
+                    
+            <p> Take notice that, when </p>
+            
+            <p>
+                $$
+                \begin{aligned}
+                    x_i \ge 0 &\implies y_i - \lambda t \ge 0 \implies y_i \ge \lambda t
+                    \\
+                    x_i \le 0 &\implies y_i + \lambda t \le 0 \implies y_i \le -\lambda t
+                \end{aligned}
+                $$
+              
+            </p>
+                  
+            <p> And if $x_i = 0$, then we will need subgradient, and we have: </p>
+                    
+                    
+            <p>
+                $$
+                \begin{aligned}
+                    \partial\left[
+                        \frac{1}{2t}(x_i - y_i)^2 + \lambda |x_i|
+                    \right] &\ni 0
+                    \\
+                    \frac{1}{t}(x_i - y_i) + [-\lambda, \lambda] &\ni 0
+                    \\
+                    x_i - y_i + [-t \lambda, t \lambda] &\ni 0
+                    \\
+                     \text{set }x_i &= 0
+                    \\
+                    y_i \in [-t \lambda, t\lambda]
+                \end{aligned}
+                $$
+            </p>
+            
+                    
+            <p> So basically let: </p>
+                  
+            <p>
+                $$
+                f(y) = \begin{cases}
+                    y - \lambda t  & y \ge \lambda t
+                    \\
+                    y + \lambda t & y \le -\lambda t
+                    \\
+                    0 & y \in [-t \lambda, t\lambda]
+                \end{cases}
+                $$ 
+            </p>
+                    
+            <p> Then</p>
+            <p>
+                $$
+                x^+ = f \bullet(y)
+                $$
+            </p>      
+            
+                    
+            <p> Where $\bullet$ saying that, the function has been vectorized on each element of the input vector. </p>
+                    
+            <p> 
+                up to this point, we have solved the proximal operator for all of the L1 Norm Regularized regression problem, the function vectorized function $f$ is the solution. 
+            </p>
+
+        </section>
+        <hr>
+        <section id="julia">
+            <h2>Julia Programming Language For speed: The Home-made Proximal Gradient Descned Method</h2>
+            <p>
+                The julia programming language supports JIT interpreter, it it compiles to code using LLVM. It uses dynamic dispatch and both static and dynamic typing. 
+            </p>
+            <p>
+                The key to speed is to restrict the type for the functions we use, so that when the function is called, it will only be compiled for one specific type by the JIT (Which itself made the function, giving it shorter assembly code), and then it's never compiled again, results in faster execution time.
+            </p>
+            <p>
+                Here is the code implementations of what we talked about: 
+            </p>
+            <p>
+                <pre>
+                    <code class="julia">
+mutable struct ProximalGradient
+    """
+        Dynamical, functional, keeps references to detailed implementation 
+        functions. 
+    """
+
+    g::Function 
+    gradient::Function
+    prox::Function
+    h::Function
+    
+    β::Float64  # For beta convex function. 
+    tol::Float64
+    maxItr::Int64 
+    solutionDim::Tuple
+
+    function ProximalGradient(tol::Float64, maxItr::Int64)
+        this = new()
+        this.tol = tol
+        this.maxItr = maxItr
+        return this
+    end
+
+end
+
+
+function OptimizeProximalGradient(
+        this::ProximalGradient, 
+        warm_start::Union{Array, Nothing}=nothing
+    )::Matrix
+    """
+        Implement FISTA, Accelerated Proximal Gradient, copied from my HW. 
+    """
+    tol = this.tol
+    max_itr = this.maxItr
+    
+    if warm_start === nothing
+        warm_start = zeros(this.solutionDim)
+    end
+
+    x  = warm_start
+    Δx = Inf
+    y  = x
+    t  = 1
+    ∇f = this.gradient(y)
+    δ  = 1/this.β # stepsize
+    xNew = similar(x)
+    yNew = similar(y)
+
+    while Δx >= tol && max_itr >= 1
+        xNew = x - δ*∇f
+        this.prox(xNew, δ)
+        tNew = (1 + sqrt(1 + 4t^2))/2
+        yNew .= xNew
+        yNew += ((t - 1)/tNew)*(xNew - x)
+
+        ∇f .= this.gradient(yNew)
+        Δx = norm(xNew - x, 1)/norm(x, 1)
+    
+        t = tNew
+        x = xNew
+        y = yNew
+        
+        max_itr -= 1
+    end
+    if max_itr == 0
+        println()
+        Warn("Maximal iteration $(this.maxItr) reached for Proximal gradient. ")
+        @assert norm(x, Inf) != Inf "Solution is infinite, something blowed up."
+        Warn("It will be bumped up by 200% more and then we try again.")
+        this.maxItr = 2*this.maxItr
+        return OptimizeProximalGradient(this, warm_start)
+    end
+
+    return x
+
+end
+
+
+
+### ----------------------------------------------------------------------------
+
+### ============================================================================
+### Lasso Proximal Operator
+### ============================================================================
+
+function L1LassoProximal!(y::Union{Vector, Matrix}, t::Float64, λ::Float64)
+    """
+        Textbook definition of the L1 Lasso proximal operator. 
+    """
+
+    return map!(y, y) do yi
+        if yi > λ*t
+            return yi - λ*t
+        elseif yi < -λ*t
+            return yi + λ*t
+        else
+            return 0
+        end
+    end
+
+end
+
+
+### ----------------------------------------------------------------------------
+
+### ============================================================================
+### The 2 Norm loss function with L1 regularization
+### ============================================================================
+
+
+function BuildPG2NormLasso(
+        A::Matrix, 
+        b::Matrix, 
+        λ::Float64, 
+        tol::Float64=1e-5,
+        max_itr::Int64=1000
+    )::ProximalGradient
+    """
+        Given matrix A, vector b, and λ the regularization perameter, 
+        this will build an instance of ProximalGradient. 
+
+        * Use Lambdas to capture variables references 
+        * A factory methods
+        ! Pass copy of matrices will be better. 
+    """
+
+    @assert size(b, 2) == 1 "Expect vector b in the"*
+    " shape of (n, 1) but it turns out to be $(size(b))"
+    @assert size(b, 1) == size(A, 1) "Expect the size of the matrix to match "*
+    "the vector but it turns out to be A is in $(size(A)), and b is $(size(b))"
+    ATA = A'*A
+    ATb = A'*b
+    β = 4*opnorm(ATA)  # convexity from spectral norm. 
+    t = 1/β
+    f(x) = norm(A*x - b)^2
+    dg(x) = 2(ATA*x - ATb)
+    
+    # ======= build ==================================
+    proxVectorized(y, t) = L1LassoProximal!(y, t, λ)
+    this = ProximalGradient(tol, max_itr)
+    this.g = f
+    this.gradient = dg
+    this.prox = proxVectorized
+    this.β = β
+    this.solutionDim = (size(A, 2), size(b, 2))
+    this.h = (x) -> norm(x, 1)
+
+    return this
+end
+
+function ChangeProximalGradientLassoλ!(this::ProximalGradient, λ::Float64)
+    """
+        Change the proximal operator for a different λ
+    """
+    this.prox = (y, t) -> L1LassoProximal!(y, t, λ)
+end
+                    </code>
+                </pre>
+                
+            </p>
+
+        </section>
+        <hr>
+        <section id="res">
+            <h2>Results: Impressive</h2>
+            
+
+        </section>
         <div class="footer-padding">
         </div>
     </div>
