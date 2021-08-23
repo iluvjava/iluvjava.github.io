@@ -309,14 +309,13 @@
         <section id="pgd">
             <h2>Proximal Gradient Descend</h2>
             <p>
-                It's gradient descend that can handle the sum of 2 convex functions $g(x) + h(x)$ where $h(x)$ is non-smooth but convex. In this section we will derive everything we need for th Lasso Path problem cause it's not that hard to be honest. In addition, we will make the assumption that the function $f(x)$ is convex, and it's bounded above by the quadratic with convexity of $\beta$, in the sense that: 
+                It's gradient descend that can handle the sum of 2 convex functions $g(x) + h(x)$ where $h(x)$ is non-smooth but convex. In this section we will derive everything we need for th Lasso Path problem cause it's not that hard to be honest. In addition, we will make the assumption that the function $g(x)$ is smooth convex, and it's so smooth that it can be bounded above by the quadratic with convexity of $\beta$, in the sense that: 
                 $$
-
-                    f(y) \le (y - x)^T\nabla f(x) + \frac{\beta}{2}\Vert y - x \Vert_2^2
+                    g(y) \le (y - x)^T\nabla g(x) + \frac{\beta}{2}\Vert y - x \Vert_2^2 
                 $$
                 Which then we have: 
                 $$
-                    g(x) + h(x) \le g(x) + (y - x)^T\nabla g(x) + \frac{\beta}{2}\Vert y - x\Vert_2^2 + h(x)
+                    g(y) + h(y) \le g(x) + (y - x)^T\nabla g(x) + \frac{\beta}{2}\Vert y - x\Vert_2^2 + h(y)
                 $$
 
             </p>
@@ -344,12 +343,12 @@
             <h3 id="claim-1">Claim 1</h3>
 
             <p>
-                To get on step for proximal gradient descned, we need to minmize this, which will cause a proximal operator to arise.   
+                To get on step for proximal gradient descend, we need to minmize this, which will cause a proximal operator to arise. 
                 <blockquote>
                     $$
                     \arg\min_y \left\lbrace
                         g(x) + \nabla g(x)^T(y - x) + \frac{\beta}{2}
-                        \Vert y - x\Vert + h(x)
+                        \Vert y - x\Vert + h(y)
                     \right\rbrace \tag{1}
                     $$                    
                 </blockquote>
@@ -366,7 +365,7 @@
                     =&
                     g(x) + \nabla g(x)^T x - \nabla g(x)^T x + 
                     \frac{\beta}{2}\Vert x\Vert^2 + \frac{\beta}{2} \Vert x\Vert^2
-                    -\beta y^T x + h(x)
+                    -\beta y^T x + h(y)
                     \\
                     =& 
                     \left(
