@@ -803,6 +803,59 @@ end
             <p>
                 <img src="./lasso_proximal.png" alt="lasso path of the data set">
             </p>
+            <h3>Statistics Time ^W^</h3>
+            <p>
+                Things to remember at heart: <b>Correlation doesn't imply Causality.</b>
+            </p>
+            <p>
+                The top predictors from the models are selected to be: 
+                <pre>
+ "PctKids2Par"          "-"  "percentage of kids in family housing with two parents (numeric - decimal)"
+ "PctIlleg"             "+"  "percentage of kids born to never married (numeric - decimal)"
+ "racePctWhite"         "-"  "racePctWhite: percentage of population that is caucasian (numeric - decimal)"
+ "HousVacant"           "+"  "number of vacant households (numeric - decimal)"
+ "MalePctDivorce"       "+"  "MalePctDivorce: percentage of males who are divorced (numeric - decimal)"
+ "PctPersDenseHous"     "+"  "PctPersDenseHous: percent of persons in dense housing (more than 1 person per room) (numeric - decimal)"
+ "pctUrban"             "+"  "percentage of people living in areas classified as urban (numeric - decimal)"
+ "LemasPctOfficDrugUn"  "+"  "LemasPctOfficDrugUn: percent of officers assigned to drug units (numeric - decimal)"
+ "PctVacantBoarded"     "+"  "percent of vacant housing that is boarded up (numeric - decimal)"
+ "PctHousOccup"         "-"  "percent of housing occupied (numeric - decimal)"
+  6.237146 seconds (51.83 M allocations: 3.222 GiB, 8.06% gc time, 2.08% compilation time)
+                </pre>
+            </p>
+            <h3>Observation</h3>
+            <p>
+                From the graph, we obseve a sharp drop in the first 3 predictors as the value for $\lambda$ decreases, this means that the first 3 predictors are highly correlated to all other predictors. It's a <b>composite factor</b>. 
+                <br>
+                Don't divorce and leave the kids out there, this action correlates to violent crime. 
+                <br>
+                A neighbour hood with a lot of vacant houses and dense houses correlates to higher than usual crime activity. 
+            </p>
+            <h3>Discussion, Questions, and my Answers</h3>
+            <p>
+                Ok, statistics are just statistics, the job of looking for deep interpretations and explanations is the job of other professions now. The Lasso Path is just an optimization problem. Let's look at some of the questions and my answers for them: 
+                <ul>
+                    <li>
+                        Does the type of correlations that causes the interactions between the weights of the predictors has to be collinearity? 
+                        <p>
+                            No, they can be quadratic or more complicated functions. 
+                        </p>
+                     </li>
+                     <li>
+                        What if, there are several type of correlations between 2 factors, and it manifesed as non-homogenous variance? 
+                        <p>
+                            Use quantile regression as loss function, which gives non-smooth objectives, and requires more sophisticated solutions. 
+                        </p>
+                     </li>
+                     <li>
+                        What is the difference between Lasso Path and Principal Components Analysis? Why use the one over the other? 
+                        <p>
+                            PCA won't tell much about non-linear correlations. PCA will give you a linear combinations of features that minimizes the covariance between features, statistically it's doing something very different. But, one can definite use PCA to embed the features, and then use Lasso to find the important principal components. I think this is going to be very interesting to try. 
+                        </p>
+                     </li>
+                </ul>
+
+            </p>
         </section>
         <hr>
         <section id="epilogue">
