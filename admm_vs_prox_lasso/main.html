@@ -4,19 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <!--Edit Here-->
-    <title>WRITE ME</title>
+    <title>Lasso Path with Proximal Gradient</title>
     <!--Open graph protocol EDIT HERE-->
-    <meta property="og:title" content="WRITE ME">
+    <meta property="og:title" content="Lasso Path with Proximal Gradient">
     <meta property="og:type" content="article">
     <meta property="og:description"
     content="WRITE ME">
-    <meta property="og:image" content="https://iluvjava.github.io/krylov_subspace_cg/energy_norm.png" >
+    <meta property="og:image" content="https://iluvjava.github.io/admm_vs_prox_lasso/lasso_proximal.png" >
     <!--END-->
     <!--Edit Here -->
     <!-- ForTwitter-->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="WRITE ME" />
-    <meta name="twitter:description" content="WRITE ME">
+    <meta name="twitter:title" content="Lasso Path with Proximal Gradient"/>
+    <meta name="twitter:description" content="The frustrations with ADMM based Conic Solver and Julia Optimization Frameworks sparks my own efficient implemention of accelerated proximal gradient descend for the lasso path problem.">
     <!---->
     <!--For Bootstrap style-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -78,6 +78,37 @@
             <div class="collapse navbar-collapse">
                 <ul>
                     <!--Section links. Edit Here -->
+                    <li><a href="#intro">Intro</a></li>
+                    <li>
+                        <a href="#the-lasso-problem">The Lasso Problem</a>
+                        <ul>
+                            <a href="#the-lasso-path">The Lasso path</a>
+                        </ul>
+                    </li>
+                    <li><a href="#qp">Quadratic Programming</a></li>
+                    <li>
+                        <a href="#pgd">Proximal Gradient Descend</a>
+                        <ul>
+                            <li><a href="#the-proximal-gradient">The Proximal Gradient</a></li>
+                            <li>
+                                <a href="#claim-1">Claim 1</a>
+                            </li>
+                            <li>
+                                <a href="#formulation-of-the-algorithm">Formulation of the Algorithm</a>
+                            </li>
+                            <li>
+                                <a href="#proximal-operator-for-the-l1-regularization">Proximal Opt for L1-Regularization</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#julia">The Julia Programming Language and my Code</a>
+                        
+                    </li>
+                    <li><a href="#res">Results</a></li>
+                    <li>
+                        <a href="#epilogue">Epilogue</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -85,6 +116,37 @@
     <div id="side-bar">
         <ul>
             <!--Section links. Edit Here-->
+            <li><a href="#intro">Intro</a></li>
+            <li>
+                <a href="#the-lasso-problem">The Lasso Problem</a>
+                <ul>
+                    <a href="#the-lasso-path">The Lasso path</a>
+                </ul>
+            </li>
+            <li><a href="#qp">Quadratic Programming</a></li>
+            <li>
+                <a href="#pgd">Proximal Gradient Descend</a>
+                <ul>
+                    <li><a href="#the-proximal-gradient">The Proximal Gradient</a></li>
+                    <li>
+                        <a href="#claim-1">Claim 1</a>
+                    </li>
+                    <li>
+                        <a href="#formulation-of-the-algorithm">Formulation of the Algorithma</a>
+                    </li>
+                    <li>
+                        <a href="#proximal-operator-for-the-l1-regularization">Proximal Opt for L1-Regularization</a>
+                    </li>               
+                </ul>
+            </li>
+            <li>
+                <a href="#julia">The Julia Programming Language my and 
+                    Code</a>
+            </li>
+            <li><a href="#res">Results</a></li>
+            <li>
+                <a href="#epilogue">Epilogue</a>
+            </li>
         </ul>
     </div>
     <div id="main-content">
@@ -101,15 +163,28 @@
                     <li>Epilogue</li>
                 </ul>
             </p>
+            <h3>A Summary: What, Why, How</h3>
             <p>
-                Major Idea and Lessons
+                I want to do the lasso path problem by formulating it as a quadratic programming problem, and then try solving it using the <code>JuMP.jl</code> optimization framework with the <code>COSMO.j</code> ADMM conic solver. However it turns out to be very slow, even with everything precompiled. I tried the following things and it didn't rescue it: 
+                <ul>
+                    <li>Using primal variable warm start for the solver</li>
+                    <li>Less Tolerance</li>
+                    <li>Build the model in <code>JuMP.jl</code> once and then modify the objective, reduce resource overhead on creating new model for each $\lambda$</li>
+                </ul>
+                <br>
+                Then I suddenly remebered that, Proximal gradient can be directly applied to the Primal, Dual of the non-smooth objective function, and achieve convergence as good as $\mathcal{O}(\exp(-k))$. 
+                <br>
+                With some good programming skill, I am able to get it working very efficiently, more precisely, 500 times speed up. 
+            </p>
+            <p>
+                <h3>Major Idea and Lessons</h3>
                 <blockquote>
                     Don't use Jump.jl framework it's slow. The reason is due to repeated computations of $A^TA$ of the data matrix, and reallocated memory each time it does it, which is just my hypothesis based on the memory usage. Although proximal gradient is fast and can handle all type of reguarized solution, but there are some details missing for a accurate predictions on the importance of predictors. 
                 </blockquote>
             </p>
         </section>
         <hr>
-        <section>
+        <section id="the-lasso-problem">
             <h2>The Lasso Problem</h2>
             <p>
                 Here we use a basic regression problem without biases, then the lasso is just a regularizing the one-norm of the weights of the model. Mathematically we are solving: 
@@ -138,7 +213,7 @@
                 </ul>
                 Probabalistically, the regurlarized problem is changing the prior distribution of the weights into the Laplace Distribution. 
             </p>
-            <h3>The Lasso Path</h3>
+            <h3 id="the-lasso-path">The Lasso Path</h3>
             <p>
                 For the 2norm loss function, the lambda value such that it sets all the weights of the predictors to zero is given as: 
             </p>
@@ -245,7 +320,7 @@
                 $$
 
             </p>
-            <h3>Defintion: The Proximal Gradient</h3>
+            <h3 id="the-proximal-gradient">Defintion: The Proximal Gradient</h3>
             <p>
                 <blockquote>
                     $$
@@ -266,7 +341,7 @@
             <p>
                 The proximal operator find the closest point, it take the non-smooth function $h(x)$ into considerations. The proximal operator is paramaterized by a parameter $t$. 
             </p>
-            <h3>Claim 1</h3>
+            <h3 id="claim-1">Claim 1</h3>
 
             <p>
                 To get on step for proximal gradient descned, we need to minmize this, which will cause a proximal operator to arise.   
@@ -399,7 +474,7 @@
             <p>
                 Therefore, the minimization along the parabolic with the non-smooth convex function is the same as solving the above proximal operator. The proximal opeartor should be anchored at $x = x^{(k)}$, the guess from the previous iteration, while solving for the next step in the gradient descend. <b>This can be generalized to ANY step sizes.</b>  
             </p>
-            <h3>Formulation of the Algorithm</h3>
+            <h3 id="formulation-of-the-algorithm">Formulation of the Algorithm</h3>
             <p>
                 In our case, we will be using Nesterov Accelerated Gradient, with the Proximal Operator, giving us:
                 <blockquote>
@@ -416,7 +491,7 @@
                     $$
                 </blockquote>
             </p>
-            <h3>Proximal Operator for the L1-Reguarlization</h3>
+            <h3 id="proximal-operator-for-the-l1-regularization">Proximal Operator for the L1-Reguarlization</h3>
             <p> The proximal solution for the nonsmooth part is the same as this problem: </p>
             <p>
                 $$
@@ -710,15 +785,63 @@ function ChangeProximalGradientLassoλ!(this::ProximalGradient, λ::Float64)
 end
                     </code>
                 </pre>
-                
+            </p>
+            <h3>Julia Package</h3>
+            <p>
+                The whole project is developed as a julia package, the repos for the package is <a href="https://github.com/iluvjava/LassoPath.jl"><code>LassoPath.jl</code></a>. 
             </p>
 
         </section>
         <hr>
         <section id="res">
             <h2>Results: Impressive</h2>
-            
+            <p>
+                Results are carried out with the crime dataset from UCI machine learning dataset. The link to the data set is <a href="https://archive.ics.uci.edu/ml/datasets/communities+and+crime">here</a>. 
+            </p>
+            <p>
+                Under around 5 seconds, on my machine with a Ryzen 4900HS, the equivalent job takes 550 second, with compromised precision, and less $\lambda$ values for the search when using quadratic programming with the <code>JuMP.jl</code> with <code>COSMO.jl</code>. Here is the lasso plot graph for the data: 
+            </p>
+            <p>
+                <img src="./lasso_proximal.png" alt="lasso path of the data set">
+            </p>
+        </section>
+        <hr>
+        <section id="epilogue">
+            <h2>Epilogue</h2>
+            <p>
+                Here, we tie up some loose end, and I will point out further works, and insights for this project. 
+            </p>
+            <h3>Everything I did is Very Basic and there is much MORE</h3>
+            <p>
+                Here are more ideas: 
+                <ol>
+                    <li>
+                        There is a way to get exactly when the value of $\lambda$ causes the solution to "bifurcates" which uses strong duality, which will give use precisely the order decay for the weights. But it requires a close look into the KTT of the problem. 
+                    </li>    
+                    <li>
+                        The quadratic programming formulation also has a dual, but it will be different from the dual of the non-smooth formulations, a look into this should creates more insights into the problem, more specifically how to formulate constraints involving ordering, say, $\Vert \bullet \Vert_{\infty}$ as a constraint. You should know how to do it it if you are taught on linear programming and modeling. 
+                    </li>
+                    <li>
+                        My Implementation of the proximal algorithm didn't exploit the dual formulations, which can be helpful because sometimes the dual is easier to solve. 
+                    </li>
+                    <li>
+                        This proximal gradient is applicable to all other types of convex smooth objectives, such as cross entropy, logit loss, huber loss. 
+                    </li>
+                    <li>
+                        For non-smooth objective function, we need Chambollo Pock (Uses operator theory and a lot of fancy stuff), OR, just use line search for the gradient which will make the algorithm much slower for larger problem. 
+                    </li>
+                    <li>
+                        Alternate coordinate descend can also solve this, but it will be much slower. 
+                    </li>
+                </ol>
+            </p>
+            <h3>Exercise for the Reader</h3>
 
+            <p>
+                <blockquote>
+                    Prove for the value claim for $\lambda_{\max}$, which is the minimum $\lambda$ that set all the weights to zero. Hint: Use Subgradient. 
+                </blockquote>
+            </p>
         </section>
         <div class="footer-padding">
         </div>
