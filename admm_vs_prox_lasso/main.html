@@ -833,7 +833,7 @@ end
             </p>
             <h3>Discussion, Questions, and my Answers</h3>
             <p>
-                Ok, statistics are just statistics, the job of looking for deep interpretations and explanations is the job of other professions now. The Lasso Path is just an optimization problem. Let's look at some of the questions and my answers for them: 
+                Ok, statistics are just statistics, the job of looking for deep interpretations and explanations is the job of other professions. The Lasso Path is just an optimization problem. Let's look at some of the questions and my answers for them: 
                 <ul>
                     <li>
                         Does the type of correlations that causes the interactions between the weights of the predictors has to be collinearity? 
@@ -844,13 +844,13 @@ end
                      <li>
                         What if, there are several type of correlations between 2 factors, and it manifesed as non-homogenous variance? 
                         <p>
-                            -> Use quantile regression as loss function, which gives non-smooth objectives, and requires more sophisticated algorithms to optimize. 
+                            -> Use quantile regression as loss function and try out different quantiles. It gives non-smooth objectives, which requires more sophisticated algorithms to optimize. 
                         </p>
                      </li>
                      <li>
                         What is the difference between Lasso Path and Principal Components Analysis? Why use the one over the other? 
                         <p>
-                            -> PCA won't tell much about non-linear correlations. PCA will give you a linear combinations of features that minimizes the covariance between features, statistically it's doing something very different. But, one can definite use PCA to embed the features, and then use Lasso to find the important principal components. I think this is going to be very interesting to try. 
+                            -> PCA won't tell much about complex correlations. PCA will give you a a sets of linear combinations of features (referred to as the principal components) that minimize the covariance between features, statistically it's doing something very different. But, one can definitely use PCA to embed the features, and then use Lasso to find the important principal components. I think this is going to be very interesting to try. 
                         </p>
                      </li>
                 </ul>
