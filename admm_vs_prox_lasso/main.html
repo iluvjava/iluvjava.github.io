@@ -868,7 +868,7 @@ end
                 Here are more ideas: 
                 <ol>
                     <li>
-                        There is a way to get exactly when the value of $\lambda$ causes the solution to "bifurcates" which uses strong duality, which will give use precisely the order decay for the weights. But it requires a close look into the KTT of the problem. 
+                        There is a way to get exactly when the value of $\lambda$ causes the solution to "bifurcate" uses strong duality, which will give precisely the order of decay for the weights. But it requires a close look into the KTT conditions of the problem. 
                     </li>    
                     <li>
                         The quadratic programming formulation also has a dual, but it will be different from the dual of the non-smooth formulations, a look into this should creates more insights into the problem, more specifically how to formulate constraints involving ordering, say, $\Vert \bullet \Vert_{\infty}$ as a constraint. You should know how to do it it if you are taught on linear programming and modeling. 
@@ -877,7 +877,7 @@ end
                         My Implementation of the proximal algorithm didn't exploit the dual formulations, which can be helpful because sometimes the dual is easier to solve. 
                     </li>
                     <li>
-                        This proximal gradient is applicable to all other types of convex smooth objectives, such as cross entropy, logit loss, huber loss. 
+                        This proximal gradient method is applicable to all other types of convex smooth objectives, such as cross-entropy, logit loss, huber loss, etc. Verious other common type of regularization and simple constraints can also be applicable for the Proximal Gradient Method. 
                     </li>
                     <li>
                         For non-smooth objective function, we need Chambollo Pock (Uses operator theory and a lot of fancy stuff), OR, just use line search for the gradient which will make the algorithm much slower for larger problem. 
@@ -888,7 +888,6 @@ end
                 </ol>
             </p>
             <h3>Exercise for the Reader</h3>
-
             <p>
                 <blockquote>
                     Prove for the value claim for $\lambda_{\max}$, which is the minimum $\lambda$ that set all the weights to zero. Hint: Use Subgradient. 
