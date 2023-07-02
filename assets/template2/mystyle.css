@@ -8,15 +8,19 @@
 /* Straight from W3C school */
 #side-bar {
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 200px; /* This is fixed  */
+  width: 20%; 
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0em; /* Stay at the top */
   left: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 4em;
+  margin-top: 50px;
+  padding-top: 2em;
   padding-right: 2em;
-  background-color: rgba(134,216,247, 0.5);
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: saturate(100%) blur(5px);
+  line-height: 1; /* Add this line to adjust line height */
+
 }
 
 #side-bar li, nav li {
@@ -30,12 +34,39 @@
   padding-inline-start: 2em;
 }
 
+#side-bar a {
+  color: rgb(80, 80, 80); /* Set the desired font color */
+}
+
 #footer-display {
   background-color:  rgba(249,184,210, 0.5);
   backdrop-filter: saturate(100%) blur(5px);
   color: cyan;
   padding: 0.5em;
 }
+
+
+body {
+  background-image: url('../ALTO_BACKGROUND.PNG');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: 100%;
+  opacity: 1;
+  
+}
+
+section {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2em;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  width: 90%;
+  margin-left: auto; /* Add this line to align section to the right */
+}
+
+
 
 div.footer-padding {
   margin-top: 10em;
@@ -62,6 +93,7 @@ nav li {
 img {
   width: 80%;
 }
+
 
 .navbar, nav li{
   background-color: rgba(249,184,210, 0.5); 

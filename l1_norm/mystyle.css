@@ -37,6 +37,25 @@
   padding: 0.5em;
 }
 
+
+body {
+  background-image: url('../assets/ALTO_BACKGROUND.PNG');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: 100%;
+  opacity: 1;
+  
+}
+
+section {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2em;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+}
+
 div.footer-padding {
   margin-top: 10em;
 }
